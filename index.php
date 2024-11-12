@@ -20,7 +20,7 @@
             $ruta_i="#";
             $ruta_soc="./paginas/socios.php";
             $ruta_serv="";
-            $ruta_tes="";
+            $ruta_tes="./paginas/testimonios.php";
             $ruta_not="";
             $ruta_cit="";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit);

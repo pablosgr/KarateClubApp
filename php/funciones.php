@@ -26,7 +26,7 @@
         return $resultado;
     }
 
-//muestra de datos con consultas - index
+//funciones index
     function testimonioRandom($conexion){
         $resultado='';
         $sql='SELECT contenido,nombre FROM testimonio
@@ -127,6 +127,7 @@
         $consulta->close();
     }
 
+
     function actualizarSocio($conexion, $id, $nombre, $usuario, $edad, $telefono){
         $resultado="";
         $sql='UPDATE socio SET nombre=?, usuario=?, edad=?, telefono=? WHERE id=?';
@@ -170,6 +171,16 @@ function imprimirTestimonios($conexion){
         return $resultado;
 }
 
+function añadirTestimonio($conexion, $autor, $contenido){
+    $fecha_actual = date("Y-m-d");
+    $sql='INSERT INTO testimonio (autor, contenido, fecha)
+        VALUES (?, ?, ?)';
+
+    $consulta=$conexion->prepare($sql);
+    $consulta->bind_param("iss", $autor, $contenido, $fecha_actual);
+    $consulta->execute();
+    $consulta->close();
+}
 
 //funciones internas
     function generarNoticias($sql, $resultado, $conexion){

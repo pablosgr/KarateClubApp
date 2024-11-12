@@ -4,6 +4,7 @@
 
 let añadir_socio=document.getElementById("formulario");
 let modificar_socio=document.getElementById("formulario-mod");
+let añadir_testimonio=document.getElementById("formulario-testimonio");
 
 let campo_foto=document.getElementById("campo-foto");
 let campo_nombre=document.getElementById("campo-nombre");
@@ -17,9 +18,9 @@ let campo_usuario_mod=document.getElementById("user-mod");
 let campo_edad_mod=document.getElementById("edad-mod");
 let campo_tlfn_mod=document.getElementById("tlfn-mod");
 
-//eventos
+let campo_texto_test=document.getElementById("contenido-testimonio");
 
-console.log(campo_usuario_mod);
+//eventos
 
 //compruebo que el formulario esté presente en la página -sea distinto de null- antes de ejecutar el código 
 //para evitar que intente ejecutar y falle en páginas donde falte algún formulario
@@ -56,6 +57,16 @@ if(modificar_socio){
                 }
             }
     });
+}
+
+if(añadir_testimonio){
+    añadir_testimonio.addEventListener("submit",
+        (evento)=>{
+            if(!validarTexto(campo_texto_test)){
+                evento.preventDefault();
+            }
+        }
+    )
 }
 
 

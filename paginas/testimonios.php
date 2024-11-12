@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shito-Ryu Club | Testimonios</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/style_socios.css">
+    <link rel="stylesheet" href="../css/style_testimonios.css">
     <script defer src="../js/app_socios.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,13 +26,29 @@
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit);
         ?>
 
-        <section class='socios'>
+        <section class='testimonios'>
             <h1>Testimonios</h1>
             <div class='contenido-testimonios'>
 
                 <?php
+                    if(isset($_POST["contenido"])){
+                        $contenido=$_POST["contenido"];
+                        $autor=$_POST["usuario"];
+                        añadirTestimonio($conexion, $autor, $contenido);
+                    }
+
                     echo imprimirTestimonios($conexion);
                 ?>
+
+                <div class='card-testimonio last'>
+                    <form action="testimonios.php" method='post' id='formulario-testimonio'>
+                        <textarea name="contenido" id="contenido-testimonio" placeholder='Déjanos tu opinión'></textarea>
+                        <span class='error'></span>
+                        <input type="hidden" value='1' id='usuario-testimonio' name='usuario'>
+                        <!--el value indicará el nombre del usuario que ha escrito la reseña-->
+                        <button type='submit'>Publicar</button>
+                    </form>
+                </div>
 
             </div>
         </section>
