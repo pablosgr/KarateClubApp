@@ -56,7 +56,7 @@
         return $resultado;
     }
 
-//pagina socios
+//funciones socios
     function imprimirSocios($conexion){
         $resultado='';
         $sql='SELECT id,nombre,usuario,edad,telefono,foto FROM socio';
@@ -98,13 +98,13 @@
             $resultado.="<div class='tarjeta_socio'>
                 <form action='socios-confirm.php' method='post' id='formulario-mod'>
                     <div class='avatar'><img src='$foto_r'></div>
-                    <input type='text' value='$nombre_r' name='nombre' placeholder='Nombre completo'>
+                    <input type='text' value='$nombre_r' name='nombre' placeholder='Nombre completo' id='nombre-mod'>
                     <span class='error'></span>
-                    <input type='text' value='$usuario_r' name='user' placeholder='Nombre de usuario'>
+                    <input type='text' value='$usuario_r' name='user' placeholder='Nombre de usuario' id='user-mod'>
                     <span class='error'></span>
-                    <input type='text' value='$edad_r' name='edad' placeholder='Edad'>
+                    <input type='text' value='$edad_r' name='edad' placeholder='Edad' id='edad-mod'>
                     <span class='error'></span>
-                    <input type='text' value='$telefono_r' name='tlfn' placeholder='Teléfono'>
+                    <input type='text' value='$telefono_r' name='tlfn' placeholder='Teléfono' id='tlfn-mod'>
                     <span class='error'></span>
                     <input type='hidden' value='$id' name='id'>
                     <button type='submit'>Actualizar socio</button>
@@ -144,6 +144,31 @@
         $consulta->close();
         return $resultado;
     }
+
+//funciones testimonios
+
+function imprimirTestimonios($conexion){
+    $resultado='';
+        $sql='SELECT testimonio.id,nombre,contenido,fecha FROM socio
+        JOIN testimonio ON socio.id=testimonio.autor
+        ORDER BY fecha DESC';
+
+        $sql_result=$conexion->query($sql);
+        while($row=$sql_result->fetch_array(MYSQLI_ASSOC)){
+            $nombre=$row["nombre"];
+            $texto=$row["contenido"];
+            $fecha=$row["fecha"];
+
+            $resultado.="
+                <div class='card-testimonio'>
+                    <h2>$nombre</h2>
+                    <p>$texto</p>
+                    <p>$fecha</p>
+                </div>
+            ";
+        }
+        return $resultado;
+}
 
 
 //funciones internas

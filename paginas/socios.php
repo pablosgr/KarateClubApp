@@ -20,7 +20,7 @@
             $ruta_i="../index.php";
             $ruta_soc="#";
             $ruta_serv="";
-            $ruta_tes="";
+            $ruta_tes="testimonios.php";
             $ruta_not="";
             $ruta_cit="";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit);
@@ -55,7 +55,7 @@
                 <div class='tarjeta_socio'>
                     <form action="socios.php" method='post' enctype='multipart/form-data' id='formulario'>
                         <label class="input-file-custom">
-                            <input type="file" name='foto-avatar' id="campo-foto">Subir imágen
+                            <input type="file" name='foto-avatar' id="campo-foto" accept="image/*">Subir imágen
                         </label>
                         <span class="error"></span>
                         <input type='text' placeholder='Nombre completo' name='nombre_comp' id="campo-nombre">

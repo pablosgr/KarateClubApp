@@ -1,6 +1,9 @@
 "use strict"
 
+//variables
+
 let añadir_socio=document.getElementById("formulario");
+let modificar_socio=document.getElementById("formulario-mod");
 
 let campo_foto=document.getElementById("campo-foto");
 let campo_nombre=document.getElementById("campo-nombre");
@@ -9,16 +12,54 @@ let campo_edad=document.getElementById("campo-edad");
 let campo_tlfn=document.getElementById("campo-tlfn");
 let campo_pass=document.getElementById("campo-pass");
 
-añadir_socio.addEventListener("submit",
-    (evento)=>{
-        let validaciones=[()=>validarTexto(campo_nombre), ()=>validarTexto(campo_usuario), validarEdad, validarTlfn, validarPass];
-        for(let validacion of validaciones){
-            if(!validacion()){
-                evento.preventDefault();
-                break;
+let campo_nombre_mod=document.getElementById("nombre-mod");
+let campo_usuario_mod=document.getElementById("user-mod");
+let campo_edad_mod=document.getElementById("edad-mod");
+let campo_tlfn_mod=document.getElementById("tlfn-mod");
+
+//eventos
+
+console.log(campo_usuario_mod);
+
+//compruebo que el formulario esté presente en la página -sea distinto de null- antes de ejecutar el código 
+//para evitar que intente ejecutar y falle en páginas donde falte algún formulario
+if(añadir_socio){
+    añadir_socio.addEventListener("submit",
+        (evento)=>{
+            let validaciones=[()=>validarTexto(campo_nombre),
+                ()=>validarTexto(campo_usuario),
+                ()=>validarEdad(campo_edad),
+                ()=>validarTlfn(campo_tlfn),
+            ()=>validarPass()];
+
+            for(let validacion of validaciones){
+                if(!validacion()){
+                    evento.preventDefault();
+                    break;
+                }
             }
-        }
-})
+    });
+}
+
+if(modificar_socio){
+    modificar_socio.addEventListener("submit", 
+        (evento)=>{
+            let validaciones_mod=[()=>validarTexto(campo_nombre_mod),
+                ()=>validarTexto(campo_usuario_mod),
+                ()=>validarEdad(campo_edad_mod),
+            ()=>validarTlfn(campo_tlfn_mod)];
+    
+            for (let val of validaciones_mod){
+                if(!val()){
+                    evento.preventDefault();
+                    break;
+                }
+            }
+    });
+}
+
+
+//funciones
 
 const validarTexto = (campo)=>{
     let contenido=campo.value.trim();
@@ -32,9 +73,9 @@ const validarTexto = (campo)=>{
     return true;
 };
 
-const validarEdad = ()=>{
-    let contenido=campo_edad.value.trim();
-    let span=campo_edad.nextElementSibling;
+const validarEdad = (campo)=>{
+    let contenido=campo.value.trim();
+    let span=campo.nextElementSibling;
     let numero=parseInt(contenido);
 
     if(isNaN(numero)){
@@ -50,9 +91,9 @@ const validarEdad = ()=>{
     return true;
 };
 
-const validarTlfn = ()=>{
-    let contenido=campo_tlfn.value.trim();
-    let span=campo_tlfn.nextElementSibling;
+const validarTlfn = (campo)=>{
+    let contenido=campo.value.trim();
+    let span=campo.nextElementSibling;
     let expresion=/^[0-9]{9}$/;
     if(!expresion.test(contenido)){
         span.style.display="inline";

@@ -9,4 +9,3 @@
     $tabla_citas="cita";
     $tabla_noticias="noticia";
     $tabla_testimonios="testimonio";
-?>

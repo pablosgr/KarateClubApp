@@ -14,7 +14,8 @@ body{
 }
 
 main.principal-index,
-main.principal-socios{
+main.principal-socios,
+main.principal-testimonios{
     flex: 1;
     display: flex;
     flex-direction: column;
