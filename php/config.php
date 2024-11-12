@@ -1,0 +1,12 @@
+<?php
+    $nombre_host='localhost';
+    $nombre_usuario='root';
+    $password_db='';
+    $nombre_db="club_deportivo";
+    //tablas
+    $tabla_socios="socio";
+    $tabla_servicios="servicio";
+    $tabla_citas="cita";
+    $tabla_noticias="noticia";
+    $tabla_testimonios="testimonio";
+?>

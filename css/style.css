@@ -1,0 +1,249 @@
+/*Documento*/
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Manrope;
+}
+
+body{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main.principal-index,
+main.principal-socios{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/*Cabecera*/
+
+a:link,
+a:visited,
+a:hover,
+a:active {
+    text-decoration: none;
+    color: inherit;
+}
+
+header{
+    position: sticky;
+    top: 0; /*para dejar la cabecera arriba evitando romper el flujo de diseño con position: fixed*/
+    z-index: 1;
+    background-color: rgb(37, 37, 37);
+    box-shadow: 0px 3px 20px rgb(37, 37, 37, 0.65);
+    color: white;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header>h1{
+    margin: 0px 40px 0px 45px;
+    min-width: 100px;
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+nav{
+    width: 800px;
+}
+
+nav ul{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+li{
+    list-style-type: none;
+    margin: 0px 15px 0px 15px;
+    font-size: 1.2rem;
+}
+
+/*Secciones - index*/
+
+section.banner-index{
+    background-image: url("../pics/banner.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 831px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+section.banner-index p{
+    color: white;
+    font-size: 90px;
+    font-weight: 600;
+    padding: 0px 40px 0px 40px;
+    text-shadow: 0px 0px 10px black;
+}
+
+section.testimonio-index{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 250px;
+    padding: 0 13% 0 13%;
+    background: white;
+    background: linear-gradient(90deg, 
+        rgb(255, 255, 255) 0%,
+        rgb(255, 255, 255) 8%,
+        rgba(157,163,166,1) 50%,
+        rgb(255, 255, 255) 92%,
+        rgb(255, 255, 255) 100%
+    );
+    font-size: 1.3rem;
+    text-align: justify;
+}
+
+section.testimonio-index h3:first-child{
+    margin-bottom: 20px;
+}
+
+section.noticias-index{
+    display: flex;
+    flex-direction: column;
+    padding: 90px 0px 90px 0px;
+}
+
+section.noticias-index>article,
+section.noticias-index>h1{
+    width: 60%;
+    align-self: center;
+}
+
+section.noticias-index>h1{
+    margin-bottom: 30px;
+    font-size: 40px;
+}
+
+article.noticia-index{
+    padding-bottom: 20px;
+    margin-bottom: 35px;
+    border-bottom: 1px solid rgb(54, 54, 54);
+}
+
+article.noticia-index p:last-of-type{
+    margin-top: 10px;
+    color: rgb(121, 121, 121);
+}
+
+article.noticia-index img{
+    width: 30%;
+    min-width: 300px;
+    margin: 20px 0px 20px 0px;
+}
+
+article{
+    transition: 0.3s ease;
+}
+
+article:hover{
+    scale: 1.02;
+    cursor: pointer;
+}
+
+div.contenido-noticia{
+    display: flex;
+    flex-direction: row;
+}
+
+div.side-text{
+    padding: 20px 0px 0px 20px;
+}
+
+/*Footer*/
+
+footer{
+    background-color: black;
+    color: white;
+    margin-top: auto;
+    min-height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*Formulario y contacto*/
+
+section.contacto>h1{
+    margin-left: 25px;
+}
+
+section.contacto{
+    padding: 90px 0px 70px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+form.form-index{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 35%;
+    height: 400px;
+    min-width: 350px;
+}
+
+iframe{
+    min-width: 350px;
+}
+
+form.form-index,iframe{
+    margin: 10px 20px 10px 20px;
+}
+
+input[type=text],
+input[type=password]{
+    border: 0;
+    padding: 8px;
+    border-bottom: 1px solid #100B00;
+    background-color: rgb(236, 236, 236);
+}
+
+input[type=text]:focus,
+input[type=password]:focus{
+    outline: none;
+}
+
+textarea{
+    resize: none;
+    height: 200px;
+    padding: 8px;
+}
+
+button[type=submit].form-index{
+    padding: 12px;
+    border: 0;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 18px;
+    transition: 0.3s ease;
+    background-color: #c5c5c5;
+}
+
+button[type=submit].form-index:hover{
+    cursor: pointer;
+    background-color: #313131;
+    color: #ffffff;
+    box-shadow: 0px 0px 8px rgb(109, 109, 109);
+}
+
+input[type=text],
+textarea,
+input[type=password]{
+    font-size: 16px;
+}
