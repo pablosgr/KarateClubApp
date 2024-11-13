@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shito-Ryu Club | Testimonios</title>
+    <title>Shito-Ryu Club | Noticias</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/style_testimonios.css">
+    <link rel="stylesheet" href="../css/style_noticias.css">
     <script defer src="../js/app_socios.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,37 +20,34 @@
             $ruta_i="../index.php";
             $ruta_soc="socios.php";
             $ruta_serv="servicios.php";
-            $ruta_tes="#";
-            $ruta_not="noticias.php";
+            $ruta_tes="testimonios.php";
+            $ruta_not="#";
             $ruta_cit="";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit);
         ?>
 
-        <section class='testimonios'>
-            <h1>Testimonios</h1>
-            <div class='contenido-testimonios'>
+        <section class='noticias'>
+            <h1>Noticias</h1>
+            <div class='contenido-noticias'>
 
                 <?php
-                    if(isset($_POST["contenido"])){
-                        $contenido=$_POST["contenido"];
-                        $autor=$_POST["usuario"];
-                        añadirTestimonio($conexion, $autor, $contenido);
+                    $pagina=''; //aqui guardaré el número de página actual
+                    if(isset($_GET["pagina"])){
+                        $pagina=$_GET["pagina"];
+                    }else{
+                        $pagina=1; //empieza en la 1era por defecto
                     }
 
-                    echo imprimirTestimonios($conexion);
+                    echo imprimirNoticias($conexion, $pagina);
                 ?>
 
-                <div class='card-testimonio last'>
-                    <form action="testimonios.php" method='post' id='formulario-testimonio'>
-                        <textarea name="contenido" id="contenido-testimonio" placeholder='Déjanos tu opinión'></textarea>
-                        <span class='error'></span>
-                        <input type="hidden" value='1' id='usuario-testimonio' name='usuario'>
-                        <!--el value se usará para imprimir el nombre del usuario que ha escrito la reseña (por defecto el primero)-->
-                        <button type='submit'>Publicar</button>
-                    </form>
-                </div>
-
             </div>
+        </section>
+
+        <section class='paginado'>
+            <?php
+                echo imprimirPaginado($conexion, $pagina);
+            ?>
         </section>
 
     </main>

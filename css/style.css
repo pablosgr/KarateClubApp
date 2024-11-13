@@ -16,7 +16,8 @@ body{
 main.principal-index,
 main.principal-socios,
 main.principal-testimonios,
-main.principal-servicios{
+main.principal-servicios,
+main.principal-noticias{
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -66,7 +67,7 @@ nav ul{
     margin: 0;
 }
 
-li{
+nav ul li{
     list-style-type: none;
     margin: 0px 15px 0px 15px;
     font-size: 1.2rem;
@@ -116,6 +117,8 @@ section.testimonio-index h3:first-child{
     margin-bottom: 20px;
 }
 
+/*Noticias*/
+
 section.noticias-index{
     display: flex;
     flex-direction: column;
@@ -133,25 +136,32 @@ section.noticias-index>h1{
     font-size: 40px;
 }
 
-article.noticia-index{
+article.noticia{
+    font-size: 1.1em;
     padding-bottom: 20px;
-    margin-bottom: 35px;
+    margin-bottom: 70px;
     border-bottom: 1px solid rgb(54, 54, 54);
+    min-width: 470px;
+    transition: 0.3s ease;
 }
 
-article.noticia-index p:last-of-type{
+article.noticia p:last-of-type{
     margin-top: 10px;
     color: rgb(121, 121, 121);
 }
 
-article.noticia-index img{
-    width: 30%;
-    min-width: 300px;
-    margin: 20px 0px 20px 0px;
+div.img-noticia {
+    min-width: 340px;
+    height: 230px;
+    margin: 20px 0;
+    overflow: hidden; /* Oculta cualquier parte de la imagen que sobresalga */
 }
 
-article{
-    transition: 0.3s ease;
+article.noticia img {
+    width: 100%; /* La imagen ocupará todo el ancho y alto del contenedor */
+    height: 100%;
+    object-fit: cover; /* Escala y recorta la imagen para que llene el contenedor sin deformarse */
+    display: block; /* Evita un pequeño espacio debajo de la imagen */
 }
 
 article:hover{
@@ -165,7 +175,7 @@ div.contenido-noticia{
 }
 
 div.side-text{
-    padding: 20px 0px 0px 20px;
+    padding: 20px 17% 0px 30px;
 }
 
 /*Footer*/
@@ -184,7 +194,7 @@ footer p{
     margin: 0;
 }
 
-/*Formulario y contacto*/
+/*Formularios y contacto*/
 
 section.contacto>h1{
     margin-left: 25px;

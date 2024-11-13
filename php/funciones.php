@@ -1,5 +1,5 @@
 <?php
-//conexión con base de datos
+//conexión con base de datos ----------------------------------------------------------------
 
     function conectar($host, $usuario, $password, $base_datos){
         $conexion = new mysqli($host, $usuario, $password, $base_datos);
@@ -7,7 +7,7 @@
         return $conexion;
     }
 
-//función para cabecera
+//función para cabecera ----------------------------------------------------------------
 
     function dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit){
         $resultado='';
@@ -28,7 +28,34 @@
         return $resultado;
     }
 
-//funciones index
+//función para paginado ----------------------------------------------------------------
+
+    function imprimirPaginado($conexion, $pagina){
+        $resultado='<ul>';
+        $total='';
+        $sql='SELECT COUNT(id) AS total FROM noticia';
+        $sql_result=$conexion->query($sql);
+
+        while($row=$sql_result->fetch_array(MYSQLI_ASSOC)){
+            $total=$row["total"];
+        }
+
+        $total = intval($total); // Convertir a entero en PHP
+        $num_paginas=ceil($total/4); //ceil redondea siempre hacia arriba, así no faltarán páginas para mostrar el contenido
+        
+        for($i=1; $i<=$num_paginas; $i++){
+            if($pagina == $i){
+                $resultado.="<a href='noticias.php?pagina=$i'><li class='marcado'>$i</li></a>"; //si es el de la página actual, lo marco
+            }else{
+                $resultado.="<a href='noticias.php?pagina=$i'><li>$i</li></a>"; //imprimo un li por cada 4 noticias
+            }
+        }
+        $resultado.='</ul>';
+
+        return $resultado;
+    }
+
+//funciones index ----------------------------------------------------------------
 
     function testimonioRandom($conexion){
         $resultado='';
@@ -50,16 +77,27 @@
     }
 
     function ultimasNoticias($conexion){
-        $resultado='';
-        $sql='SELECT titulo,contenido,imagen,fecha_publicacion
+        $sql='SELECT id,titulo,contenido,imagen,fecha_publicacion
         FROM noticia ORDER BY fecha_publicacion DESC LIMIT 3';
 
-        $resultado.=generarNoticias($sql, $resultado, $conexion);
+        $resultado=generarListaNoticias($sql, $conexion);
 
         return $resultado;
     }
 
-//funciones socios
+//funciones noticias
+
+    function imprimirNoticias($conexion, $pagina){
+        $offset = ($pagina - 1) * 4; //para que calcule el offset de 4 en 4 según el número de página (las noticias de cada página)
+        $sql="SELECT id,titulo,contenido,imagen,fecha_publicacion
+        FROM noticia ORDER BY fecha_publicacion DESC LIMIT 4 OFFSET $offset";
+
+        $resultado=generarListaNoticias($sql, $conexion);
+
+        return $resultado;
+    }
+
+//funciones socios ----------------------------------------------------------------
 
     function imprimirSocios($conexion){
         $resultado='';
@@ -150,7 +188,7 @@
         return $resultado;
     }
 
-//funciones testimonios
+//funciones testimonios ----------------------------------------------------------------
 
 function imprimirTestimonios($conexion){
     $resultado='';
@@ -186,7 +224,7 @@ function añadirTestimonio($conexion, $autor, $contenido){
     $consulta->close();
 }
 
-//funciones servicios
+//funciones servicios ----------------------------------------------------------------
 
 function imprimirServicios($conexion){
         $resultado='';
@@ -281,20 +319,25 @@ function actualizarServicio($conexion, $id, $descripcion, $duracion, $ud_duracio
     return $resultado;
 }
 
-//funciones internas
+//funciones internas ----------------------------------------------------------------
 
-    function generarNoticias($sql, $resultado, $conexion){
+    function generarListaNoticias($sql, $conexion){
         $sql_result=$conexion->query($sql);
+        $resultado='';
 
         while($row=$sql_result->fetch_array(MYSQLI_ASSOC)){
+            $id=$row["id"];
             $titulo=$row["titulo"];
-            $contenido=substr($row["contenido"], 0, 75);
+            $contenido=substr($row["contenido"], 0, 170);
             $ruta_imagen=$row["imagen"];
             $fecha=$row["fecha_publicacion"];
-            $resultado.="<article class='noticia-index'>
+            $resultado.="
+            <article class='noticia' data-id='$id'>
                 <h2>$titulo</h2>
                 <div class='contenido-noticia'>
-                    <img src='$ruta_imagen'>
+                    <div class='img-noticia'>
+                        <img src='$ruta_imagen'>
+                    </div>
                     <div class='side-text'>
                         <p>$contenido...</p>
                         <p>$fecha</p>
