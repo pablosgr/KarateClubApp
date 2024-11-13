@@ -1,0 +1,108 @@
+section.servicios{
+    width: 73%;
+    max-width: 1180px;
+    align-self: center;
+    padding: 60px 0px 60px 0px;
+}
+
+section.servicios h1{
+    font-size: 40px; 
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: black;
+}
+
+div.contenido-servicios{
+    padding-left: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.custom-serv{
+    filter: brightness(0.88); /* Ajusta el valor para oscurecer más */
+    min-width: 390px;
+    transition: 0.3s ease;
+    margin-bottom: 50px;
+}
+
+.custom-serv:hover{
+    scale: 1.04;
+}
+
+.custom-serv p, .custom-serv h1{
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+.custom-serv h1{
+    font-size: 2.2em !important;
+}
+
+.custom-serv span{
+    font-weight: 600;
+}
+
+.btn-custom{
+    background-color: inherit;
+    font-size: 1.1em;
+    color: black;
+    border: 1px solid black;
+    border-radius: 40px;
+    width: 15%;
+    min-width: 105px;
+    padding: 10px;
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-custom:hover{
+    background-color: #6c757d;
+    border: 1px solid #6c757d;
+}
+
+/*formulario*/
+
+.card-servicio{
+    display: flex;
+    justify-content: center;
+    margin: 50px 0px 50px 0px;
+}
+
+form#formulario-servicios{
+    width: 70%;
+    min-width: 290px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+form#formulario-servicios textarea{
+    font-size: 1.15em;
+    height: 100px;
+    width: 100%;
+    margin-bottom: 7px;
+    border-radius: 7px;
+}
+
+form#formulario-servicios input[type=text],
+form#formulario-servicios select{
+    background-color: inherit;
+    padding: 8px;
+    border: 1px solid #100B00;
+    border-radius: 5px;
+}
+
+span.error::before{
+    content: '⚠️ ';
+}
+
+span.error{
+    font-size: 0.9em;
+    color: tomato;
+    display: none;
+}
+
+.centrado{
+    text-align: center;
+}

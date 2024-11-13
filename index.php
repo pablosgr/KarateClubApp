@@ -19,7 +19,7 @@
             //getcwd() devuelve el directorio actual
             $ruta_i="#";
             $ruta_soc="./paginas/socios.php";
-            $ruta_serv="";
+            $ruta_serv="./paginas/servicios.php";
             $ruta_tes="./paginas/testimonios.php";
             $ruta_not="";
             $ruta_cit="";

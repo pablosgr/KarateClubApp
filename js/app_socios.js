@@ -5,6 +5,7 @@
 let añadir_socio=document.getElementById("formulario");
 let modificar_socio=document.getElementById("formulario-mod");
 let añadir_testimonio=document.getElementById("formulario-testimonio");
+let form_servicio=document.getElementById("formulario-servicios");
 
 let campo_foto=document.getElementById("campo-foto");
 let campo_nombre=document.getElementById("campo-nombre");
@@ -19,6 +20,11 @@ let campo_edad_mod=document.getElementById("edad-mod");
 let campo_tlfn_mod=document.getElementById("tlfn-mod");
 
 let campo_texto_test=document.getElementById("contenido-testimonio");
+
+let campo_descripcion=document.getElementById("contenido-servicio");
+let campo_duracion=document.getElementById("duracion-servicio");
+let campo_u_duracion=document.getElementById("u-duracion-servicio");
+let campo_precio=document.getElementById("precio-servicio");
 
 //eventos
 
@@ -69,6 +75,27 @@ if(añadir_testimonio){
     )
 }
 
+//este evento actua en los formularios de adición y modificación
+if(form_servicio){
+    form_servicio.addEventListener("submit",
+        (evento)=>{
+            let validaciones_serv=[
+                ()=>validarTexto(campo_descripcion),
+                ()=>validarNum(campo_duracion),
+                ()=>validarSelect(campo_u_duracion),
+                ()=>validarNum(campo_precio)
+            ];
+
+            for (let val of validaciones_serv){
+                if(!val()){
+                    evento.preventDefault();
+                    break;
+                }
+            }
+        }
+    )
+}
+
 
 //funciones
 
@@ -93,9 +120,40 @@ const validarEdad = (campo)=>{
         span.style.display="inline";
         span.innerText="Debes escribir un número";
         return false;
-    }else if(numero < 0 || numero > 100){
+    }else if(numero < 1 || numero > 100){
         span.style.display="inline";
         span.innerText="Escribe una edad válida";
+        return false;
+    }
+    span.style.display="none";
+    return true;
+};
+
+const validarNum = (campo)=>{
+    let contenido=campo.value.trim();
+    let span=campo.nextElementSibling;
+    let numero=parseInt(contenido);
+
+    if(isNaN(numero)){
+        span.style.display="inline";
+        span.innerText="Debes escribir un número";
+        return false;
+    }else if(numero < 1){
+        span.style.display="inline";
+        span.innerText="Escribe un número válido";
+        return false;
+    }
+    span.style.display="none";
+    return true;
+};
+
+const validarSelect = (campo)=>{
+    let select=campo.value;
+    let span=campo.nextElementSibling;
+
+    if(select === ''){
+        span.style.display="inline";
+        span.innerText="Selecciona una opción válida";
         return false;
     }
     span.style.display="none";
@@ -113,7 +171,7 @@ const validarTlfn = (campo)=>{
     }
     span.style.display="none";
     return true;
-}
+};
 
 const validarPass = ()=>{
     let contenido=campo_pass.value.trim();
@@ -126,4 +184,4 @@ const validarPass = ()=>{
     }
     span.style.display="none";
     return true;
-}
+};

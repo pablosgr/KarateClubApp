@@ -19,7 +19,7 @@
             $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../index.php";
             $ruta_soc="#";
-            $ruta_serv="";
+            $ruta_serv="servicios.php";
             $ruta_tes="testimonios.php";
             $ruta_not="";
             $ruta_cit="";

@@ -1,5 +1,6 @@
 <?php
 //conexión con base de datos
+
     function conectar($host, $usuario, $password, $base_datos){
         $conexion = new mysqli($host, $usuario, $password, $base_datos);
         $conexion->set_charset("utf8");
@@ -7,6 +8,7 @@
     }
 
 //función para cabecera
+
     function dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit){
         $resultado='';
         $resultado.="
@@ -27,6 +29,7 @@
     }
 
 //funciones index
+
     function testimonioRandom($conexion){
         $resultado='';
         $sql='SELECT contenido,nombre FROM testimonio
@@ -57,6 +60,7 @@
     }
 
 //funciones socios
+
     function imprimirSocios($conexion){
         $resultado='';
         $sql='SELECT id,nombre,usuario,edad,telefono,foto FROM socio';
@@ -182,7 +186,103 @@ function añadirTestimonio($conexion, $autor, $contenido){
     $consulta->close();
 }
 
+//funciones servicios
+
+function imprimirServicios($conexion){
+        $resultado='';
+        $sql='SELECT id, descripcion, duracion, unidad_duracion, precio FROM servicio
+        ORDER BY descripcion ASC';
+
+        $sql_result=$conexion->query($sql);
+        while($row=$sql_result->fetch_array(MYSQLI_ASSOC)){
+            $id=$row["id"];
+            $descripcion=$row["descripcion"];
+            $duracion=$row["duracion"];
+            $ud_duracion=$row["unidad_duracion"];
+            $precio=$row["precio"];
+
+            $resultado.="
+                <div class='p-5 text-center bg-body-secondary rounded-4 custom-serv'>
+                    <h1 class='text-body-emphasis'>$descripcion</h1>
+                    <p class='lead'>Este servicio cuenta con una duración de <span>$duracion $ud_duracion</span> y un precio de <span>$precio Euros</span>.</p>
+                    <a href='servicios-mod.php?id=$id'>
+                        <button class='btn btn-primary d-inline-flex align-items-center btn-custom'>
+                            Modificar
+                        </button>
+                    </a>
+                </div>
+            ";
+        }
+        return $resultado;
+}
+
+function imprimirModificarServicio($conexion, $id){
+    $resultado='';
+    $sql='SELECT descripcion, duracion, precio FROM servicio
+    WHERE id=?';
+
+    $consulta=$conexion->prepare($sql);
+    $consulta->bind_param("i", $id);
+    $consulta->execute();
+    $consulta->bind_result($descripcion_r, $duracion_r, $precio_r);
+
+    while($consulta->fetch()){
+        $resultado.="
+        <div class='card-servicio'>
+            <form action='servicios-confirm.php' method='post' id='formulario-servicios'>
+                    <textarea name='contenido-serv' id='contenido-servicio' placeholder='Descripción del servicio'>$descripcion_r</textarea>
+                    <span class='error'></span>
+                    <input type='text' name='duracion' id='duracion-servicio' value='$duracion_r' placeholder='Duración'>
+                    <span class='error'></span>
+                    <select name='u-duracion' id='u-duracion-servicio'>
+                        <option value=''>Selecciona una unidad</option>
+                        <option value='minutos'>Minutos</option>
+                        <option value='horas'>Horas</option>
+                    </select>
+                    <span class='error'></span>
+                    <input type='text' name='precio' id='precio-servicio' value='$precio_r' placeholder='Precio'>
+                    <span class='error'></span>
+                    <input name='id' type='hidden' value='$id'>
+                    <button class='btn btn-outline-secondary' type='submit'>Actualizar servicio</button>
+            </form>
+        </div>
+        ";
+    }
+
+    $consulta->close();
+    return $resultado;
+}
+
+function añadirServicio($conexion, $descripcion, $duracion, $ud_duracion, $precio){
+    $sql='INSERT INTO servicio (descripcion, duracion, unidad_duracion, precio)
+        VALUES (?, ?, ?, ?)';
+
+    $consulta=$conexion->prepare($sql);
+    $consulta->bind_param("sisi", $descripcion, $duracion, $ud_duracion, $precio);
+    $consulta->execute();
+    $consulta->close();
+}
+
+function actualizarServicio($conexion, $id, $descripcion, $duracion, $ud_duracion, $precio){
+    $resultado="";
+    $sql='UPDATE servicio SET descripcion=?, duracion=?, unidad_duracion=?, precio=? WHERE id=?';
+    $consulta=$conexion->prepare($sql);
+    $consulta->bind_param("sisii", $descripcion, $duracion, $ud_duracion, $precio, $id);
+    $consulta->execute();
+
+    if($consulta){
+        $resultado.="<h1 class='centrado'>Servicio actualizado</h1>
+        <h2 class='centrado'>Volviendo a la página de servicios en 3 segundos...</h2>";
+    }else{
+        $resultado.="<h1 class='centrado'>Error</h1>";
+    }
+
+    $consulta->close();
+    return $resultado;
+}
+
 //funciones internas
+
     function generarNoticias($sql, $resultado, $conexion){
         $sql_result=$conexion->query($sql);
 

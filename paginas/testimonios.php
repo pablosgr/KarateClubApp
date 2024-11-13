@@ -19,7 +19,7 @@
             $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../index.php";
             $ruta_soc="socios.php";
-            $ruta_serv="";
+            $ruta_serv="servicios.php";
             $ruta_tes="#";
             $ruta_not="";
             $ruta_cit="";
@@ -45,7 +45,7 @@
                         <textarea name="contenido" id="contenido-testimonio" placeholder='Déjanos tu opinión'></textarea>
                         <span class='error'></span>
                         <input type="hidden" value='1' id='usuario-testimonio' name='usuario'>
-                        <!--el value indicará el nombre del usuario que ha escrito la reseña-->
+                        <!--el value se usará para imprimir el nombre del usuario que ha escrito la reseña (por defecto el primero)-->
                         <button type='submit'>Publicar</button>
                     </form>
                 </div>
