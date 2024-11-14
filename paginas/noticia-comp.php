@@ -21,37 +21,26 @@
             $ruta_soc="socios.php";
             $ruta_serv="servicios.php";
             $ruta_tes="testimonios.php";
-            $ruta_not="#";
+            $ruta_not="noticias.php";
             $ruta_cit="";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit);
         ?>
 
-        <section class='noticias'>
+        <section class='noticia-comp'>
             <h1>Noticias</h1>
             <div class='contenido-noticias'>
-
                 <?php
                     $pagina=''; //aqui guardaré el número de página actual
-                    if(isset($_GET["pagina"])){
-                        $pagina=$_GET["pagina"];
+                    if(isset($_GET["id"])){
+                        $id_noticia=$_GET["id"];
                     }else{
-                        $pagina=1; //empieza en la 1era por defecto
+                        echo "<h2 class='centrado'>Error al mostrar la noticia</h2>";
                     }
 
-                    echo imprimirNoticias($conexion, $pagina);
+                    echo generarNoticia($conexion, $id_noticia);
                 ?>
 
-                <a class='mod' href='noticia-new.php'>
-                    <button>Añadir noticia</button>
-                </a>
-
             </div>
-        </section>
-
-        <section class='paginado'>
-            <?php
-                echo imprimirPaginado($conexion, $pagina);
-            ?>
         </section>
 
     </main>

@@ -44,11 +44,11 @@ div.tarjeta_socio p{
 }
 
 div.tarjeta_socio a.boton, button[type=submit]{
-    border-radius: 20px;
-    border: 0;
+    border-radius: 30px;
+    border: 1px solid rgb(54, 54, 54);
     width: 80%;
     text-align: center;
-    background-color: #c5c5c5;
+    background-color: inherit;
     color: black;
     font-size: 1.05em;
     margin-top: 20px;
@@ -58,6 +58,7 @@ div.tarjeta_socio a.boton, button[type=submit]{
 
 div.tarjeta_socio a.boton:hover, button[type=submit]:hover{
     background-color: #6c757d;
+    border: 1px solid #6c757d;
     cursor: pointer;
     color: white;
 }

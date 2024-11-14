@@ -21,37 +21,28 @@
             $ruta_soc="socios.php";
             $ruta_serv="servicios.php";
             $ruta_tes="testimonios.php";
-            $ruta_not="#";
+            $ruta_not="noticias.php";
             $ruta_cit="";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit);
         ?>
 
         <section class='noticias'>
-            <h1>Noticias</h1>
+            <h1>Nueva noticia</h1>
             <div class='contenido-noticias'>
 
-                <?php
-                    $pagina=''; //aqui guardaré el número de página actual
-                    if(isset($_GET["pagina"])){
-                        $pagina=$_GET["pagina"];
-                    }else{
-                        $pagina=1; //empieza en la 1era por defecto
-                    }
-
-                    echo imprimirNoticias($conexion, $pagina);
-                ?>
-
-                <a class='mod' href='noticia-new.php'>
-                    <button>Añadir noticia</button>
-                </a>
+                <form action="noticia-confirm.php" method='post' id='formulario-noticias'>
+                    <label class="input-file-custom">
+                        <input type="file" name='pic' id="pic-not" accept="image/*">Subir imágen
+                    </label>
+                    <input type='text' name="titulo" id="titulo-not" placeholder='Título'></input>
+                    <span class='error'></span>
+                    <textarea name="contenido" id="contenido-not" placeholder='Contenido de la noticia'></textarea>
+                    <span class='error'></span>
+                    <input type="date" name="fecha" id="fecha-not">
+                    <button class="btn btn-outline-secondary" type="submit">Publicar</button>
+                </form>
 
             </div>
-        </section>
-
-        <section class='paginado'>
-            <?php
-                echo imprimirPaginado($conexion, $pagina);
-            ?>
         </section>
 
     </main>

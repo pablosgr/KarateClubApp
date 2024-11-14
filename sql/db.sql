@@ -69,7 +69,7 @@ INSERT INTO noticia (titulo, contenido, imagen, fecha_publicacion) VALUES
 
 ('Clases para Nuevos Miembros',
  '¡Inscripciones abiertas para el próximo ciclo! Si tienes interés en aprender karate, este es el momento ideal para unirte. Ofrecemos clases para principiantes, enfocadas en técnicas básicas, disciplina y trabajo en equipo. Además, los nuevos miembros podrán conocer la historia y filosofía del karate, y beneficiarse de nuestro programa de entrenamiento personalizado. Las plazas son limitadas, ¡así que no pierdas esta oportunidad!',
- NULL, '2024-09-05'),
+ '../pics/nuevos-miembros.jpg', '2024-09-05'),
 
 ('Celebración del Día del Karate',
  'Estamos muy emocionados de anunciar un evento especial para celebrar el Día Internacional del Karate el próximo mes. Invitamos a todos nuestros miembros y a la comunidad local a unirse a esta celebración en nuestras instalaciones, donde tendremos exhibiciones de kata, kumite, y charlas con instructores invitados. También habrá actividades para todas las edades y una ceremonia especial para reconocer los logros de nuestros alumnos. ¡No te lo pierdas!',
@@ -77,27 +77,27 @@ INSERT INTO noticia (titulo, contenido, imagen, fecha_publicacion) VALUES
 
 ('Seminario Internacional de Karate',
  'Nuestro club será anfitrión del Seminario Internacional de Karate 2024, donde contaremos con la presencia de destacados maestros de diversas partes del mundo. Este evento ofrece una oportunidad única para aprender de expertos en diferentes estilos de karate y técnicas avanzadas de combate. Se impartirán clases de kata, kumite y defensa personal. Las inscripciones están abiertas para todos los niveles, pero el cupo es limitado.',
- './pics/news4.jpg', '2024-11-20'),
+ '../pics/seminario.webp', '2024-11-20'),
 
 ('Actualización de Protocolos de Seguridad',
  'En nuestro compromiso con la seguridad de todos nuestros miembros, hemos implementado nuevos protocolos de seguridad dentro y fuera del dojo. Estas medidas incluyen capacitaciones en primeros auxilios para nuestros instructores, revisiones periódicas de equipos de entrenamiento y la implementación de normas de higiene más estrictas. La seguridad y el bienestar de nuestros estudiantes son nuestra máxima prioridad.',
- NULL, '2024-08-25'),
+ '../pics/seguridad.webp', '2024-08-25'),
 
 ('Campeonato Juvenil de Karate',
  'El próximo mes, nuestro club participará en el Campeonato Juvenil de Karate, una competencia regional que reúne a los mejores talentos jóvenes. Los alumnos han estado entrenando intensamente para este evento, y confiamos en que sus habilidades y espíritu de equipo los llevarán al éxito. Animamos a todos a venir y apoyar a nuestros jóvenes atletas en este emocionante campeonato.',
- './pics/news5.webp', '2024-10-10'),
+ '../pics/campeonato-juvenil.jpg', '2024-10-10'),
 
 ('Examen de Cinturones Negros',
  'Nos complace anunciar que varios de nuestros miembros se presentarán para el examen de cinturón negro, uno de los mayores logros en el camino del karateka. Estos estudiantes han demostrado una dedicación excepcional y están listos para enfrentarse a esta importante prueba. Invitamos a familiares y amigos a presenciar este evento y a apoyar a nuestros futuros cinturones negros.',
- './pics/news6.jpg', '2024-11-05'),
+ '../pics/cintu-negro.jpg', '2024-11-05'),
 
 ('Práctica de Kata en el Parque',
  'Para aprovechar los días soleados, hemos organizado una práctica especial de kata en el parque de la ciudad. Este evento gratuito está abierto a todos los niveles y es una excelente oportunidad para entrenar al aire libre y aprender en un entorno diferente. Los instructores guiarán las prácticas en grupos, y al final del día habrá una exhibición de kata avanzada por nuestros alumnos más experimentados.',
- NULL, '2024-10-25'),
+ '../pics/karate-park.jpg', '2024-10-25'),
 
 ('Recaudación de Fondos para Equipos Nuevos',
  'Estamos organizando una campaña de recaudación de fondos para renovar nuestro equipo de entrenamiento y mejorar la experiencia de nuestros miembros. Durante las próximas semanas, realizaremos varias actividades, incluyendo una rifa y un evento especial de exhibiciones. Invitamos a todos a participar y contribuir para que nuestro club siga siendo un lugar seguro y cómodo para entrenar.',
- './pics/news7.jpg', '2024-11-15');
+ '../pics/equipos.jpg', '2024-11-15');
 
 INSERT INTO socio (nombre, edad, pass, usuario, telefono, foto) VALUES
 ('Juan Pérez', 28, 'contraseña1', 'juanperez', '612345678', '../pics/avatar3.jpg'),

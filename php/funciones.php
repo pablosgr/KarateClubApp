@@ -79,20 +79,43 @@
     function ultimasNoticias($conexion){
         $sql='SELECT id,titulo,contenido,imagen,fecha_publicacion
         FROM noticia ORDER BY fecha_publicacion DESC LIMIT 3';
+        $ruta_index=true;
 
-        $resultado=generarListaNoticias($sql, $conexion);
+        $resultado=generarListaNoticias($sql, $conexion, $ruta_index);
 
         return $resultado;
     }
 
-//funciones noticias
+//funciones noticias ----------------------------------------------------------------
 
     function imprimirNoticias($conexion, $pagina){
         $offset = ($pagina - 1) * 4; //para que calcule el offset de 4 en 4 según el número de página (las noticias de cada página)
         $sql="SELECT id,titulo,contenido,imagen,fecha_publicacion
         FROM noticia ORDER BY fecha_publicacion DESC LIMIT 4 OFFSET $offset";
+        $ruta_index=false;
 
-        $resultado=generarListaNoticias($sql, $conexion);
+        $resultado=generarListaNoticias($sql, $conexion, $ruta_index);
+
+        return $resultado;
+    }
+
+    function generarNoticia($conexion, $id){
+        $resultado='';
+        $sql="SELECT * FROM noticia WHERE id=$id";
+
+        $sql_result=$conexion->query($sql);
+        while($row=$sql_result->fetch_array(MYSQLI_ASSOC)){
+            $titulo=$row["titulo"];
+            $contenido=$row["contenido"];
+            $imagen=$row["imagen"];
+            $fecha_publicacion=$row["fecha_publicacion"];
+            $resultado.="
+                <h1>$titulo</h1>
+                <img src='$imagen'>
+                <p>$contenido</p>
+                <p>$fecha_publicacion</p>
+            ";
+        }
 
         return $resultado;
     }
@@ -320,8 +343,8 @@ function actualizarServicio($conexion, $id, $descripcion, $duracion, $ud_duracio
 }
 
 //funciones internas ----------------------------------------------------------------
-
-    function generarListaNoticias($sql, $conexion){
+    
+    function generarListaNoticias($sql, $conexion, $ruta_index){
         $sql_result=$conexion->query($sql);
         $resultado='';
 
@@ -331,19 +354,29 @@ function actualizarServicio($conexion, $id, $descripcion, $duracion, $ud_duracio
             $contenido=substr($row["contenido"], 0, 170);
             $ruta_imagen=$row["imagen"];
             $fecha=$row["fecha_publicacion"];
+            $enlace="noticia-comp.php?id=$id";
+            
+            //compruebo si estoy en el index para cambiar las rutas
+            if($ruta_index){
+                $ruta_imagen=str_replace('../pics/', './pics/', $ruta_imagen);
+                $enlace='./paginas/'.$enlace;
+            }
+
             $resultado.="
-            <article class='noticia' data-id='$id'>
-                <h2>$titulo</h2>
-                <div class='contenido-noticia'>
-                    <div class='img-noticia'>
-                        <img src='$ruta_imagen'>
+            <a href='$enlace'>
+                <article class='noticia' data-id='$id'>
+                    <h2>$titulo</h2>
+                    <div class='contenido-noticia'>
+                        <div class='img-noticia'>
+                            <img src='$ruta_imagen'>
+                        </div>
+                        <div class='side-text'>
+                            <p>$contenido...</p>
+                            <p>$fecha</p>
+                        </div>
                     </div>
-                    <div class='side-text'>
-                        <p>$contenido...</p>
-                        <p>$fecha</p>
-                    </div>
-                </div>
-            </article>";
+                </article>
+            </a>";
         }
 
         return $resultado;
