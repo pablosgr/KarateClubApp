@@ -144,7 +144,7 @@ section.noticias-index>h1{
 article.noticia{
     font-size: 1.1em;
     line-height: 1.5;
-    text-align: justify;
+    /* text-align: justify; */
     padding-bottom: 20px;
     margin-bottom: 70px;
     border-bottom: 1px solid rgb(54, 54, 54);
@@ -183,6 +183,9 @@ div.contenido-noticia{
 
 div.side-text{
     padding: 20px 17% 0px 30px;
+    word-wrap: break-word; /*para que los textos no salgan de su contenedor*/
+    word-break: break-word;
+    white-space: normal;
 }
 
 /*Footer*/

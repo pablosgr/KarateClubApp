@@ -41,8 +41,8 @@
         }
 
         $total = intval($total); // Convertir a entero en PHP
-        $num_paginas=ceil($total/4); //ceil redondea siempre hacia arriba, así no faltarán páginas para mostrar el contenido
-        
+        $num_paginas=floor($total/4); //ceil redondea siempre hacia arriba, floor hacia abajo, así no faltarán páginas para mostrar el contenido ni sobrarán
+
         for($i=1; $i<=$num_paginas; $i++){
             if($pagina == $i){
                 $resultado.="<a href='noticias.php?pagina=$i'><li class='marcado'>$i</li></a>"; //si es el de la página actual, lo marco
@@ -78,7 +78,9 @@
 
     function ultimasNoticias($conexion){
         $sql='SELECT id,titulo,contenido,imagen,fecha_publicacion
-        FROM noticia ORDER BY fecha_publicacion DESC LIMIT 3';
+        FROM noticia 
+        WHERE fecha_publicacion <= CURDATE()
+        ORDER BY fecha_publicacion DESC LIMIT 3';
         $ruta_index=true;
 
         $resultado=generarListaNoticias($sql, $conexion, $ruta_index);
@@ -91,7 +93,9 @@
     function imprimirNoticias($conexion, $pagina){
         $offset = ($pagina - 1) * 4; //para que calcule el offset de 4 en 4 según el número de página (las noticias de cada página)
         $sql="SELECT id,titulo,contenido,imagen,fecha_publicacion
-        FROM noticia ORDER BY fecha_publicacion DESC LIMIT 4 OFFSET $offset";
+        FROM noticia 
+        WHERE fecha_publicacion <= CURDATE()
+        ORDER BY fecha_publicacion DESC LIMIT 4 OFFSET $offset";
         $ruta_index=false;
 
         $resultado=generarListaNoticias($sql, $conexion, $ruta_index);
@@ -118,6 +122,25 @@
         }
 
         return $resultado;
+    }
+
+    function añadirNoticia($conexion, $imagen, $titulo, $contenido, $fecha){
+        $resultado='';
+        $sql='INSERT INTO noticia (titulo, contenido, imagen, fecha_publicacion)
+            VALUES (?, ?, ?, ?)';
+    
+        $consulta=$conexion->prepare($sql);
+        $consulta->bind_param("ssss", $titulo, $contenido, $imagen, $fecha);
+        $consulta->execute();
+
+        if($consulta){
+            $resultado.="<h1 class='centrado'>Noticia publicada</h1>
+            <h2 class='centrado'>Volviendo a la página de noticias en 3 segundos...</h2>";
+        }else{
+            $resultado.="<h1 class='centrado'>Error</h1>";
+        }
+        return $resultado;
+        $consulta->close();
     }
 
 //funciones socios ----------------------------------------------------------------

@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shito-Ryu Club | Noticias</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/style_noticias.css">
+    <link rel="stylesheet" href="../css/style_servicios.css">
     <script defer src="../js/app_socios.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <main class='principal-testimonios'>
+    <main class='principal-servicios'>
         <?php
             require_once '../php/funciones.php';
             require_once '../php/config.php';
@@ -27,22 +27,24 @@
         ?>
 
         <section class='noticias'>
-            <h1>Nueva noticia</h1>
-            <div class='contenido-form'>
 
-                <form action="noticia-confirm.php" method='post' id='formulario-noticias' enctype='multipart/form-data'>
-                    <label class="input-file-custom">
-                        <input type="file" name='pic' id="pic-not" accept="image/*">Subir imágen
-                    </label>
-                    <span class='error'></span>
-                    <input type='text' name="titulo" id="titulo-not" placeholder='Título'></input>
-                    <span class='error'></span>
-                    <textarea name="contenido" id="contenido-not" placeholder='Contenido de la noticia'></textarea>
-                    <span class='error'></span>
-                    <input type="date" name="fecha" id="fecha-not">
-                    <span class='error'></span>
-                    <button class="btn btn-outline-secondary custom" type="submit">Publicar</button>
-                </form>
+            <div class='contenido-noticias'>
+
+                <?php
+                    if(isset($_POST["titulo"])){
+                        $titulo=$_POST["titulo"];
+                        $contenido=$_POST["contenido"];
+                        $fecha=$_POST["fecha"];
+
+                        $imagen=$_FILES["pic"]["name"];
+                        $imagen_tmp=$_FILES["pic"]["tmp_name"];
+                        $ruta_img="../pics/".$imagen;
+                        move_uploaded_file($imagen_tmp, $ruta_img);
+
+                        echo añadirNoticia($conexion, $ruta_img, $titulo, $contenido, $fecha);
+                    }
+
+                ?>
 
             </div>
         </section>
@@ -50,6 +52,7 @@
     </main>
 
     <?php 
+        header("refresh:3;url=noticias.php");
         include '../php/footer.php';
         $conexion->close();
     ?>
