@@ -41,7 +41,7 @@
         }
 
         $total = intval($total); // Convertir a entero en PHP
-        $num_paginas=floor($total/4); //ceil redondea siempre hacia arriba, floor hacia abajo, así no faltarán páginas para mostrar el contenido ni sobrarán
+        $num_paginas=round($total/4); //ceil redondea siempre hacia arriba, floor hacia abajo
 
         for($i=1; $i<=$num_paginas; $i++){
             if($pagina == $i){
