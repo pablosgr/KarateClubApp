@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shito-Ryu Club | Noticias</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/style_servicios.css">
+    <link rel="stylesheet" href="../css/style_noticias.css">
     <script defer src="../js/app_socios.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,8 +28,6 @@
 
         <section class='noticias'>
 
-            <div class='contenido-noticias'>
-
                 <?php
                     if(isset($_POST["titulo"])){
                         $titulo=$_POST["titulo"];
@@ -46,7 +44,6 @@
 
                 ?>
 
-            </div>
         </section>
 
     </main>

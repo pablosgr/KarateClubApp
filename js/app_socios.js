@@ -42,11 +42,13 @@ let campo_fecha=document.getElementById("fecha-not");
 if(añadir_socio){
     añadir_socio.addEventListener("submit",
         (evento)=>{
-            let validaciones=[()=>validarTexto(campo_nombre),
+            let validaciones=[
+                ()=>validarTexto(campo_nombre),
                 ()=>validarTexto(campo_usuario),
                 ()=>validarEdad(campo_edad),
                 ()=>validarTlfn(campo_tlfn),
-            ()=>validarPass()];
+                ()=>validarPass()
+            ];
 
             for(let validacion of validaciones){
                 if(!validacion()){
@@ -60,10 +62,12 @@ if(añadir_socio){
 if(modificar_socio){
     modificar_socio.addEventListener("submit", 
         (evento)=>{
-            let validaciones=[()=>validarTexto(campo_nombre_mod),
+            let validaciones=[
+                ()=>validarTexto(campo_nombre_mod),
                 ()=>validarTexto(campo_usuario_mod),
                 ()=>validarEdad(campo_edad_mod),
-            ()=>validarTlfn(campo_tlfn_mod)];
+                ()=>validarTlfn(campo_tlfn_mod)
+            ];
     
             for (let val of validaciones){
                 if(!val()){
@@ -77,7 +81,7 @@ if(modificar_socio){
 if(añadir_testimonio){
     añadir_testimonio.addEventListener("submit",
         (evento)=>{
-            if(!validarTexto(campo_texto_test)){
+            if(!validarTestimonio(campo_texto_test)){
                 evento.preventDefault();
             }
         }
@@ -89,10 +93,10 @@ if(form_servicio){
     form_servicio.addEventListener("submit",
         (evento)=>{
             let validaciones=[
-                ()=>validarTexto(campo_descripcion),
+                ()=>validarServicio(campo_descripcion),
                 ()=>validarNum(campo_duracion),
-                ()=>validarSelect(campo_u_duracion),
-                ()=>validarNum(campo_precio)
+                ()=>validarUDuracion(campo_u_duracion),
+                ()=>validarPrecioServicio(campo_precio)
             ];
 
             for (let val of validaciones){
@@ -110,8 +114,8 @@ if(form_noticia){
         (evento)=>{
             let validaciones_n=[
                 ()=>validarImagen(campo_imagen),
-                ()=>validarTexto(campo_titulo),
-                ()=>validarTexto(campo_noticia),
+                ()=>validarNoticia(campo_titulo),
+                ()=>validarNoticia(campo_noticia),
                 ()=>validarFecha(campo_fecha)
             ];
 
@@ -126,18 +130,128 @@ if(form_noticia){
 }
 
 
-//funciones
+//funciones servicios ----------------------------------
 
-const validarTexto = (campo)=>{
+const validarServicio=(campo)=>{
     let contenido=campo.value.trim();
     let span=campo.nextElementSibling;
-    if(contenido === ""){
+    let reg_exp=/^[a-zA-Z ]{3,50}$/;
+
+    if(!validarTexto(contenido)){
         span.style.display="inline";
-        span.innerText="El campo es obligatorio";
+        span.innerText="El campo no puede estar vacío";
+        return false;
+    }else if(!reg_exp.test(contenido)){
+        span.style.display="inline";
+        span.innerText="El nombre debe tener entre 3 y 50 caracteres";
+        return false;
+    }else{
+        span.style.display="none";
+        return true;
+    }
+}
+
+const validarUDuracion = (campo)=>{
+    let select=campo.value;
+    let span=campo.nextElementSibling;
+
+    if(select === ''){
+        span.style.display="inline";
+        span.innerText="Selecciona una opción válida";
+        return false;
+    }else if(select === 'minutos'){
+        if(campo_duracion.value.trim() < 15){
+            span.style.display="inline";
+            span.innerText="La duración mínima es de 15 min.";
+            return false;
+        }
+    }
+    span.style.display="none";
+    return true;
+};
+
+const validarPrecioServicio=(campo)=>{
+    let contenido=campo.value.trim();
+    let span=campo.nextElementSibling;
+    let numero=parseInt(contenido);
+
+    if(isNaN(numero) || numero < 1){
+        span.style.display="inline";
+        span.innerText="Escribe un precio válido";
         return false;
     }
     span.style.display="none";
     return true;
+}
+
+//funciones noticias --------------------------------
+
+const validarNoticia=(campo)=>{
+    let contenido=campo.value.trim();
+    let span=campo.nextElementSibling;
+    let reg_exp=/^.{3,}$/;
+
+    if(!validarTexto(contenido)){
+        span.style.display="inline";
+        span.innerText="El campo no puede estar vacío";
+        return false;
+    }else if(!reg_exp.test(contenido)){
+        span.style.display="inline";
+        span.innerText="Debes escribir al menos 3 caracteres";
+        return false;
+    }else{
+        span.style.display="none";
+        return true;
+    }
+}
+
+const validarFecha = (campo) => {
+    let contenido=campo.value.trim();
+    let span=campo.nextElementSibling;
+
+    if(!contenido){
+        span.style.display="inline";
+        span.innerText="Selecciona una fecha para la noticia";
+        return false;
+    }
+
+    let fecha_seleccionada = new Date(contenido); //uso objeto tipo Date con la fecha escogida
+    let fecha_actual = new Date(); //aqui lo creo vacio para darle la fecha actual
+    fecha_actual.setHours(0, 0, 0, 0); // ajustar la hora de la fecha actual
+
+    if (fecha_seleccionada < fecha_actual) {
+        span.style.display="inline";
+        span.innerText="La fecha debe ser igual o posterior a la fecha actual";
+        return false;
+    }
+
+    span.style.display="none";
+    return true;
+};
+
+//funciones testimonios --------------------------------
+
+const validarTestimonio=(campo)=>{
+    let contenido=campo.value.trim();
+    let span=campo.nextElementSibling;
+    
+    if(!validarTexto(contenido)){
+        span.style.display="inline";
+        span.innerText="El campo no puede estar vacío";
+        return false;
+    }
+    span.style.display="none";
+    return true;
+}
+
+//funciones validacion general --------------------------------
+
+const validarTexto = (contenido)=>{
+    if(contenido === ""){
+        return false;
+    }else{
+        return true;
+    }
 };
 
 const validarEdad = (campo)=>{
@@ -176,19 +290,6 @@ const validarNum = (campo)=>{
     return true;
 };
 
-const validarSelect = (campo)=>{
-    let select=campo.value;
-    let span=campo.nextElementSibling;
-
-    if(select === ''){
-        span.style.display="inline";
-        span.innerText="Selecciona una opción válida";
-        return false;
-    }
-    span.style.display="none";
-    return true;
-};
-
 const validarTlfn = (campo)=>{
     let contenido=campo.value.trim();
     let span=campo.nextElementSibling;
@@ -216,32 +317,24 @@ const validarPass = ()=>{
 };
 
 const validarImagen = (campo) => {
-    const tipos_admitidos=['image/png', 'image/jpg', 'image/jpeg', 'image/webp'];
+    const tipo='image/jpeg';
+    const tamaño=5*1024*1024; //el tamaño se compara en bytes
     let span=campo.parentNode.nextElementSibling;
 
     if(campo.files.length > 0){
         let fichero=campo.files[0];
-        if(!tipos_admitidos.includes(fichero.type)){
+        if(fichero.type !== tipo){
             span.style.display="inline";
             span.innerText="No es un formato de imágen válido";
+            return false;
+        }else if(fichero.size > tamaño){
+            span.style.display="inline";
+            span.innerText="El tamaño máximo es de 5 MB";
             return false;
         }
     }else{
         span.style.display="inline";
-        span.innerText="Sube una imágen para la noticia";
-        return false;
-    }
-    span.style.display="none";
-    return true;
-};
-
-const validarFecha = (campo) => {
-    let contenido=campo.value.trim();
-    let span=campo.nextElementSibling;
-
-    if(!contenido){
-        span.style.display="inline";
-        span.innerText="Selecciona una fecha para la noticia";
+        span.innerText="Sube una imágen";
         return false;
     }
     span.style.display="none";

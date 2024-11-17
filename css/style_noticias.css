@@ -134,6 +134,11 @@ span.error{
     text-align: center;
 }
 
+.centrado h1{
+    font-size: larger;
+    margin-top: 60px;
+}
+
 a.mod button{
     border-radius: 30px;
     border: 1px solid rgb(54, 54, 54);

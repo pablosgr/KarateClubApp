@@ -77,10 +77,12 @@
     }
 
     function ultimasNoticias($conexion){
-        $sql='SELECT id,titulo,contenido,imagen,fecha_publicacion
-        FROM noticia 
+        $sql = 'SELECT id, titulo, contenido, imagen, fecha_publicacion
+        FROM noticia
         WHERE fecha_publicacion <= CURDATE()
-        ORDER BY fecha_publicacion DESC LIMIT 3';
+        ORDER BY fecha_publicacion DESC
+        LIMIT 3';
+        //ordenará por fecha y por hora
         $ruta_index=true;
 
         $resultado=generarListaNoticias($sql, $conexion, $ruta_index);
