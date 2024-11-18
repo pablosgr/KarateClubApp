@@ -53,7 +53,7 @@
                 ?>
 
                 <div class='tarjeta_socio'>
-                    <form action="socios.php" method='post' enctype='multipart/form-data' id='formulario'>
+                    <form action="socios.php" method='post' enctype='multipart/form-data' id='formulario-socios'>
                         <label class="input-file-custom">
                             <input type="file" name='foto-avatar' id="campo-foto" accept="image/*">Subir imágen
                         </label>
@@ -64,7 +64,7 @@
                         <span class="error"></span>
                         <input type='text' placeholder='Edad' name='edad' id="campo-edad">
                         <span class="error"></span>
-                        <input type='text' placeholder='Teléfono' name='tlfn' id="campo-tlfn">
+                        <input type='text' placeholder='Teléfono (+34)' name='tlfn' id="campo-tlfn">
                         <span class="error"></span>
                         <input type='password' placeholder='Contraseña' name='pass' id="campo-pass">
                         <span class="error"></span>

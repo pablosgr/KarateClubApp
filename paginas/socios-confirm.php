@@ -35,8 +35,16 @@
                         $user_new=$_POST["user"];
                         $edad_new=$_POST["edad"];
                         $tlfn_new=$_POST["tlfn"];
+                        $ruta_new='';
 
-                        echo actualizarSocio($conexion, $id, $nombre_new, $user_new, $edad_new, $tlfn_new);
+                        if(isset($_FILES["avatar"]) && $_FILES["avatar"]["size"] > 0){
+                            $imagen=$_FILES["avatar"]["name"];
+                            $imagen_tmp=$_FILES["avatar"]["tmp_name"];
+                            $ruta_new="../pics/".$imagen;
+                            move_uploaded_file($imagen_tmp, $ruta_new);
+                        }
+
+                        echo actualizarSocio($conexion, $id, $nombre_new, $user_new, $edad_new, $tlfn_new, $ruta_new);
                     }
                 ?>
 

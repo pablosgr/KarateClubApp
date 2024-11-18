@@ -186,15 +186,20 @@
 
         while($consulta->fetch()){
             $resultado.="<div class='tarjeta_socio'>
-                <form action='socios-confirm.php' method='post' id='formulario-mod'>
+                <form action='socios-confirm.php' method='post' id='formulario-socios' enctype='multipart/form-data'>
                     <div class='avatar'><img src='$foto_r'></div>
-                    <input type='text' value='$nombre_r' name='nombre' placeholder='Nombre completo' id='nombre-mod'>
+                    <label class='input-file-custom'>
+                            <input type='file' name='avatar' id='campo-foto' accept='image/*'>
+                            Subir imágen
+                    </label>
                     <span class='error'></span>
-                    <input type='text' value='$usuario_r' name='user' placeholder='Nombre de usuario' id='user-mod'>
+                    <input type='text' value='$nombre_r' name='nombre' placeholder='Nombre completo' id='campo-nombre'>
                     <span class='error'></span>
-                    <input type='text' value='$edad_r' name='edad' placeholder='Edad' id='edad-mod'>
+                    <input type='text' value='$usuario_r' name='user' placeholder='Nombre de usuario' id='campo-usuario'>
                     <span class='error'></span>
-                    <input type='text' value='$telefono_r' name='tlfn' placeholder='Teléfono' id='tlfn-mod'>
+                    <input type='text' value='$edad_r' name='edad' placeholder='Edad' id='campo-edad'>
+                    <span class='error'></span>
+                    <input type='text' value='$telefono_r' name='tlfn' placeholder='Teléfono' id='campo-tlfn'>
                     <span class='error'></span>
                     <input type='hidden' value='$id' name='id'>
                     <button type='submit'>Actualizar socio</button>
@@ -218,11 +223,19 @@
     }
 
 
-    function actualizarSocio($conexion, $id, $nombre, $usuario, $edad, $telefono){
-        $resultado="";
-        $sql='UPDATE socio SET nombre=?, usuario=?, edad=?, telefono=? WHERE id=?';
-        $consulta=$conexion->prepare($sql);
-        $consulta->bind_param("ssiii", $nombre, $usuario, $edad, $telefono, $id);
+    function actualizarSocio($conexion, $id, $nombre, $usuario, $edad, $telefono, $ruta){
+        $resultado='';
+
+        if($ruta === ''){
+            $sql='UPDATE socio SET nombre=?, usuario=?, edad=?, telefono=? WHERE id=?';
+            $consulta=$conexion->prepare($sql);
+            $consulta->bind_param("ssisi", $nombre, $usuario, $edad, $telefono, $id);
+        }else{
+            $sql='UPDATE socio SET nombre=?, usuario=?, edad=?, telefono=?, foto=? WHERE id=?';
+            $consulta=$conexion->prepare($sql);
+            $consulta->bind_param("ssissi", $nombre, $usuario, $edad, $telefono, $ruta, $id);
+        }
+        
         $consulta->execute();
 
         if($consulta){

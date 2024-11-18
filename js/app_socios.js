@@ -1,8 +1,7 @@
 "use strict"
 
 //variables formularios
-let añadir_socio=document.getElementById("formulario");
-let modificar_socio=document.getElementById("formulario-mod");
+let form_socio=document.getElementById("formulario-socios");
 let añadir_testimonio=document.getElementById("formulario-testimonio");
 let form_servicio=document.getElementById("formulario-servicios");
 let form_noticia=document.getElementById("formulario-noticias");
@@ -14,11 +13,6 @@ let campo_usuario=document.getElementById("campo-usuario");
 let campo_edad=document.getElementById("campo-edad");
 let campo_tlfn=document.getElementById("campo-tlfn");
 let campo_pass=document.getElementById("campo-pass");
-
-let campo_nombre_mod=document.getElementById("nombre-mod");
-let campo_usuario_mod=document.getElementById("user-mod");
-let campo_edad_mod=document.getElementById("edad-mod");
-let campo_tlfn_mod=document.getElementById("tlfn-mod");
 
 //campos testimonios
 let campo_texto_test=document.getElementById("contenido-testimonio");
@@ -39,38 +33,22 @@ let campo_fecha=document.getElementById("fecha-not");
 
 //compruebo que el formulario esté presente en la página -sea distinto de null- antes de ejecutar el código 
 //para evitar que intente ejecutar y falle en páginas donde falte algún formulario
-if(añadir_socio){
-    añadir_socio.addEventListener("submit",
+
+//este evento actua en los formularios de adición y modificación
+if(form_socio){
+    form_socio.addEventListener("submit",
         (evento)=>{
             let validaciones=[
-                ()=>validarTexto(campo_nombre),
-                ()=>validarTexto(campo_usuario),
-                ()=>validarEdad(campo_edad),
+                ()=>validarImagenSocio(campo_foto),
+                ()=>validarNombreSocio(campo_nombre),
+                ()=>validarUsuario(campo_usuario),
+                ()=>validarEdadSocio(campo_edad),
                 ()=>validarTlfn(campo_tlfn),
-                ()=>validarPass()
+                ()=>validarPass(campo_pass)
             ];
 
             for(let validacion of validaciones){
                 if(!validacion()){
-                    evento.preventDefault();
-                    break;
-                }
-            }
-    });
-}
-
-if(modificar_socio){
-    modificar_socio.addEventListener("submit", 
-        (evento)=>{
-            let validaciones=[
-                ()=>validarTexto(campo_nombre_mod),
-                ()=>validarTexto(campo_usuario_mod),
-                ()=>validarEdad(campo_edad_mod),
-                ()=>validarTlfn(campo_tlfn_mod)
-            ];
-    
-            for (let val of validaciones){
-                if(!val()){
                     evento.preventDefault();
                     break;
                 }
@@ -113,7 +91,7 @@ if(form_noticia){
     form_noticia.addEventListener("submit",
         (evento)=>{
             let validaciones_n=[
-                ()=>validarImagen(campo_imagen),
+                ()=>validarImagenNoticia(campo_imagen),
                 ()=>validarNoticia(campo_titulo),
                 ()=>validarNoticia(campo_noticia),
                 ()=>validarFecha(campo_fecha)
@@ -130,12 +108,109 @@ if(form_noticia){
 }
 
 
+//funciones socios ----------------------------------
+
+const validarImagenSocio = (campo) => {
+    let span=campo.parentNode.nextElementSibling;
+
+    if(campo.files.length > 0){
+        if(!validarImagen(campo, span)){
+            return false;
+        }
+    }
+    
+    span.style.display="none";
+    return true;
+};
+
+const validarNombreSocio = (campo) =>{
+    let contenido=campo.value.trim();
+    let span=campo.nextElementSibling;
+    let reg_exp=/^[a-zA-Z áéíóúÁÉÍÓÚ]{4,50}$/;
+
+    if(!validarTexto(contenido)){
+        span.style.display="inline";
+        span.innerText="El campo no puede estar vacío";
+        return false;
+    }else if(!reg_exp.test(contenido)){
+        span.style.display="inline";
+        span.innerText="Debe tener entre 4 y 50 caracteres, sin números";
+        return false;
+    }
+
+    span.style.display="none";
+    return true;
+};
+
+const validarUsuario = (campo) =>{
+    let contenido=campo.value.trim();
+    let span=campo.nextElementSibling;
+    let reg_exp=/^[a-zA-Z][a-zA-Z0-9]{4,19}$/;
+
+    if(!validarTexto(contenido)){
+        span.style.display="inline";
+        span.innerText="El campo no puede estar vacío";
+        return false;
+    }else if(!reg_exp.test(contenido)){
+        span.style.display="inline";
+        span.innerText="Debe tener entre 5 y 20 caracteres, sin especiales";
+        return false;
+    }
+
+    span.style.display="none";
+    return true;
+};
+
+const validarEdadSocio = (campo) =>{
+    let contenido=campo.value.trim();
+    let span=campo.nextElementSibling;
+
+    if(!validarNum(contenido, span)){
+        return false;
+    }else if(contenido < 18){
+        span.style.display="inline";
+        span.innerText="Debe ser mayor de edad";
+        return false;
+    }
+
+    span.style.display="none";
+    return true;
+};
+
+const validarTlfn = (campo)=>{
+    let contenido=campo.value.trim();
+    let span=campo.nextElementSibling;
+    let expresion=/^\+34[0-9]{9}$/;
+
+    if(!expresion.test(contenido)){
+        span.style.display="inline";
+        span.innerText="El teléfono no es válido";
+        return false;
+    }
+    span.style.display="none";
+    return true;
+};
+
+const validarPass = (campo)=>{
+    let contenido=campo.value.trim();
+    let span=campo.nextElementSibling;
+    let expresion=/^[a-zA-Z][a-zA-Z0-9_]{7,15}/;
+
+    if(!expresion.test(contenido)){
+        span.style.display="inline";
+        span.innerText="Escribe una contraseña válida (mín. 8 máx. 16 carac. empieza por letra)";
+        return false;
+    }
+    span.style.display="none";
+    return true;
+};
+
 //funciones servicios ----------------------------------
 
 const validarServicio=(campo)=>{
     let contenido=campo.value.trim();
     let span=campo.nextElementSibling;
-    let reg_exp=/^[a-zA-Z ]{3,50}$/;
+    let reg_exp=/^[a-zA-Z \´]{3,50}$/;
 
     if(!validarTexto(contenido)){
         span.style.display="inline";
@@ -185,6 +260,23 @@ const validarPrecioServicio=(campo)=>{
 }
 
 //funciones noticias --------------------------------
+
+const validarImagenNoticia = (campo) => {
+    let span=campo.parentNode.nextElementSibling;
+
+    if(campo.files.length > 0){
+        if(!validarImagen(campo, span)){
+            return false;
+        }
+    }else{
+        span.style.display="inline";
+        span.innerText="Sube una imágen";
+        return false;
+    }
+
+    span.style.display="none";
+    return true;
+};
 
 const validarNoticia=(campo)=>{
     let contenido=campo.value.trim();
@@ -244,7 +336,7 @@ const validarTestimonio=(campo)=>{
     return true;
 }
 
-//funciones validacion general --------------------------------
+//funciones de validación generales --------------------------------
 
 const validarTexto = (contenido)=>{
     if(contenido === ""){
@@ -254,75 +346,11 @@ const validarTexto = (contenido)=>{
     }
 };
 
-const validarEdad = (campo)=>{
-    let contenido=campo.value.trim();
-    let span=campo.nextElementSibling;
-    let numero=parseInt(contenido);
-
-    if(isNaN(numero)){
-        span.style.display="inline";
-        span.innerText="Debes escribir un número";
-        return false;
-    }else if(numero < 1 || numero > 100){
-        span.style.display="inline";
-        span.innerText="Escribe una edad válida";
-        return false;
-    }
-    span.style.display="none";
-    return true;
-};
-
-const validarNum = (campo)=>{
-    let contenido=campo.value.trim();
-    let span=campo.nextElementSibling;
-    let numero=parseInt(contenido);
-
-    if(isNaN(numero)){
-        span.style.display="inline";
-        span.innerText="Debes escribir un número";
-        return false;
-    }else if(numero < 1){
-        span.style.display="inline";
-        span.innerText="Escribe un número válido";
-        return false;
-    }
-    span.style.display="none";
-    return true;
-};
-
-const validarTlfn = (campo)=>{
-    let contenido=campo.value.trim();
-    let span=campo.nextElementSibling;
-    let expresion=/^[0-9]{9}$/;
-    if(!expresion.test(contenido)){
-        span.style.display="inline";
-        span.innerText="Escribe un teléfono válido";
-        return false;
-    }
-    span.style.display="none";
-    return true;
-};
-
-const validarPass = ()=>{
-    let contenido=campo_pass.value.trim();
-    let span=campo_pass.nextElementSibling;
-    let expresion=/[a-zA-Z0-9]{4}/;
-    if(!expresion.test(contenido)){
-        span.style.display="inline";
-        span.innerText="Escribe una contraseña válida";
-        return false;
-    }
-    span.style.display="none";
-    return true;
-};
-
-const validarImagen = (campo) => {
+const validarImagen = (campo, span)=>{
     const tipo='image/jpeg';
     const tamaño=5*1024*1024; //el tamaño se compara en bytes
-    let span=campo.parentNode.nextElementSibling;
+    let fichero=campo.files[0];
 
-    if(campo.files.length > 0){
-        let fichero=campo.files[0];
         if(fichero.type !== tipo){
             span.style.display="inline";
             span.innerText="No es un formato de imágen válido";
@@ -332,9 +360,20 @@ const validarImagen = (campo) => {
             span.innerText="El tamaño máximo es de 5 MB";
             return false;
         }
-    }else{
+        
+        return true;
+};
+
+const validarNum = (contenido, span)=>{
+    let numero=parseInt(contenido);
+
+    if(isNaN(numero)){
         span.style.display="inline";
-        span.innerText="Sube una imágen";
+        span.innerText="Escribe un número";
+        return false;
+    }else if(numero < 1){
+        span.style.display="inline";
+        span.innerText="No puede ser negativo";
         return false;
     }
     span.style.display="none";
