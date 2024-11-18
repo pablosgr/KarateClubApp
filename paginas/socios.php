@@ -28,6 +28,12 @@
 
         <section class='socios'>
             <h1>Socios</h1>
+
+            <form action="servicios-src.php" method='post' id='buscador'>
+                <input type="text" placeholder='Nombre o teléfono del socio...'>
+                <button type="submit">Buscar</button>
+            </form>
+
             <div class='contenido-socios'>
 
                 <?php

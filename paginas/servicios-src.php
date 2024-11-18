@@ -21,7 +21,7 @@
             $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../index.php";
             $ruta_soc="socios.php";
-            $ruta_serv="#";
+            $ruta_serv="servicios.php";
             $ruta_tes="testimonios.php";
             $ruta_not="noticias.php";
             $ruta_cit="";
@@ -39,34 +39,14 @@
             <div class='contenido-servicios'>
 
                 <?php
-                if(isset($_POST["contenido-serv"])){
-                    $descripcion=$_POST["contenido-serv"];
-                    $duracion=$_POST["duracion"];
-                    $ud_duracion=$_POST["u-duracion"];
-                    $precio=$_POST["precio"];
-                    añadirServicio($conexion, $descripcion, $duracion, $ud_duracion, $precio);
+                if(isset($_POST["texto"])){
+                    $texto=$_POST["texto"];
+                    echo imprimirServiciosBuscados($conexion, $texto);
+                }else{
+                    echo "<h1 class='centrado'>Error al realizar la búsqueda</h1>";
                 }
-
-                echo imprimirServiciosComp($conexion);
+                
                 ?>
-
-                <div class='card-servicio'>
-                    <form action="servicios.php" method='post' id='formulario-servicios'>
-                        <textarea name="contenido-serv" id="contenido-servicio" placeholder='Descripción del servicio'></textarea>
-                        <span class='error'></span>
-                        <input type="text" name="duracion" id="duracion-servicio" placeholder='Duración'>
-                        <span class='error'></span>
-                        <select name="u-duracion" id="u-duracion-servicio">
-                            <option value="">Selecciona una unidad</option>
-                            <option value="minutos">Minutos</option>
-                            <option value="horas">Horas</option>
-                        </select>
-                        <span class='error'></span>
-                        <input type="text" name="precio" id="precio-servicio" placeholder='Precio'>
-                        <span class='error'></span>
-                        <button class="btn btn-outline-secondary" type="submit">Añadir servicio</button>
-                    </form>
-                </div>
 
             </div>
         </section>

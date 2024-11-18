@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shito-Ryu Club | Servicios</title>
+    <title>Shito-Ryu Club | Socios</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/style_servicios.css">
+    <link rel="stylesheet" href="../css/style_socios.css">
     <script defer src="../js/app_socios.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,52 +21,32 @@
             $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../index.php";
             $ruta_soc="socios.php";
-            $ruta_serv="#";
+            $ruta_serv="servicios.php";
             $ruta_tes="testimonios.php";
             $ruta_not="noticias.php";
             $ruta_cit="";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit);
         ?>
 
-        <section class='servicios'>
-            <h1>Servicios</h1>
+        <section class='socios'>
+            <h1>Socios</h1>
 
-            <form action="servicios-src.php" method='post' id='buscador' name='buscar-servicios'>
-                <input type="text" placeholder='Nombre del servicio...' name='texto' id='texto-buscado'>
+            <form action="socios-src.php" method='post' id='buscador' name='buscar-servicios'>
+                <input type="text" placeholder='Nombre o teléfono del socio...' name='texto' id='texto-buscado'>
                 <button type="submit">Buscar</button>
             </form>
 
             <div class='contenido-servicios'>
 
                 <?php
-                if(isset($_POST["contenido-serv"])){
-                    $descripcion=$_POST["contenido-serv"];
-                    $duracion=$_POST["duracion"];
-                    $ud_duracion=$_POST["u-duracion"];
-                    $precio=$_POST["precio"];
-                    añadirServicio($conexion, $descripcion, $duracion, $ud_duracion, $precio);
+                if(isset($_POST["texto"])){
+                    $texto=$_POST["texto"];
+                    echo imprimirSociosBuscados($conexion, $texto);
+                }else{
+                    echo "<h1 class='centrado'>Error al realizar la búsqueda</h1>";
                 }
-
-                echo imprimirServiciosComp($conexion);
+                
                 ?>
-
-                <div class='card-servicio'>
-                    <form action="servicios.php" method='post' id='formulario-servicios'>
-                        <textarea name="contenido-serv" id="contenido-servicio" placeholder='Descripción del servicio'></textarea>
-                        <span class='error'></span>
-                        <input type="text" name="duracion" id="duracion-servicio" placeholder='Duración'>
-                        <span class='error'></span>
-                        <select name="u-duracion" id="u-duracion-servicio">
-                            <option value="">Selecciona una unidad</option>
-                            <option value="minutos">Minutos</option>
-                            <option value="horas">Horas</option>
-                        </select>
-                        <span class='error'></span>
-                        <input type="text" name="precio" id="precio-servicio" placeholder='Precio'>
-                        <span class='error'></span>
-                        <button class="btn btn-outline-secondary" type="submit">Añadir servicio</button>
-                    </form>
-                </div>
 
             </div>
         </section>

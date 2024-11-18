@@ -287,33 +287,25 @@ function añadirTestimonio($conexion, $autor, $contenido){
 
 //funciones servicios ----------------------------------------------------------------
 
-function imprimirServicios($conexion){
-        $resultado='';
-        $sql='SELECT id, descripcion, duracion, unidad_duracion, precio FROM servicio
-        ORDER BY descripcion ASC';
+function imprimirServiciosComp($conexion){
+    $sql='SELECT id, descripcion, duracion, unidad_duracion, precio FROM servicio
+    ORDER BY descripcion ASC';
 
-        $sql_result=$conexion->query($sql);
-        while($row=$sql_result->fetch_array(MYSQLI_ASSOC)){
-            $id=$row["id"];
-            $descripcion=$row["descripcion"];
-            $duracion=$row["duracion"];
-            $ud_duracion=$row["unidad_duracion"];
-            $precio=$row["precio"];
-
-            $resultado.="
-                <div class='p-5 text-center bg-body-secondary rounded-4 custom-serv'>
-                    <h1 class='text-body-emphasis'>$descripcion</h1>
-                    <p class='lead'>Este servicio cuenta con una duración de <span>$duracion $ud_duracion</span> y un precio de <span>$precio Euros</span>.</p>
-                    <a href='servicios-mod.php?id=$id'>
-                        <button class='btn btn-primary d-inline-flex align-items-center btn-custom'>
-                            Modificar
-                        </button>
-                    </a>
-                </div>
-            ";
-        }
-        return $resultado;
+    $resultado=imprimirServicios($conexion, $sql);
+    return $resultado;
 }
+
+
+function imprimirServiciosBuscados($conexion, $texto){
+    $texto="%".$texto."%";
+    $sql="SELECT id, descripcion, duracion, unidad_duracion, precio FROM servicio
+    WHERE descripcion LIKE ?
+    ORDER BY descripcion ASC";
+
+    $resultado=imprimirServiciosPrep($conexion, $sql, $texto);
+    return $resultado;
+}
+
 
 function imprimirModificarServicio($conexion, $id){
     $resultado='';
@@ -417,6 +409,56 @@ function actualizarServicio($conexion, $id, $descripcion, $duracion, $ud_duracio
             </a>";
         }
 
+        return $resultado;
+    }
+
+    function imprimirServicios($conexion, $sql){
+        $resultado='';
+
+        $sql_result=$conexion->query($sql);
+        while($row=$sql_result->fetch_array(MYSQLI_ASSOC)){
+            $id=$row["id"];
+            $descripcion=$row["descripcion"];
+            $duracion=$row["duracion"];
+            $ud_duracion=$row["unidad_duracion"];
+            $precio=$row["precio"];
+
+            $resultado.="
+                <div class='p-5 text-center bg-body-secondary rounded-4 custom-serv'>
+                    <h1 class='text-body-emphasis'>$descripcion</h1>
+                    <p class='lead'>Este servicio cuenta con una duración de <span>$duracion $ud_duracion</span> y un precio de <span>$precio Euros</span>.</p>
+                    <a href='servicios-mod.php?id=$id'>
+                        <button class='btn btn-primary d-inline-flex align-items-center btn-custom'>
+                            Modificar
+                        </button>
+                    </a>
+                </div>
+            ";
+        }
+        return $resultado;
+    }
+
+    function imprimirServiciosPrep($conexion, $sql, $texto){
+        $resultado='';
+
+        $consulta=$conexion->prepare($sql);
+        $consulta->bind_param("s", $texto);
+        $consulta->execute();
+        $consulta->bind_result($id, $descripcion, $duracion, $unidad_duracion, $precio);
+
+        while($consulta->fetch()){
+            $resultado.="
+                <div class='p-5 text-center bg-body-secondary rounded-4 custom-serv'>
+                    <h1 class='text-body-emphasis'>$descripcion</h1>
+                    <p class='lead'>Este servicio cuenta con una duración de <span>$duracion $unidad_duracion</span> y un precio de <span>$precio Euros</span>.</p>
+                    <a href='servicios-mod.php?id=$id'>
+                        <button class='btn btn-primary d-inline-flex align-items-center btn-custom'>
+                            Modificar
+                        </button>
+                    </a>
+                </div>
+            ";
+        }
         return $resultado;
     }
 ?>
