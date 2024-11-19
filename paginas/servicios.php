@@ -23,8 +23,8 @@
             $ruta_soc="socios.php";
             $ruta_serv="#";
             $ruta_tes="testimonios.php";
-            $ruta_not="noticias.php";
-            $ruta_cit="";
+            $ruta_not="./noticias/noticias.php";
+            $ruta_cit="citas.php";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit);
         ?>
 
@@ -33,8 +33,10 @@
 
             <form action="servicios-src.php" method='post' id='buscador' name='buscar-servicios'>
                 <input type="text" placeholder='Nombre del servicio...' name='texto' id='texto-buscado'>
+                <span class="error"></span>
                 <button type="submit">Buscar</button>
             </form>
+            
 
             <div class='contenido-servicios'>
 

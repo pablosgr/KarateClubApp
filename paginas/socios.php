@@ -21,16 +21,17 @@
             $ruta_soc="#";
             $ruta_serv="servicios.php";
             $ruta_tes="testimonios.php";
-            $ruta_not="noticias.php";
-            $ruta_cit="";
+            $ruta_not="./noticias/noticias.php";
+            $ruta_cit="citas.php";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit);
         ?>
 
         <section class='socios'>
             <h1>Socios</h1>
 
-            <form action="servicios-src.php" method='post' id='buscador'>
-                <input type="text" placeholder='Nombre o teléfono del socio...'>
+            <form action="socios-src.php" method='post' id='buscador'  name='buscar-servicios'>
+                <input type="text" placeholder='Nombre o teléfono del socio...' name='texto' id='texto-buscado'>
+                <span class="error"></span>
                 <button type="submit">Buscar</button>
             </form>
 
@@ -55,7 +56,7 @@
                         añadirSocio($conexion, $nombre_socio, $edad_socio, $pass_socio, $user_socio, $tlfn_socio, $ruta);
                     }
                     
-                    echo imprimirSocios($conexion);
+                    echo imprimirSociosComp($conexion);
                 ?>
 
                 <div class='tarjeta_socio'>

@@ -147,7 +147,7 @@
 
 //funciones socios ----------------------------------------------------------------
 
-    function imprimirSocios($conexion){
+    function imprimirSociosComp($conexion){
         $resultado='';
         $sql='SELECT id,nombre,usuario,edad,telefono,foto FROM socio';
 
@@ -169,6 +169,41 @@
                     <p>Tlfn: $tlfn</p>
                     <a href='socios-mod.php?id=$id' class='boton'>Modificar</a>
                 </div>
+            ";
+        }
+        return $resultado;
+    }
+
+    function imprimirSociosBuscados($conexion, $texto){
+        $texto="%".$texto."%";
+        $sql="SELECT id,nombre,usuario,edad,telefono,foto FROM socio
+        WHERE nombre LIKE ?
+        OR telefono LIKE ?
+        ORDER BY id ASC";
+        $resultado='';
+
+        $consulta=$conexion->prepare($sql);
+        $consulta->bind_param("ss", $texto, $texto);
+        $consulta->execute();
+        $consulta->store_result(); // Necesario para contar filas en SELECT
+        $consulta->bind_result($id, $nombre, $usuario, $edad, $telefono, $foto);
+
+        if($consulta -> num_rows > 0){
+            while($consulta->fetch()){
+                $resultado.="
+                    <div class='tarjeta_socio'>
+                        <div class='avatar'><img src='$foto'></div>
+                        <h3>$nombre</h3>
+                        <p>Usuario: $usuario</p>
+                        <p>Edad: $edad</p>
+                        <p>Tlfn: $telefono</p>
+                        <a href='socios-mod.php?id=$id' class='boton'>Modificar</a>
+                    </div>
+                ";
+            }
+        }else{
+            $resultado.="
+                <h1 class='centrado'>No se han encontrado resultados...</h1>
             ";
         }
         return $resultado;
@@ -372,6 +407,63 @@ function actualizarServicio($conexion, $id, $descripcion, $duracion, $ud_duracio
     return $resultado;
 }
 
+//funciones citas ----------------------------------------------------------------
+    
+function imprimirCalendario($meses, $mes_actual, $anno_actual){
+    $dias_mes=cal_days_in_month(CAL_GREGORIAN, $mes_actual, $anno_actual);
+    $contador_semana=7;
+    $dias=['Lun', 'Mar', 'Miér', 'Jue', 'Vie', 'Sáb', 'Dom'];
+
+    $primer_dia=mktime(0, 0, 0, $mes_actual, 1, $anno_actual); // Crear una marca de tiempo para el primer día del mes
+    $pos_semana=date("N", $primer_dia); // Obtener el día de la semana del primer día del mes
+
+    $resultado="
+        <div class='cal'>
+        <div class='contenedor-cal'>
+            <h2>$meses[$mes_actual] de $anno_actual</h2>
+            <div class='seleccion'>
+                <a href='citas-prv.php?mes=$mes_actual&anno=$anno_actual' class='btn'>Anterior</a>
+                <a href='citas-nxt.php?mes=$mes_actual&anno=$anno_actual' class='btn'>Siguiente</a>
+            </div>
+        </div>
+        <table class='calendario'>
+        <thead>
+    ";
+    foreach($dias as $d){
+        $resultado.="<th>$d</th>";
+    }
+    $resultado.="</thead>
+        <tbody>
+        <tr>
+    ";
+
+    for($i=1; $i<=$dias_mes; $i++){
+        if($pos_semana > 1){
+            $resultado.="<td></td>"; //añado celda vacía por cada día que no coincida con el lunes (1)
+            $pos_semana--; //le resto uno a la posicion de la semana para volver a comprobar
+            $i--; //resto 1 a la variable del for para que no avance en los días del mes
+        }else{
+            $resultado.="<td class='dia-selecc'>$i</td>";
+        }
+        
+        if($contador_semana > 1){
+            $contador_semana--;
+        }else{
+            $resultado.="</tr><tr>"; //cierro y abro fila
+            $contador_semana=7; //reseteo el contador de dias a 7
+        }
+    }
+
+    $resultado.="</tr>
+        </tbody>
+        </table>
+        </div>
+    ";
+
+    return $resultado;
+    
+}
+
 //funciones internas ----------------------------------------------------------------
     
     function generarListaNoticias($sql, $conexion, $ruta_index){
@@ -388,8 +480,8 @@ function actualizarServicio($conexion, $id, $descripcion, $duracion, $ud_duracio
             
             //compruebo si estoy en el index para cambiar las rutas
             if($ruta_index){
-                $ruta_imagen=str_replace('../pics/', './pics/', $ruta_imagen);
-                $enlace='./paginas/'.$enlace;
+                $ruta_imagen=str_replace('../../pics/', './pics/', $ruta_imagen);
+                $enlace='./paginas/noticias/'.$enlace;
             }
 
             $resultado.="
@@ -444,21 +536,29 @@ function actualizarServicio($conexion, $id, $descripcion, $duracion, $ud_duracio
         $consulta=$conexion->prepare($sql);
         $consulta->bind_param("s", $texto);
         $consulta->execute();
+        $consulta->store_result(); 
         $consulta->bind_result($id, $descripcion, $duracion, $unidad_duracion, $precio);
 
-        while($consulta->fetch()){
+        if($consulta->num_rows>0){
+            while($consulta->fetch()){
+                $resultado.="
+                    <div class='p-5 text-center bg-body-secondary rounded-4 custom-serv'>
+                        <h1 class='text-body-emphasis'>$descripcion</h1>
+                        <p class='lead'>Este servicio cuenta con una duración de <span>$duracion $unidad_duracion</span> y un precio de <span>$precio Euros</span>.</p>
+                        <a href='servicios-mod.php?id=$id'>
+                            <button class='btn btn-primary d-inline-flex align-items-center btn-custom'>
+                                Modificar
+                            </button>
+                        </a>
+                    </div>
+                ";
+            }
+        }else{
             $resultado.="
-                <div class='p-5 text-center bg-body-secondary rounded-4 custom-serv'>
-                    <h1 class='text-body-emphasis'>$descripcion</h1>
-                    <p class='lead'>Este servicio cuenta con una duración de <span>$duracion $unidad_duracion</span> y un precio de <span>$precio Euros</span>.</p>
-                    <a href='servicios-mod.php?id=$id'>
-                        <button class='btn btn-primary d-inline-flex align-items-center btn-custom'>
-                            Modificar
-                        </button>
-                    </a>
-                </div>
+                <h1 class='centrado'>No se han encontrado resultados...</h1>
             ";
         }
+        
         return $resultado;
     }
 ?>

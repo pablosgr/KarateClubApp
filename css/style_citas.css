@@ -1,0 +1,98 @@
+section.citas{
+    width: 73%;
+    max-width: 1180px;
+    align-self: center;
+    padding: 60px 0px 60px 0px;
+}
+
+section.citas h1{
+    font-size: 40px; 
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: black;
+}
+
+div.contenido-citas{
+    padding-left: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+/*calendario*/
+
+.cal{
+    display: flex;
+    flex-direction: column;
+}
+
+.contenedor-cal{
+    width: 550px;
+    align-self: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 30px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgb(54,54,54);
+}
+
+.calendario{
+    font-size: 1.2em;
+    min-width: 550px;
+    height: auto;
+    align-self: center;
+    border-collapse: separate;
+    border-spacing: 10px;
+}
+
+.calendario th, .calendario td{
+    text-align: center;
+}
+
+.calendario th{
+    padding-bottom: 20px;
+}
+
+.dia-selecc{
+    padding: 20px;
+    border-radius: 20px;
+    transition: 0.2s ease;
+}
+
+.dia-selecc:hover{
+    color: white;
+    background-color: #6c757d;
+    cursor: pointer;
+}
+
+/*span y errores*/
+
+a.btn{
+    margin-left: 20px;
+    padding: 15px;
+    border: 1px solid rgb(54,54,54);
+    border-radius: 5px;
+    transition: 0.3s ease;
+}
+
+a.btn:hover{
+    border: 1px solid #6c757d;
+    background-color: #6c757d;
+    color: white;
+}
+
+
+span.error::before{
+    content: '⚠️ ';
+}
+
+span.error{
+    font-size: 0.9em;
+    color: tomato;
+    display: none;
+}
+
+.centrado{
+    text-align: center;
+}

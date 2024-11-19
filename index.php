@@ -21,8 +21,8 @@
             $ruta_soc="./paginas/socios.php";
             $ruta_serv="./paginas/servicios.php";
             $ruta_tes="./paginas/testimonios.php";
-            $ruta_not="./paginas/noticias.php";
-            $ruta_cit="";
+            $ruta_not="./paginas/noticias/noticias.php";
+            $ruta_cit="./paginas/citas.php";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit);
         ?>
 

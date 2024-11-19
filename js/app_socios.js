@@ -5,6 +5,7 @@ let form_socio=document.getElementById("formulario-socios");
 let añadir_testimonio=document.getElementById("formulario-testimonio");
 let form_servicio=document.getElementById("formulario-servicios");
 let form_noticia=document.getElementById("formulario-noticias");
+let form_busqueda=document.getElementById("buscador");
 
 //campos socios
 let campo_foto=document.getElementById("campo-foto");
@@ -28,6 +29,9 @@ let campo_imagen=document.getElementById("pic-not");
 let campo_titulo=document.getElementById("titulo-not");
 let campo_noticia=document.getElementById("contenido-not");
 let campo_fecha=document.getElementById("fecha-not");
+
+//campo buscador
+let campo_buscador=document.getElementById("texto-buscado");
 
 //eventos
 
@@ -107,6 +111,32 @@ if(form_noticia){
     );
 }
 
+if(form_busqueda){
+    form_busqueda.addEventListener("submit",
+        (evento)=>{
+            if(!validarBuscador(campo_buscador)){
+                evento.preventDefault();
+            }
+        }
+    )
+}
+
+
+//funciones buscador --------------------------------
+
+const validarBuscador = (campo)=>{
+    let contenido=campo.value.trim();
+    let span=campo.nextElementSibling;
+
+    if(!validarTexto(contenido)){
+        span.style.display="inline";
+        span.innerText="El campo no puede estar vacío";
+        return false;
+    }
+
+    span.style.display="none";
+    return true;
+}
 
 //funciones socios ----------------------------------
 

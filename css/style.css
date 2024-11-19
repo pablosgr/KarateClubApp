@@ -319,6 +319,10 @@ form#buscador button:hover{
     border: 1px solid #6c757d;
 }
 
+form#buscador span{
+    margin: 0px 0px 0px 40px;
+}
+
 /*media query - noticias*/
 
 @media (width <= 1180px){
