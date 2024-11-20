@@ -443,7 +443,12 @@ function imprimirCalendario($meses, $mes_actual, $anno_actual){
             $pos_semana--; //le resto uno a la posicion de la semana para volver a comprobar
             $i--; //resto 1 a la variable del for para que no avance en los días del mes
         }else{
-            $resultado.="<td class='dia-selecc'>$i</td>";
+            $fecha="$anno_actual-$mes_actual-$i";
+            $resultado.="
+            <td class='dia-selecc'>
+                <a href='cita-info.php?fecha=$fecha'>$i</a>
+            </td>
+            "; //guardo en un data la fecha completa
         }
         
         if($contador_semana > 1){
@@ -462,6 +467,84 @@ function imprimirCalendario($meses, $mes_actual, $anno_actual){
 
     return $resultado;
     
+}
+
+function imprimirFormularioCita($conexion){
+    $sql_socios='SELECT id,nombre FROM socio';
+    $sql_servicios='SELECT id,descripcion FROM servicio';
+    $consulta1=$conexion->query($sql_socios);
+    $consulta2=$conexion->query($sql_servicios);
+
+    $resultado="
+        <div class='form-cita'>
+            <form id='form-citas'>
+                <p>Datos de cita</p>
+                <input type='date' name='fecha' id='fecha-cita'>
+                <span class='error'></span>
+                <input type='time' name='hora' id='hora-cita'>
+                <span class='error'></span>
+                <select name='socio' id='socio-cita'>
+                <option value=''>Selecciona un socio</option>
+    ";
+    while($row=$consulta1->fetch_array(MYSQLI_ASSOC)){
+        $id=$row["id"];
+        $nombre=$row["nombre"];
+        $resultado.="
+            <option value='$id'>$nombre</option>
+        ";
+    }
+
+    $resultado.="</select>
+        <select name='servicio' id='servicio-cita'>
+        <option value=''>Selecciona un servicio</option>
+    ";
+    while($row=$consulta2->fetch_array(MYSQLI_ASSOC)){
+        $id=$row["id"];
+        $nombre=$row["descripcion"];
+        $resultado.="
+            <option value='$id'>$nombre</option>
+        ";
+    }
+
+    $resultado.="</select>
+        <div class='caja-btn'>
+            <button type='submit'>Generar cita</button>
+        </div>
+        </form>
+        </div>
+    ";
+
+    return $resultado;
+}
+
+function generarCita($conexion, $socio, $servicio, $fecha, $hora){
+    $sql='INSERT INTO citas (socio, servicio, fecha, hora) 
+    VALUES (?, ?, ?, ?)';
+    $consulta=$conexion->prepare($sql);
+    $consulta->bind_param("iiss", $socio, $servicio, $fecha, $hora);
+    $consulta->execute();
+    $consulta->close();
+}
+
+function mostrarCitas($conexion, $fecha){
+    $resultado='';
+    $sql='SELECT socio.nombre,descripcion.servicio,socio,servicio,fecha,hora 
+    FROM citas 
+    JOIN servicio ON servicio.id=servicio
+    JOIN socio ON socio.id=socio
+    WHERE fecha=?';
+
+    $consulta=$conexion->prepare($sql);
+    $consulta->bind_param("s", $fecha);
+    $consulta->execute();
+    $consulta->store_result(); 
+    $consulta->bind_result($nombre_socio, $nombre_servicio, $id_socio, $id_servicio, $fecha, $hora);
+
+    if($consulta->num_rows>0){
+        $resultado.="
+            
+        ";
+    }
 }
 
 //funciones internas ----------------------------------------------------------------

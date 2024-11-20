@@ -14,8 +14,10 @@ section.citas h1{
 
 div.contenido-citas{
     padding-left: 30px;
+    height: 592px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-around;
 }
 
 /*calendario*/
@@ -38,7 +40,7 @@ div.contenido-citas{
 }
 
 .calendario{
-    font-size: 1.2em;
+    font-size: 1.1em;
     min-width: 550px;
     height: auto;
     align-self: center;
@@ -64,6 +66,23 @@ div.contenido-citas{
     color: white;
     background-color: #6c757d;
     cursor: pointer;
+}
+
+/*formulario*/
+
+div.form-cita{
+    /* display: none; */
+    box-shadow: 0px 0px 14px rgba(25, 25, 25, 0.3);
+    border-radius: 7px;
+    padding: 40px;
+    margin-left: 60px;
+    width: 30%;
+    min-width: 315px;
+}
+
+form#form-citas{
+    display: flex;
+    flex-direction: column;
 }
 
 /*span y errores*/

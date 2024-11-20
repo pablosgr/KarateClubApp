@@ -9,7 +9,7 @@ CREATE TABLE socio (
     nombre VARCHAR(150) NOT NULL,
     edad INTEGER NOT NULL,
     pass VARCHAR(20) NOT NULL,
-    usuario VARCHAR(255) NOT NULL UNIQUE,
+    usuario VARCHAR(255) NOT NULL UNIQUE, -- generar mensaje de error al intentar añadir duplicadas
     telefono VARCHAR(15) NOT NULL UNIQUE,
     foto VARCHAR(255)
 );

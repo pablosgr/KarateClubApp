@@ -44,7 +44,16 @@
                     }
                 }
                 
+                if(isset($_POST["fecha"])){
+                    $fecha=$_POST["fecha"];
+                    $hora=$_POST["hora"];
+                    $id_socio=$_POST["socio"];
+                    $id_servicio=$_POST["servicio"];
+                    generarCita($conexion, $id_socio, $id_servicio, $fecha, $hora);
+                }
+                
                 echo imprimirCalendario($meses, $mes_actual, $anno_actual);
+                echo imprimirFormularioCita($conexion);
             ?>
 
             </div>
