@@ -409,7 +409,7 @@ function actualizarServicio($conexion, $id, $descripcion, $duracion, $ud_duracio
 
 //funciones citas ----------------------------------------------------------------
     
-function imprimirCalendario($meses, $mes_actual, $anno_actual){
+function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
     $dias_mes=cal_days_in_month(CAL_GREGORIAN, $mes_actual, $anno_actual);
     $contador_semana=7;
     $dias=['Lun', 'Mar', 'Miér', 'Jue', 'Vie', 'Sáb', 'Dom'];
@@ -444,11 +444,31 @@ function imprimirCalendario($meses, $mes_actual, $anno_actual){
             $i--; //resto 1 a la variable del for para que no avance en los días del mes
         }else{
             $fecha="$anno_actual-$mes_actual-$i";
-            $resultado.="
-            <td class='dia-selecc'>
-                <a href='cita-info.php?fecha=$fecha'>$i</a>
-            </td>
-            "; //guardo en un data la fecha completa
+            $sql="SELECT COUNT(socio) AS conteo FROM citas WHERE fecha='$fecha'"; //hago consulta para comprobar que en la fecha que esta recorriendo, haya citas o no y altere la clase del enlac een consecuencia
+            $consulta=$conexion->query($sql);
+            $cuenta=0;
+            while($row=$consulta->fetch_array(MYSQLI_ASSOC)){
+                $cuenta=$row["conteo"];
+            }
+            if($cuenta > 0){
+                $resultado.="
+                <td class='dia-selecc'>
+                    <a href='citas-info.php?fecha=$fecha'>
+                        <div class='celda green'>$i</div>
+                    </a>
+                </td>
+                ";
+            }else{
+                $resultado.="
+                <td class='dia-selecc'>
+                    <a href='citas-info.php?fecha=$fecha'>
+                        <div class='celda'>$i</div>
+                    </a>
+                </td>
+                ";
+            }
+
+            //guardo en un data la fecha completa
         }
         
         if($contador_semana > 1){
@@ -528,23 +548,34 @@ function generarCita($conexion, $socio, $servicio, $fecha, $hora){
 
 function mostrarCitas($conexion, $fecha){
     $resultado='';
-    $sql='SELECT socio.nombre,descripcion.servicio,socio,servicio,fecha,hora 
+    $sql='SELECT socio.nombre,servicio.descripcion,socio,servicio,fecha,hora 
     FROM citas 
-    JOIN servicio ON servicio.id=servicio
-    JOIN socio ON socio.id=socio
+    JOIN servicio ON servicio.id=citas.servicio
+    JOIN socio ON socio.id=citas.socio
     WHERE fecha=?';
 
     $consulta=$conexion->prepare($sql);
     $consulta->bind_param("s", $fecha);
     $consulta->execute();
     $consulta->store_result(); 
-    $consulta->bind_result($nombre_socio, $nombre_servicio, $id_socio, $id_servicio, $fecha, $hora);
+    $consulta->bind_result($nombre_socio, $nombre_servicio, $id_socio, $id_servicio, $fecha_cita, $hora);
 
-    if($consulta->num_rows>0){
-        $resultado.="
-            
-        ";
+    if($consulta->num_rows > 0){
+        while($consulta->fetch()){
+            $resultado.="
+                <div>
+                    <p>$nombre_socio</p>
+                    <p>$nombre_servicio</p>
+                    <p>$fecha_cita</p>
+                    <p>$hora</p>
+                </div>
+            ";
+        }
+    }else{
+        $resultado.="<h1 class='centrado'>No se han encontrado citas</h1>";
     }
+
+    return $resultado;
 }
 
 //funciones internas ----------------------------------------------------------------

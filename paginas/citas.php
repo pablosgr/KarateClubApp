@@ -44,7 +44,7 @@
                 $anno_actual=date("Y");
                 $mes_actual=date("m");
                 
-                echo imprimirCalendario($meses, $mes_actual, $anno_actual);
+                echo imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual);
                 echo imprimirFormularioCita($conexion);
             ?>
 

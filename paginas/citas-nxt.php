@@ -52,7 +52,7 @@
                     generarCita($conexion, $id_socio, $id_servicio, $fecha, $hora);
                 }
                 
-                echo imprimirCalendario($meses, $mes_actual, $anno_actual);
+                echo imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual);
                 echo imprimirFormularioCita($conexion);
             ?>
 

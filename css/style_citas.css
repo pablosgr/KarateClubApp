@@ -56,16 +56,26 @@ div.contenido-citas{
     padding-bottom: 20px;
 }
 
-.dia-selecc{
-    padding: 20px;
-    border-radius: 20px;
+div.celda{
     transition: 0.2s ease;
+    border-radius: 20px;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
 }
 
-.dia-selecc:hover{
+div.celda:hover{
     color: white;
     background-color: #6c757d;
     cursor: pointer;
+}
+
+div.green{
+    background-color: #40ad4e;
+}
+
+div.green:hover{
+    background-color: #78e787;
 }
 
 /*formulario*/
