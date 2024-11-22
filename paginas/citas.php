@@ -24,23 +24,25 @@
             $ruta_serv="servicios.php";
             $ruta_tes="testimonios.php";
             $ruta_not="./noticias/noticias.php";
-            $ruta_cit="#";
+            $ruta_cit="citas.php";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit);
         ?>
 
         <section class='citas'>
             <h1>Citas</h1>
-            
-            <div class='contenido-citas'>
-
             <?php
                 if(isset($_POST["fecha"])){
                     $fecha=$_POST["fecha"];
                     $hora=$_POST["hora"];
                     $id_socio=$_POST["socio"];
                     $id_servicio=$_POST["servicio"];
-                    generarCita($conexion, $id_socio, $id_servicio, $fecha, $hora);
+                    echo generarCita($conexion, $id_socio, $id_servicio, $fecha, $hora);
                 }
+            ?>
+            
+            <div class='contenido-citas'>
+
+            <?php
                 $anno_actual=date("Y");
                 $mes_actual=date("m");
                 

@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <main class='principal-servicios'>
+    <main class='principal-citas'>
         <?php
             require_once '../php/funciones.php';
             require_once '../php/config.php';
@@ -29,40 +29,27 @@
         ?>
 
         <section class='citas'>
-            <h1>Citas</h1>
-            <?php
-                if(isset($_POST["fecha"])){
-                    $fecha=$_POST["fecha"];
-                    $hora=$_POST["hora"];
-                    $id_socio=$_POST["socio"];
-                    $id_servicio=$_POST["servicio"];
-                    echo generarCita($conexion, $id_socio, $id_servicio, $fecha, $hora);
-                }
-            ?>
-            
-            <div class='contenido-citas'>
+            <div class='contenido-citas-confirm'>
+                <?php
+                        if(isset($_POST["socio"])){
+                            $socio=$_POST["socio"];
+                            $servicio=$_POST["servicio"];
+                            $fecha=$_POST["fecha"];
+                            $hora=$_POST["hora"];
+                            $cancel=$_POST["cancel"];
+                            $accion=$_POST["action"];
+                            //funcion para cancelar o borrar
+                        }
 
-            <?php
-                if(isset($_GET["mes"])){
-                    $mes_actual=$_GET["mes"]-1;
-                    $anno_actual=$_GET["anno"];
-
-                    if($mes_actual < 1){
-                        $mes_actual=12;
-                        $anno_actual--;
-                    }
-                }
-
-                echo imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual);
-                echo imprimirFormularioCita($conexion);
-            ?>
-
+                ?>
             </div>
+
         </section>
 
     </main>
 
-    <?php 
+    <?php
+        header("refresh:3;url=citas.php");
         include '../php/footer.php';
         $conexion->close();
     ?>

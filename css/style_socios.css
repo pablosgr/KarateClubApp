@@ -22,6 +22,22 @@ section.socios h1{
     margin-bottom: 30px;
 }
 
+div.contenido-socios-src{
+    padding-left: 26px;
+    display: flex;
+    flex-direction: row;
+    gap: 100px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 50px;
+}
+
+div.contenido-socios-src>h1.centrado{
+    align-self: center;
+    margin: 0 auto; /*para justificarlo en el centro de la pagina*/
+}
+
 /*tarjetas*/
 
 div.tarjeta_socio{

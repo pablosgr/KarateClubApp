@@ -43,10 +43,10 @@ CREATE TABLE citas (
     servicio INTEGER,
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
-    PRIMARY KEY (socio, servicio),
+    cancelada TINYINT DEFAULT 0,
+    PRIMARY KEY (socio, servicio, fecha, hora),
     FOREIGN KEY (socio) REFERENCES socio (id) ON DELETE CASCADE,
-    FOREIGN KEY (servicio) REFERENCES servicio (id) ON DELETE CASCADE,
-    UNIQUE (socio, fecha, hora)
+    FOREIGN KEY (servicio) REFERENCES servicio (id) ON DELETE CASCADE
 );
 
 -- INSERTs
@@ -109,6 +109,7 @@ INSERT INTO testimonio (autor, contenido, fecha) VALUES
 (1, 'Este club ha cambiado mi vida, he mejorado en disciplina y condición física.', '2024-09-20'),
 (2, 'Las clases son excelentes, los entrenadores son muy profesionales y amables.', '2024-10-05');
 
-INSERT INTO citas (socio, servicio, fecha, hora) VALUES
-(1, 1, '2024-10-10', '18:00:00'),  -- Cita el mes pasado
-(2, 2, '2024-11-15', '19:00:00');  -- Cita este mes
+INSERT INTO citas (socio, servicio, fecha, hora, cancelada) VALUES
+(1, 1, '2024-10-10', '18:00:00', 0),  -- Cita el mes pasado
+(2, 2, '2024-11-15', '19:00:00', 0), -- Cita este mes
+(3, 2, '2024-11-15', '19:00:00', 1);

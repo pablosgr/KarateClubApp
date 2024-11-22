@@ -497,7 +497,7 @@ function imprimirFormularioCita($conexion){
 
     $resultado="
         <div class='form-cita'>
-            <form id='form-citas'>
+            <form id='form-citas' action='citas.php' method='post' id='form-citas'>
                 <p>Datos de cita</p>
                 <input type='date' name='fecha' id='fecha-cita'>
                 <span class='error'></span>
@@ -538,17 +538,33 @@ function imprimirFormularioCita($conexion){
 }
 
 function generarCita($conexion, $socio, $servicio, $fecha, $hora){
-    $sql='INSERT INTO citas (socio, servicio, fecha, hora) 
-    VALUES (?, ?, ?, ?)';
-    $consulta=$conexion->prepare($sql);
-    $consulta->bind_param("iiss", $socio, $servicio, $fecha, $hora);
-    $consulta->execute();
-    $consulta->close();
+    $resultado='';
+
+    //lanzo una consulta para comprobar que no haya duplicidades no deseadas
+    $check="SELECT * FROM citas WHERE socio=? AND servicio=? AND fecha=? AND hora=?";
+    $consulta_check=$conexion->prepare($check);
+    $consulta_check->bind_param("iiss", $socio, $servicio, $fecha, $hora);
+    $consulta_check->execute();
+    $consulta_check->store_result();
+    if($consulta_check->num_rows === 0){
+        //si no hay duplicados, inserto la cita
+        $sql='INSERT INTO citas (socio, servicio, fecha, hora) 
+        VALUES (?, ?, ?, ?)';
+        $consulta=$conexion->prepare($sql);
+        $consulta->bind_param("iiss", $socio, $servicio, $fecha, $hora);
+        $consulta->execute();
+        $consulta->close();
+    }else{
+        //retorno un mensaje de error en caso de duplicidad
+        $resultado.="<h2 class='centrado red'>Error al generar la cita (duplicidad en los datos)</h2>";
+    }
+    $consulta_check->close();
+    return $resultado;
 }
 
 function mostrarCitas($conexion, $fecha){
     $resultado='';
-    $sql='SELECT socio.nombre,servicio.descripcion,socio,servicio,fecha,hora 
+    $sql='SELECT socio.nombre,servicio.descripcion,socio,servicio,fecha,hora,cancelada 
     FROM citas 
     JOIN servicio ON servicio.id=citas.servicio
     JOIN socio ON socio.id=citas.socio
@@ -558,18 +574,36 @@ function mostrarCitas($conexion, $fecha){
     $consulta->bind_param("s", $fecha);
     $consulta->execute();
     $consulta->store_result(); 
-    $consulta->bind_result($nombre_socio, $nombre_servicio, $id_socio, $id_servicio, $fecha_cita, $hora);
+    $consulta->bind_result($nombre_socio, $nombre_servicio, $id_socio, $id_servicio, $fecha_cita, $hora, $cancel);
 
     if($consulta->num_rows > 0){
         while($consulta->fetch()){
             $resultado.="
-                <div>
-                    <p>$nombre_socio</p>
-                    <p>$nombre_servicio</p>
-                    <p>$fecha_cita</p>
-                    <p>$hora</p>
-                </div>
-            ";
+                <div class='cita'>
+                    <div class='cita-contenido'>
+                    <p><span class='resaltado'>Socio:</span> $nombre_socio</p>
+                    <p><span class='resaltado'>Servicio:</span> $nombre_servicio</p>
+                    <p><span class='resaltado'>Fecha:</span> $fecha_cita</p>
+                    <p><span class='resaltado'>Hora:</span> $hora</p>";
+                        
+            if($cancel === 0){
+                $resultado.="<button class='active'>Activa</button>
+                            </div><div class='cita-btn'>
+                            <a href='citas-confirm.php?socio=$id_socio&servicio=$id_servicio&fecha=$fecha_cita&hora=$hora&cancel=$cancel&action=c'>
+                                <button class='btn'>Cancelar</button>
+                            </a>
+                            ";
+            }else{
+                $resultado.="<button class='cancelled'>Cancelada</button>
+                            </div><div class='cita-btn'>
+                            <a href='citas-confirm.php?socio=$id_socio&servicio=$id_servicio&fecha=$fecha_cita&hora=$hora&cancel=$cancel&action=d'>
+                                <button class='btn'>Borrar</button>
+                            </a>
+                            ";
+            }
+
+            $resultado.="</div>
+            </div>";
         }
     }else{
         $resultado.="<h1 class='centrado'>No se han encontrado citas</h1>";

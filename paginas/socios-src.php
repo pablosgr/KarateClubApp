@@ -35,7 +35,7 @@
                 <button type="submit">Buscar</button>
             </form>
 
-            <div class='contenido-socios'>
+            <div class='contenido-socios-src'>
 
                 <?php
                 if(isset($_POST["texto"])){
