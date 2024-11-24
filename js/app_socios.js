@@ -6,6 +6,7 @@ let añadir_testimonio=document.getElementById("formulario-testimonio");
 let form_servicio=document.getElementById("formulario-servicios");
 let form_noticia=document.getElementById("formulario-noticias");
 let form_busqueda=document.getElementById("buscador");
+let form_cita=document.getElementById("form-citas");
 
 //campos socios
 let campo_foto=document.getElementById("campo-foto");
@@ -32,6 +33,12 @@ let campo_fecha=document.getElementById("fecha-not");
 
 //campo buscador
 let campo_buscador=document.getElementById("texto-buscado");
+
+//campos citas
+let fecha_cita=document.getElementById("fecha-cita");
+let hora_cita=document.getElementById("hora-cita");
+let socio_cita=document.getElementById("socio-cita");
+let servicio_cita=document.getElementById("servicio-cita");
 
 //eventos
 
@@ -98,7 +105,7 @@ if(form_noticia){
                 ()=>validarImagenNoticia(campo_imagen),
                 ()=>validarNoticia(campo_titulo),
                 ()=>validarNoticia(campo_noticia),
-                ()=>validarFecha(campo_fecha)
+                ()=>validarFecha(campo_fecha, "noticia")
             ];
 
             for (let val of validaciones_n){
@@ -116,6 +123,26 @@ if(form_busqueda){
         (evento)=>{
             if(!validarBuscador(campo_buscador)){
                 evento.preventDefault();
+            }
+        }
+    )
+}
+
+if(form_cita){
+    form_cita.addEventListener("submit",
+        (evento)=>{
+            let validaciones_c=[
+                ()=>validarFecha(fecha_cita, "cita"),
+                ()=>validarHora(hora_cita),
+                ()=>validarSelect(socio_cita),
+                ()=>validarSelect(servicio_cita)
+            ];
+
+            for (let val of validaciones_c){
+                if(!val()){
+                    evento.preventDefault();
+                    break;
+                }
             }
         }
     )
@@ -262,7 +289,7 @@ const validarUDuracion = (campo)=>{
 
     if(select === ''){
         span.style.display="inline";
-        span.innerText="Selecciona una opción válida";
+        span.innerText="Selecciona una opción";
         return false;
     }else if(select === 'minutos'){
         if(campo_duracion.value.trim() < 15){
@@ -327,13 +354,13 @@ const validarNoticia=(campo)=>{
     }
 }
 
-const validarFecha = (campo) => {
+const validarFecha = (campo, accion) => {
     let contenido=campo.value.trim();
     let span=campo.nextElementSibling;
 
     if(!contenido){
         span.style.display="inline";
-        span.innerText="Selecciona una fecha para la noticia";
+        span.innerText="Selecciona una fecha";
         return false;
     }
 
@@ -341,12 +368,19 @@ const validarFecha = (campo) => {
     let fecha_actual = new Date(); //aqui lo creo vacio para darle la fecha actual
     fecha_actual.setHours(0, 0, 0, 0); // ajustar la hora de la fecha actual
 
-    if (fecha_seleccionada < fecha_actual) {
-        span.style.display="inline";
-        span.innerText="La fecha debe ser igual o posterior a la fecha actual";
-        return false;
+    if(accion==="noticia"){
+        if (fecha_seleccionada < fecha_actual) {
+            span.style.display="inline";
+            span.innerText="La fecha debe ser igual o posterior a la fecha actual";
+            return false;
+        }
+    }else if(accion==="cita"){
+        if (fecha_seleccionada <= fecha_actual) {
+            span.style.display="inline";
+            span.innerText="La fecha debe ser posterior a la actual";
+            return false;
+        }
     }
-
     span.style.display="none";
     return true;
 };
@@ -360,6 +394,34 @@ const validarTestimonio=(campo)=>{
     if(!validarTexto(contenido)){
         span.style.display="inline";
         span.innerText="El campo no puede estar vacío";
+        return false;
+    }
+    span.style.display="none";
+    return true;
+}
+
+//funciones citas ----------------------------------------
+
+const validarSelect = (campo)=>{
+    let select=campo.value;
+    let span=campo.nextElementSibling;
+
+    if(select === ''){
+        span.style.display="inline";
+        span.innerText="Selecciona una opción";
+        return false;
+    }
+    span.style.display="none";
+    return true;
+};
+
+const validarHora = (campo)=>{
+    let contenido=campo.value.trim();
+    let span=campo.nextElementSibling;
+
+    if(!contenido){
+        span.style.display="inline";
+        span.innerText="Selecciona una hora";
         return false;
     }
     span.style.display="none";

@@ -31,14 +31,14 @@
         <section class='citas'>
             <div class='contenido-citas-confirm'>
                 <?php
-                        if(isset($_POST["socio"])){
-                            $socio=$_POST["socio"];
-                            $servicio=$_POST["servicio"];
-                            $fecha=$_POST["fecha"];
-                            $hora=$_POST["hora"];
-                            $cancel=$_POST["cancel"];
-                            $accion=$_POST["action"];
-                            //funcion para cancelar o borrar
+                        if(isset($_GET["socio"])){
+                            $socio=$_GET["socio"];
+                            $servicio=$_GET["servicio"];
+                            $fecha=$_GET["fecha"];
+                            $hora=$_GET["hora"];
+                            $cancel=$_GET["cancel"];
+                            $accion=$_GET["action"];
+                            echo modificarCita($conexion, $socio, $servicio, $fecha, $hora, $cancel, $accion);
                         }
 
                 ?>

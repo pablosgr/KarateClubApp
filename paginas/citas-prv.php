@@ -30,6 +30,13 @@
 
         <section class='citas'>
             <h1>Citas</h1>
+
+            <form action="citas-info.php" method='post' id='buscador' name='buscar-citas'>
+                <input type="text" placeholder='Nombre del socio, servicio o fecha' name='texto' id='texto-buscado'>
+                <span class="error"></span>
+                <button type="submit">Buscar</button>
+            </form>
+
             <?php
                 if(isset($_POST["fecha"])){
                     $fecha=$_POST["fecha"];

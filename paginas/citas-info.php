@@ -30,14 +30,25 @@
 
         <section class='citas'>
             <h1>Citas</h1>
+
+            <form action="citas-info.php" method='post' id='buscador' name='buscar-citas'>
+                <input type="text" placeholder='Nombre del socio, servicio o fecha' name='texto' id='texto-buscado'>
+                <span class="error"></span>
+                <button type="submit">Buscar</button>
+            </form>
             
             <div class='contenido-citas-info'>
 
             <?php
+                //compruebo si los datos se mandan por post (buscador) o por get (selección de día)
                 if(isset($_GET["fecha"])){
                     $fecha=$_GET["fecha"];
+                    echo imprimirCitas($conexion, $fecha);
+                }else if($_POST["texto"]){
+                    $texto=$_POST["texto"];
+                    echo imprimirCitasBuscadas($conexion, $texto);
                 }
-                echo mostrarCitas($conexion, $fecha);
+                
             ?>
 
             </div>

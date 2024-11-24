@@ -417,6 +417,14 @@ function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
     $primer_dia=mktime(0, 0, 0, $mes_actual, 1, $anno_actual); // Crear una marca de tiempo para el primer día del mes
     $pos_semana=date("N", $primer_dia); // Obtener el día de la semana del primer día del mes
 
+    $array_fechas=[];
+    $sql='SELECT fecha FROM citas'; //también podría lanzar una consulta al imprimir cada día (si hubiera un gran número de citas)
+    $consulta=$conexion->query($sql);
+    while($row=$consulta->fetch_array(MYSQLI_ASSOC)){
+        $f=$row["fecha"];
+        array_push($array_fechas, $f); //incluyo todas las fechas de citas en la db en el array
+    }
+
     $resultado="
         <div class='cal'>
         <div class='contenedor-cal'>
@@ -444,13 +452,8 @@ function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
             $i--; //resto 1 a la variable del for para que no avance en los días del mes
         }else{
             $fecha="$anno_actual-$mes_actual-$i";
-            $sql="SELECT COUNT(socio) AS conteo FROM citas WHERE fecha='$fecha'"; //hago consulta para comprobar que en la fecha que esta recorriendo, haya citas o no y altere la clase del enlac een consecuencia
-            $consulta=$conexion->query($sql);
-            $cuenta=0;
-            while($row=$consulta->fetch_array(MYSQLI_ASSOC)){
-                $cuenta=$row["conteo"];
-            }
-            if($cuenta > 0){
+            //compruebo que la fecha esté presente en el array de fechas para marcar el día
+            if(in_array($fecha, $array_fechas)){
                 $resultado.="
                 <td class='dia-selecc'>
                     <a href='citas-info.php?fecha=$fecha'>
@@ -467,8 +470,6 @@ function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
                 </td>
                 ";
             }
-
-            //guardo en un data la fecha completa
         }
         
         if($contador_semana > 1){
@@ -515,6 +516,7 @@ function imprimirFormularioCita($conexion){
     }
 
     $resultado.="</select>
+        <span class='error'></span>
         <select name='servicio' id='servicio-cita'>
         <option value=''>Selecciona un servicio</option>
     ";
@@ -527,6 +529,7 @@ function imprimirFormularioCita($conexion){
     }
 
     $resultado.="</select>
+        <span class='error'></span>
         <div class='caja-btn'>
             <button type='submit'>Generar cita</button>
         </div>
@@ -562,8 +565,40 @@ function generarCita($conexion, $socio, $servicio, $fecha, $hora){
     return $resultado;
 }
 
-function mostrarCitas($conexion, $fecha){
+function modificarCita($conexion, $socio, $servicio, $fecha, $hora, $cancel, $accion){
     $resultado='';
+    $sqld='DELETE FROM citas WHERE socio=? AND servicio=? AND fecha=? and hora=?';
+    $sqlu='UPDATE citas SET cancelada=1 WHERE socio=? AND servicio=? AND fecha=? and hora=?';
+    
+    $fecha_actual=date("Y-m-d");
+    $fecha_obj = new DateTime($fecha);
+    $fecha_actual_obj = new DateTime($fecha_actual);
+
+    if ($fecha_obj > $fecha_actual_obj){
+        if($accion==='d'){
+            $consulta=$conexion->prepare($sqld);
+            $consulta->bind_param("iiss", $socio, $servicio, $fecha, $hora);
+            $consulta->execute();
+            $consulta->close();
+            $resultado.="<h1 class='centrado'>Cita borrada</h1>
+            <h2 class='centrado'>Volviendo a la página de citas en 3 segundos...</h2>";
+        }else if($accion==='c'){
+            $consulta=$conexion->prepare($sqlu);
+            $consulta->bind_param("iiss", $socio, $servicio, $fecha, $hora);
+            $consulta->execute();
+            $consulta->close();
+            $resultado.="<h1 class='centrado'>Cita cancelada</h1>
+            <h2 class='centrado'>Volviendo a la página de citas en 3 segundos...</h2>";
+        }
+    }else{
+        $resultado.="<h2 class='centrado red'>No se pueden cancelar o borrar citas anteriores o iguales al día actual</h2>
+        <h2 class='centrado'>Volviendo a la página de citas en 3 segundos...</h2>";
+    }
+
+    return $resultado;
+}
+
+function imprimirCitas($conexion, $fecha){
     $sql='SELECT socio.nombre,servicio.descripcion,socio,servicio,fecha,hora,cancelada 
     FROM citas 
     JOIN servicio ON servicio.id=citas.servicio
@@ -576,38 +611,27 @@ function mostrarCitas($conexion, $fecha){
     $consulta->store_result(); 
     $consulta->bind_result($nombre_socio, $nombre_servicio, $id_socio, $id_servicio, $fecha_cita, $hora, $cancel);
 
-    if($consulta->num_rows > 0){
-        while($consulta->fetch()){
-            $resultado.="
-                <div class='cita'>
-                    <div class='cita-contenido'>
-                    <p><span class='resaltado'>Socio:</span> $nombre_socio</p>
-                    <p><span class='resaltado'>Servicio:</span> $nombre_servicio</p>
-                    <p><span class='resaltado'>Fecha:</span> $fecha_cita</p>
-                    <p><span class='resaltado'>Hora:</span> $hora</p>";
-                        
-            if($cancel === 0){
-                $resultado.="<button class='active'>Activa</button>
-                            </div><div class='cita-btn'>
-                            <a href='citas-confirm.php?socio=$id_socio&servicio=$id_servicio&fecha=$fecha_cita&hora=$hora&cancel=$cancel&action=c'>
-                                <button class='btn'>Cancelar</button>
-                            </a>
-                            ";
-            }else{
-                $resultado.="<button class='cancelled'>Cancelada</button>
-                            </div><div class='cita-btn'>
-                            <a href='citas-confirm.php?socio=$id_socio&servicio=$id_servicio&fecha=$fecha_cita&hora=$hora&cancel=$cancel&action=d'>
-                                <button class='btn'>Borrar</button>
-                            </a>
-                            ";
-            }
+    $resultado=listaCitas($consulta);
 
-            $resultado.="</div>
-            </div>";
-        }
-    }else{
-        $resultado.="<h1 class='centrado'>No se han encontrado citas</h1>";
-    }
+    return $resultado;
+}
+
+function imprimirCitasBuscadas($conexion, $texto){
+    $texto="%".$texto."%";
+    $sql='SELECT socio.nombre,servicio.descripcion,socio,servicio,fecha,hora,cancelada 
+    FROM citas 
+    JOIN servicio ON servicio.id=citas.servicio
+    JOIN socio ON socio.id=citas.socio
+    WHERE socio.nombre LIKE ?
+    OR servicio.descripcion LIKE ?
+    OR fecha LIKE ?';
+
+    $consulta=$conexion->prepare($sql);
+    $consulta->bind_param("sss", $texto, $texto, $texto);
+    $consulta->execute();
+    $consulta->store_result();
+
+    $resultado=listaCitas($consulta);
 
     return $resultado;
 }
@@ -707,6 +731,45 @@ function mostrarCitas($conexion, $fecha){
             ";
         }
         
+        return $resultado;
+    }
+
+    function listaCitas($consulta){
+        $resultado='';
+
+        $consulta->bind_result($nombre_socio, $nombre_servicio, $id_socio, $id_servicio, $fecha_cita, $hora, $cancel);
+        if($consulta->num_rows > 0){
+            while($consulta->fetch()){
+                $resultado.="
+                    <div class='cita'>
+                        <div class='cita-contenido'>
+                        <p><span class='resaltado'>Socio:</span> $nombre_socio</p>
+                        <p><span class='resaltado'>Servicio:</span> $nombre_servicio</p>
+                        <p><span class='resaltado'>Fecha:</span> $fecha_cita</p>
+                        <p><span class='resaltado'>Hora:</span> $hora</p>";
+                            
+                if($cancel === 0){
+                    $resultado.="<button class='active'>Activa</button>
+                                </div><div class='cita-btn'>
+                                <a href='citas-confirm.php?socio=$id_socio&servicio=$id_servicio&fecha=$fecha_cita&hora=$hora&cancel=$cancel&action=c'>
+                                    <button class='btn'>Cancelar</button>
+                                </a>
+                                ";
+                }else{
+                    $resultado.="<button class='cancelled'>Cancelada</button>
+                                </div><div class='cita-btn'>
+                                <a href='citas-confirm.php?socio=$id_socio&servicio=$id_servicio&fecha=$fecha_cita&hora=$hora&cancel=$cancel&action=d'>
+                                    <button class='btn'>Borrar</button>
+                                </a>
+                                ";
+                }
+    
+                $resultado.="</div>
+                </div>";
+            }
+        }else{
+            $resultado.="<h1 class='centrado'>No se han encontrado citas</h1>";
+        }
         return $resultado;
     }
 ?>
