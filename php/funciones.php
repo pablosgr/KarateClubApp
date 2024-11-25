@@ -112,14 +112,13 @@
 
     function generarNoticia($conexion, $id){
         $resultado='';
-        $sql="SELECT * FROM noticia WHERE id=$id";
-
-        $sql_result=$conexion->query($sql);
-        while($row=$sql_result->fetch_array(MYSQLI_ASSOC)){
-            $titulo=$row["titulo"];
-            $contenido=$row["contenido"];
-            $imagen=$row["imagen"];
-            $fecha_publicacion=$row["fecha_publicacion"];
+        $sql="SELECT * FROM noticia WHERE id=?";
+        $consulta=$conexion->prepare($sql);
+        $consulta->bind_param("i", $id);
+        $consulta->execute();
+        $consulta->store_result(); 
+        $consulta->bind_result($id, $titulo, $contenido, $imagen, $fecha_publicacion);
+        while($consulta->fetch()){
             $resultado.="
                 <h1>$titulo</h1>
                 <img src='$imagen'>
@@ -127,6 +126,7 @@
                 <p>$fecha_publicacion</p>
             ";
         }
+        $consulta->close();
 
         return $resultado;
     }
@@ -156,15 +156,10 @@
         $resultado='';
         $sql='SELECT id,nombre,usuario,edad,telefono,foto FROM socio';
 
-        $sql_result=$conexion->query($sql);
-        while($row=$sql_result->fetch_array(MYSQLI_ASSOC)){
-            $id=$row["id"];
-            $nombre=$row["nombre"];
-            $usuario=$row["usuario"];
-            $edad=$row["edad"];
-            $tlfn=$row["telefono"];
-            $ruta_avatar=$row["foto"];
-
+        $consulta=$conexion->prepare($sql);
+        $consulta->execute();
+        $consulta->bind_result($id, $nombre, $usuario, $edad, $tlfn, $ruta_avatar);
+        while($consulta->fetch()){
             $resultado.="
                 <div class='tarjeta_socio'>
                     <div class='avatar'><img src='$ruta_avatar'></div>
@@ -176,6 +171,8 @@
                 </div>
             ";
         }
+        $consulta->close();
+
         return $resultado;
     }
 
@@ -297,21 +294,22 @@ function imprimirTestimonios($conexion){
         JOIN testimonio ON socio.id=testimonio.autor
         ORDER BY fecha DESC';
 
-        $sql_result=$conexion->query($sql);
-        while($row=$sql_result->fetch_array(MYSQLI_ASSOC)){
-            $nombre=$row["nombre"];
-            $texto=$row["contenido"];
-            $fecha=$row["fecha"];
+    $consulta=$conexion->prepare($sql);
+    $consulta->execute();
+    $consulta->bind_result($id, $nombre, $texto, $fecha);
 
-            $resultado.="
-                <div class='card-testimonio'>
-                    <h2>$nombre</h2>
-                    <p>$texto</p>
-                    <p>$fecha</p>
-                </div>
-            ";
-        }
-        return $resultado;
+    while($consulta->fetch()){
+        $resultado.="
+            <div class='card-testimonio'>
+                <h2>$nombre</h2>
+                <p>$texto</p>
+                <p>$fecha</p>
+            </div>
+        ";
+    }
+    $consulta->close();
+
+    return $resultado;
 }
 
 function añadirTestimonio($conexion, $autor, $contenido){
@@ -415,6 +413,7 @@ function actualizarServicio($conexion, $id, $descripcion, $duracion, $ud_duracio
 //funciones citas ----------------------------------------------------------------
     
 function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
+    $mes_actual = sprintf("%02d", $mes_actual); //formateo de mes para que tenga dos digitos (necesario)
     $dias_mes=cal_days_in_month(CAL_GREGORIAN, $mes_actual, $anno_actual);
     $contador_semana=7;
     $dias=['Lun', 'Mar', 'Miér', 'Jue', 'Vie', 'Sáb', 'Dom'];
@@ -425,11 +424,14 @@ function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
 
     $array_fechas=[];
     $sql='SELECT fecha FROM citas'; //también podría lanzar una consulta al imprimir cada día (si hubiera un gran número de citas)
-    $consulta=$conexion->query($sql);
-    while($row=$consulta->fetch_array(MYSQLI_ASSOC)){
-        $f=$row["fecha"];
+    
+    $consulta=$conexion->prepare($sql);
+    $consulta->execute();
+    $consulta->bind_result($f);
+    while($consulta->fetch()){
         array_push($array_fechas, $f); //incluyo todas las fechas de citas de la db en el array
     }
+    $consulta->close();
 
     $resultado="
         <div class='cal'>
@@ -463,7 +465,6 @@ function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
                 $resultado.="
                 <td class='dia-selecc'>
                     <a href='citas-info.php?fecha=$fecha'>";
-                
                     if($fecha === $act_date){
                         $resultado.="<div class='celda green actual'>$i</div>";
                     }else{
@@ -511,9 +512,10 @@ function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
 function imprimirFormularioCita($conexion){
     $sql_socios='SELECT id,nombre FROM socio';
     $sql_servicios='SELECT id,descripcion FROM servicio';
-    $consulta1=$conexion->query($sql_socios);
-    $consulta2=$conexion->query($sql_servicios);
-
+    
+    $consulta1=$conexion->prepare($sql_socios);
+    $consulta1->execute();
+    $consulta1->bind_result($id, $nombre);
     $resultado="
         <div class='form-cita'>
             <form id='form-citas' action='citas.php' method='post' id='form-citas'>
@@ -525,26 +527,27 @@ function imprimirFormularioCita($conexion){
                 <select name='socio' id='socio-cita'>
                 <option value=''>Selecciona un socio</option>
     ";
-    while($row=$consulta1->fetch_array(MYSQLI_ASSOC)){
-        $id=$row["id"];
-        $nombre=$row["nombre"];
+    while($consulta1->fetch()){
         $resultado.="
             <option value='$id'>$nombre</option>
         ";
     }
+    $consulta1->close();
 
+    $consulta2=$conexion->prepare($sql_servicios);
+    $consulta2->execute();
+    $consulta2->bind_result($id_s, $nombre_s);
     $resultado.="</select>
         <span class='error'></span>
         <select name='servicio' id='servicio-cita'>
         <option value=''>Selecciona un servicio</option>
     ";
-    while($row=$consulta2->fetch_array(MYSQLI_ASSOC)){
-        $id=$row["id"];
-        $nombre=$row["descripcion"];
+    while($consulta2->fetch()){
         $resultado.="
-            <option value='$id'>$nombre</option>
+            <option value='$id_s'>$nombre_s</option>
         ";
     }
+    $consulta2->close();
 
     $resultado.="</select>
         <span class='error'></span>
@@ -700,25 +703,24 @@ function imprimirCitasBuscadas($conexion, $texto){
     function imprimirServicios($conexion, $sql){
         $resultado='';
 
-        $sql_result=$conexion->query($sql);
-        while($row=$sql_result->fetch_array(MYSQLI_ASSOC)){
-            $id=$row["id"];
-            $descripcion=$row["descripcion"];
-            $duracion=$row["duracion"];
-            $ud_duracion=$row["unidad_duracion"];
-            $precio=$row["precio"];
+        $consulta=$conexion->prepare($sql);
+        $consulta->execute();
+        $consulta->store_result(); 
+        $consulta->bind_result($id, $descripcion, $duracion, $unidad_duracion, $precio);
 
-            $resultado.="
-                <div class='p-5 text-center bg-body-secondary rounded-4 custom-serv'>
-                    <h1 class='text-body-emphasis'>$descripcion</h1>
-                    <p class='lead'>Este servicio cuenta con una duración de <span>$duracion $ud_duracion</span> y un precio de <span>$precio Euros</span>.</p>
-                    <a href='servicios-mod.php?id=$id'>
-                        <button class='btn btn-primary d-inline-flex align-items-center btn-custom'>
-                            Modificar
-                        </button>
-                    </a>
-                </div>
-            ";
+ 
+            while($consulta->fetch()){
+                $resultado.="
+                    <div class='p-5 text-center bg-body-secondary rounded-4 custom-serv'>
+                        <h1 class='text-body-emphasis'>$descripcion</h1>
+                        <p class='lead'>Este servicio cuenta con una duración de <span>$duracion $unidad_duracion</span> y un precio de <span>$precio Euros</span>.</p>
+                        <a href='servicios-mod.php?id=$id'>
+                            <button class='btn btn-primary d-inline-flex align-items-center btn-custom'>
+                                Modificar
+                            </button>
+                        </a>
+                    </div>
+                ";
         }
         return $resultado;
     }

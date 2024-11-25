@@ -107,9 +107,15 @@ INSERT INTO socio (nombre, edad, pass, usuario, telefono, foto) VALUES
 
 INSERT INTO testimonio (autor, contenido, fecha) VALUES
 (1, 'Este club ha cambiado mi vida, he mejorado en disciplina y condición física.', '2024-09-20'),
-(2, 'Las clases son excelentes, los entrenadores son muy profesionales y amables.', '2024-10-05');
+(2, 'Las clases son excelentes, los entrenadores son muy profesionales y amables.', '2024-10-05'),
+(3, 'El ambiente es increíble, siempre es motivador venir a entrenar.', '2024-11-20'),
+(4, 'Me siento parte de una familia. Es un lugar que recomiendo a todos.', '2024-11-25');
 
 INSERT INTO citas (socio, servicio, fecha, hora, cancelada) VALUES
-(1, 1, '2024-10-10', '18:00:00', 0),  -- Cita el mes pasado
-(2, 2, '2024-11-15', '19:00:00', 0), -- Cita este mes
-(3, 2, '2024-11-15', '19:00:00', 1);
+(1, 1, '2024-10-10', '18:00:00', 0),
+(2, 2, '2024-11-15', '19:00:00', 0),
+(3, 2, '2024-11-15', '19:00:00', 1),
+(1, 1, '2024-12-05', '17:30:00', 0),
+(4, 3, '2025-01-15', '20:00:00', 0),
+(4, 2, '2024-02-07', '18:00:00', 1),
+(2, 2, '2024-12-10', '19:00:00', 1);
