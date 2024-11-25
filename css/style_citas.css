@@ -16,7 +16,7 @@ div.contenido-citas{
     padding-left: 30px;
     min-height: 592px;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     flex-direction: row;
     justify-content: space-around;
 }
@@ -95,25 +95,29 @@ div.celda{
 
 div.celda:hover{
     color: white;
-    background-color: #6c757d;
+    background-color: #b2b7bb;
     cursor: pointer;
 }
 
 div.green{
-    background-color: #46c057;
+    background-color: #99eea4;
 }
 
 div.green:hover{
     background-color: #46c057;
 }
 
+div.actual{
+    background-color: #6c757d;
+    color: white;
+}
+
 /*formulario*/
 
 div.form-cita{
     /* display: none; */
-    box-shadow: 0px 0px 14px rgba(25, 25, 25, 0.3);
-    border-radius: 7px;
-    padding: 40px;
+    /* box-shadow: 0px 0px 14px rgba(25, 25, 25, 0.3); */
+    /* border-radius: 7px; */
     margin-left: 60px;
     width: 30%;
     min-width: 315px;
@@ -122,7 +126,45 @@ div.form-cita{
 form#form-citas{
     display: flex;
     flex-direction: column;
+    gap: 30px;
 }
+
+form#form-citas p:first-child{
+    font-size: 1.6em;
+    font-weight: 600;
+    padding-bottom: 28px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid rgb(54,54,54);
+}
+
+form#form-citas input[type=date],
+form#form-citas input[type=time],
+form#form-citas select{
+    background-color: inherit;
+    padding: 8px;
+    border: 1px solid #100B00;
+    border-radius: 5px;
+    font-size: 1.01em;
+}
+
+form#form-citas button{
+    align-self: flex-end;
+    border-radius: 30px;
+    padding: 15px 15px 15px 15px;
+    border: 1px solid rgb(54, 54, 54);
+    background-color: inherit;
+    transition: 0.2s ease;
+    font-size: 1.03em;
+}
+
+form#form-citas button:hover{
+    background-color: #6c757d;
+    color: white;
+    border: 1px solid #6c757d;
+    cursor: pointer;
+}
+
+/*tarjetas citas*/
 
 div.cita button{
     padding: 12px;
@@ -153,7 +195,7 @@ a button.btn:hover{
     color: white;
 }
 
-.active{
+.actived{
     background-color: #46c057;
     color: white;
     font-weight: 600;
@@ -205,3 +247,50 @@ span.error{
     font-weight: 700;
     margin-right: 7px;
 }
+
+/*media query*/
+@media (width <= 1364px){
+    div.cal{
+        margin-bottom: 80px;
+    }
+
+    div.contenido-citas{
+        padding-left: 0;
+    }
+
+    div.form-cita{
+        align-self: center;
+        margin-left: 0;
+        margin-bottom: 40px;
+    }
+
+    .contenedor-cal{
+        font-size: 0.8em;
+        width: 420px;
+        align-self: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 30px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgb(54,54,54);
+    }
+
+    .calendario{
+        font-size: 1em;
+        min-width: 450px;
+        height: auto;
+        border-spacing: 5px;
+    }
+
+    div.contenido-citas{
+        flex-direction: column;
+    }
+}
+
+/* @media (width <= 1229px){
+    div.contenido-citas{
+        flex-direction: column;
+    }
+} */

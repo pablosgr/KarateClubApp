@@ -74,6 +74,28 @@ nav ul li{
     font-size: 1.2rem;
 }
 
+#menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    color: white;
+    cursor: pointer;
+    margin-right: 50px;
+}
+
+nav ul li,
+#menu-btn,
+header>h1{
+    transition: 0.2s ease;
+}
+
+nav ul li:hover,
+#menu-btn:hover,
+header>h1:hover{
+    text-shadow: 0px 0px 10px rgb(206, 206, 206);
+}
+
 /*Secciones - index*/
 
 section.banner-index{
@@ -88,11 +110,13 @@ section.banner-index{
 }
 
 section.banner-index p{
+    text-align: center;
     color: white;
-    font-size: 90px;
+    font-size: 12em;
     font-weight: 600;
-    padding: 0px 40px 0px 40px;
+    padding: 0px 40px 80px 40px;
     text-shadow: 0px 0px 10px black;
+    font-family: Slackside One;
 }
 
 section.testimonio-index{
@@ -149,7 +173,7 @@ article.noticia{
     padding-bottom: 20px;
     margin-bottom: 70px;
     border-bottom: 1px solid rgb(54, 54, 54);
-    min-width: 440px;
+    min-width: 400px;
     transition: 0.3s ease;
 }
 
@@ -318,6 +342,7 @@ form#buscador button:hover{
     background-color: #6c757d;
     color: white;
     border: 1px solid #6c757d;
+    cursor: pointer;
 }
 
 form#buscador span{
@@ -341,5 +366,35 @@ form#buscador span{
 
     div.side-text{
         padding-left: 0;
+    }
+}
+
+@media (width <= 1009px) {
+    #menu-btn {
+        display: inline-block;
+    }
+
+    nav ul {
+        display: none; /* Oculta el menú */
+        flex-direction: column;
+        background-color: rgb(37, 37, 37);
+        position: absolute;
+        top: 80px;
+        right: 0;
+        width: 100%;
+        padding: 20px 0;
+    }
+
+    nav ul.active {
+        display: flex; /* Muestra el menú al activarlo */
+    }
+
+    nav ul li {
+        text-align: center;
+        margin: 10px 0;
+    }
+
+    section.banner-index p{
+        font-size: 8em;
     }
 }

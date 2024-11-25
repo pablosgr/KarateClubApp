@@ -40,10 +40,18 @@ let hora_cita=document.getElementById("hora-cita");
 let socio_cita=document.getElementById("socio-cita");
 let servicio_cita=document.getElementById("servicio-cita");
 
+//variables para el menú hamburguesa
+const menuBtn=document.getElementById("menu-btn");
+const navMenu=document.querySelector('nav ul');
+
 //eventos
 
 //compruebo que el formulario esté presente en la página -sea distinto de null- antes de ejecutar el código 
 //para evitar que intente ejecutar y falle en páginas donde falte algún formulario
+
+menuBtn.addEventListener("click", () => {
+    navMenu.classList.toggle("active"); //añade y elimina la clase active
+});
 
 //este evento actua en los formularios de adición y modificación
 if(form_socio){

@@ -1,5 +1,6 @@
 <header>
     <h1>糸東流</h1>
+    <button id="menu-btn" aria-label="Toggle menu">&#9776;</button>
     <nav>
         <ul>
             <li><a href="index.php">SOCIOS</a></li>

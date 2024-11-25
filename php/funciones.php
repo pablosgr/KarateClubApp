@@ -23,6 +23,7 @@
                     <li><a href='$ruta_cit'>CITAS</a></li>
                 </ul>
             </nav>
+        <button id='menu-btn' aria-label='Toggle menu'>&#9776;</button>
         </header>";
 
         return $resultado;
@@ -34,13 +35,15 @@
         $resultado='<ul>';
         $total='';
         $sql='SELECT COUNT(id) AS total FROM noticia';
-        $sql_result=$conexion->query($sql);
-
-        while($row=$sql_result->fetch_array(MYSQLI_ASSOC)){
-            $total=$row["total"];
+        
+        $consulta=$conexion->prepare($sql);
+        $consulta->execute();
+        $consulta->bind_result($total);
+        while($consulta->fetch()){
+            $total=intval($total); // convertir a entero
         }
+        $consulta->close();
 
-        $total = intval($total); // Convertir a entero en PHP
         $num_paginas=round($total/4); //ceil redondea siempre hacia arriba, floor hacia abajo
 
         for($i=1; $i<=$num_paginas; $i++){
@@ -64,15 +67,17 @@
             ORDER BY RAND() LIMIT 1
         ';
 
-        $sql_result=$conexion->query($sql);
-        while($row=$sql_result->fetch_array(MYSQLI_ASSOC)){
-            $testimonio=$row["contenido"];
-            $nombre_usuario=$row["nombre"];
+        $consulta=$conexion->prepare($sql);
+        $consulta->execute();
+        $consulta->bind_result($testimonio, $nombre_usuario);
+        while($consulta->fetch()){
             $resultado.="
                 <h3>$nombre_usuario</h3>
                 <p><em>$testimonio</em></p>
             ";
         }
+        $consulta->close();
+        
         return $resultado;
     }
 
@@ -413,16 +418,17 @@ function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
     $dias_mes=cal_days_in_month(CAL_GREGORIAN, $mes_actual, $anno_actual);
     $contador_semana=7;
     $dias=['Lun', 'Mar', 'Miér', 'Jue', 'Vie', 'Sáb', 'Dom'];
+    $act_date=date("Y-m-d");
 
-    $primer_dia=mktime(0, 0, 0, $mes_actual, 1, $anno_actual); // Crear una marca de tiempo para el primer día del mes
-    $pos_semana=date("N", $primer_dia); // Obtener el día de la semana del primer día del mes
+    $primer_dia=mktime(0, 0, 0, $mes_actual, 1, $anno_actual); // crear una marca de tiempo para el primer día del mes
+    $pos_semana=date("N", $primer_dia); // obtener el día de la semana del primer día del mes
 
     $array_fechas=[];
     $sql='SELECT fecha FROM citas'; //también podría lanzar una consulta al imprimir cada día (si hubiera un gran número de citas)
     $consulta=$conexion->query($sql);
     while($row=$consulta->fetch_array(MYSQLI_ASSOC)){
         $f=$row["fecha"];
-        array_push($array_fechas, $f); //incluyo todas las fechas de citas en la db en el array
+        array_push($array_fechas, $f); //incluyo todas las fechas de citas de la db en el array
     }
 
     $resultado="
@@ -448,7 +454,7 @@ function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
     for($i=1; $i<=$dias_mes; $i++){
         if($pos_semana > 1){
             $resultado.="<td></td>"; //añado celda vacía por cada día que no coincida con el lunes (1)
-            $pos_semana--; //le resto uno a la posicion de la semana para volver a comprobar
+            $pos_semana--; //le resto 1 a la posicion de la semana para volver a comprobar
             $i--; //resto 1 a la variable del for para que no avance en los días del mes
         }else{
             $fecha="$anno_actual-$mes_actual-$i";
@@ -456,18 +462,30 @@ function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
             if(in_array($fecha, $array_fechas)){
                 $resultado.="
                 <td class='dia-selecc'>
-                    <a href='citas-info.php?fecha=$fecha'>
-                        <div class='celda green'>$i</div>
-                    </a>
-                </td>
+                    <a href='citas-info.php?fecha=$fecha'>";
+                
+                    if($fecha === $act_date){
+                        $resultado.="<div class='celda green actual'>$i</div>";
+                    }else{
+                        $resultado.="<div class='celda green'>$i</div>";
+                    }
+
+                $resultado.="</a>
+                    </td>
                 ";
             }else{
                 $resultado.="
                 <td class='dia-selecc'>
-                    <a href='citas-info.php?fecha=$fecha'>
-                        <div class='celda'>$i</div>
-                    </a>
-                </td>
+                    <a href='citas-info.php?fecha=$fecha'>";
+                
+                    if($fecha === $act_date){
+                        $resultado.="<div class='celda actual'>$i</div>";
+                    }else{
+                        $resultado.="<div class='celda'>$i</div>";
+                    }
+
+                $resultado.="</a>
+                    </td>
                 ";
             }
         }
@@ -499,7 +517,7 @@ function imprimirFormularioCita($conexion){
     $resultado="
         <div class='form-cita'>
             <form id='form-citas' action='citas.php' method='post' id='form-citas'>
-                <p>Datos de cita</p>
+                <p>Nueva cita</p>
                 <input type='date' name='fecha' id='fecha-cita'>
                 <span class='error'></span>
                 <input type='time' name='hora' id='hora-cita'>
@@ -624,7 +642,8 @@ function imprimirCitasBuscadas($conexion, $texto){
     JOIN socio ON socio.id=citas.socio
     WHERE socio.nombre LIKE ?
     OR servicio.descripcion LIKE ?
-    OR fecha LIKE ?';
+    OR fecha LIKE ?
+    ORDER BY fecha DESC';
 
     $consulta=$conexion->prepare($sql);
     $consulta->bind_param("sss", $texto, $texto, $texto);
@@ -639,15 +658,15 @@ function imprimirCitasBuscadas($conexion, $texto){
 //funciones internas ----------------------------------------------------------------
     
     function generarListaNoticias($sql, $conexion, $ruta_index){
-        $sql_result=$conexion->query($sql);
         $resultado='';
+        $enlace='';
 
-        while($row=$sql_result->fetch_array(MYSQLI_ASSOC)){
-            $id=$row["id"];
-            $titulo=$row["titulo"];
-            $contenido=substr($row["contenido"], 0, 170);
-            $ruta_imagen=$row["imagen"];
-            $fecha=$row["fecha_publicacion"];
+        $consulta=$conexion->prepare($sql);
+        $consulta->execute();
+        $consulta->bind_result($id, $titulo, $contenido, $ruta_imagen, $fecha);
+        
+        while($consulta->fetch()){
+            $contenido=substr($contenido, 0, 170);
             $enlace="noticia-comp.php?id=$id";
             
             //compruebo si estoy en el index para cambiar las rutas
@@ -672,6 +691,8 @@ function imprimirCitasBuscadas($conexion, $texto){
                 </article>
             </a>";
         }
+
+        $consulta->close();
 
         return $resultado;
     }
@@ -749,7 +770,7 @@ function imprimirCitasBuscadas($conexion, $texto){
                         <p><span class='resaltado'>Hora:</span> $hora</p>";
                             
                 if($cancel === 0){
-                    $resultado.="<button class='active'>Activa</button>
+                    $resultado.="<button class='actived'>Activa</button>
                                 </div><div class='cita-btn'>
                                 <a href='citas-confirm.php?socio=$id_socio&servicio=$id_servicio&fecha=$fecha_cita&hora=$hora&cancel=$cancel&action=c'>
                                     <button class='btn'>Cancelar</button>
