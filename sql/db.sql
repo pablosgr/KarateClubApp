@@ -52,8 +52,8 @@ CREATE TABLE citas (
 -- INSERTs
 
 INSERT INTO servicio (descripcion, duracion, unidad_duracion, precio) VALUES
-('Clases de Karate Infantil', 60, 'minutos', 30.00),
-('Clases de Karate Adulto', 90, 'minutos', 40.00),
+('Clase de Karate', 60, 'minutos', 30.00),
+('Clase de Karate Avanzado', 90, 'minutos', 40.00),
 ('Entrenamiento Personalizado', 45, 'minutos', 50.00),
 ('Taller de Defensa Personal', 120, 'minutos', 25.00),
 ('Seminario de Competencia', 180, 'minutos', 100.00);
@@ -117,5 +117,6 @@ INSERT INTO citas (socio, servicio, fecha, hora, cancelada) VALUES
 (3, 2, '2024-11-15', '19:00:00', 1),
 (1, 1, '2024-12-05', '17:30:00', 0),
 (4, 3, '2025-01-15', '20:00:00', 0),
+(3, 5, '2025-02-03', '10:30:00', 0),
 (4, 2, '2024-02-07', '18:00:00', 1),
 (2, 2, '2024-12-10', '19:00:00', 1);

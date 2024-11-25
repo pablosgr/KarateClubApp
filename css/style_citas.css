@@ -249,6 +249,7 @@ span.error{
 }
 
 /*media query*/
+
 @media (width <= 1364px){
     div.cal{
         margin-bottom: 80px;

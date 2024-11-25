@@ -136,6 +136,11 @@ span.error{
     text-align: center;
 }
 
+h2.red{
+    color: tomato;
+    margin-bottom: 40px;
+}
+
 /*media query*/
 
 @media (width <= 1443px){

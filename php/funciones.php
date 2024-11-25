@@ -251,12 +251,40 @@
 
 
     function añadirSocio($conexion, $nombre, $edad, $pass, $usuario, $tlfn, $ruta_img){
+        $resultado='';
+        $check='SELECT * FROM socio WHERE telefono=?';
+        $check2='SELECT * FROM socio WHERE usuario=?';
+
+        $consulta_check=$conexion->prepare($check);
+        $consulta_check->bind_param("s", $tlfn);
+        $consulta_check->execute();
+        $consulta_check->store_result(); 
+        if($consulta_check->num_rows > 0){
+            $resultado.="<h2 class='centrado red'>El teléfono ya está en uso</h2>";
+            $consulta_check->close();
+            return $resultado;
+        }
+        $consulta_check->close();
+
+        $consulta_check2=$conexion->prepare($check2);
+        $consulta_check2->bind_param("s", $usuario);
+        $consulta_check2->execute();
+        $consulta_check2->store_result(); 
+        if($consulta_check2->num_rows > 0){
+            $resultado.="<h2 class='centrado red'>El nombre de usuario ya está en uso</h2>";
+            $consulta_check2->close();
+            return $resultado;
+        }
+        $consulta_check2->close();
+
         $sql='INSERT INTO socio (nombre, edad, pass, usuario, telefono, foto) 
         VALUES (?, ?, ?, ?, ?, ?)';
         $consulta=$conexion->prepare($sql);
         $consulta->bind_param("sissss", $nombre, $edad, $pass, $usuario, $tlfn, $ruta_img);
         $consulta->execute();
         $consulta->close();
+
+        return $resultado;
     }
 
 
@@ -459,7 +487,8 @@ function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
             $pos_semana--; //le resto 1 a la posicion de la semana para volver a comprobar
             $i--; //resto 1 a la variable del for para que no avance en los días del mes
         }else{
-            $fecha="$anno_actual-$mes_actual-$i";
+            $dia_format=sprintf("%02d", $i); //formateo el día a dos digitos
+            $fecha="$anno_actual-$mes_actual-$dia_format";
             //compruebo que la fecha esté presente en el array de fechas para marcar el día
             if(in_array($fecha, $array_fechas)){
                 $resultado.="
