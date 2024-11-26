@@ -110,13 +110,13 @@ section.banner-index{
 }
 
 section.banner-index p{
-    text-align: center;
     color: white;
     font-size: 12em;
-    font-weight: 600;
-    padding: 0px 40px 80px 40px;
-    text-shadow: 0px 0px 10px black;
+    font-weight: 500;
+    padding: 0px 80px 80px 80px;
+    text-shadow: 0px 0px 15px black;
     font-family: Slackside One;
+    transition: 0.2s ease;
 }
 
 section.testimonio-index{
@@ -393,8 +393,10 @@ form#buscador span{
         text-align: center;
         margin: 10px 0;
     }
+}
 
+@media (width <= 649px) {
     section.banner-index p{
-        font-size: 8em;
+        font-size: 9em;
     }
 }
