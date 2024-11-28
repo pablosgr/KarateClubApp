@@ -51,9 +51,11 @@
 
             <?php
                 if(isset($_GET["mes"])){
+                    //obtengo el año y mes y le resto 1 al mes
                     $mes_actual=$_GET["mes"]-1;
                     $anno_actual=$_GET["anno"];
 
+                    //si el mes baja de enero, lo reseteo a enero y resto 1 al año
                     if($mes_actual < 1){
                         $mes_actual=12;
                         $anno_actual--;

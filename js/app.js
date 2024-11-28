@@ -46,14 +46,15 @@ const navMenu=document.querySelector('nav ul');
 
 //eventos
 
-//compruebo que el formulario esté presente en la página -sea distinto de null- antes de ejecutar el código 
-//para evitar que intente ejecutar y falle en páginas donde falte algún formulario
-
+//evento para mostrar el menú escondido en resoluciones menores
 menuBtn.addEventListener("click", () => {
     navMenu.classList.toggle("active"); //añade y elimina la clase active
 });
 
-//este evento actua en los formularios de adición y modificación
+//compruebo que cada formulario esté presente en la página -sea distinto de null- antes de ejecutar el código 
+//para evitar que intente ejecutar y falle en páginas donde falte algún formulario
+
+//este evento actua en los formularios de adición y modificación de socios
 if(form_socio){
     form_socio.addEventListener("submit",
         (evento)=>{
@@ -85,13 +86,13 @@ if(añadir_testimonio){
     );
 }
 
-//este evento actua en los formularios de adición y modificación
+//este evento actua en los formularios de adición y modificación de servicios
 if(form_servicio){
     form_servicio.addEventListener("submit",
         (evento)=>{
             let validaciones=[
                 ()=>validarServicio(campo_descripcion),
-                ()=>validarNum(campo_duracion),
+                ()=>validarDuracion(campo_duracion),
                 ()=>validarUDuracion(campo_u_duracion),
                 ()=>validarPrecioServicio(campo_precio)
             ];
@@ -291,6 +292,17 @@ const validarServicio=(campo)=>{
     }
 }
 
+const validarDuracion = (campo)=>{
+    let span=campo.nextElementSibling;
+
+    if(!validarNum(campo, span)){
+        return false;
+    }
+    
+    span.style.display="none";
+    return true;
+}
+
 const validarUDuracion = (campo)=>{
     let select=campo.value;
     let span=campo.nextElementSibling;
@@ -374,7 +386,7 @@ const validarFecha = (campo, accion) => {
 
     let fecha_seleccionada = new Date(contenido); //uso objeto tipo Date con la fecha escogida
     let fecha_actual = new Date(); //aqui lo creo vacio para darle la fecha actual
-    fecha_actual.setHours(0, 0, 0, 0); // ajustar la hora de la fecha actual
+    fecha_actual.setHours(0, 0, 0, 0); // ajusto la hora de la fecha actual
 
     if(accion==="noticia"){
         if (fecha_seleccionada < fecha_actual) {
@@ -436,9 +448,9 @@ const validarHora = (campo)=>{
     return true;
 }
 
-//funciones de validación generales --------------------------------
+//funciones de validación generales (llamadas por otras funciones en el código) --------------------------------
 
-const validarTexto = (contenido)=>{
+const validarTexto = (contenido)=>{ //gestiono el valor del campo directamente
     if(contenido === ""){
         return false;
     }else{
@@ -448,7 +460,7 @@ const validarTexto = (contenido)=>{
 
 const validarImagen = (campo, span)=>{
     const tipo='image/jpeg';
-    const tamaño=5*1024*1024; //el tamaño se compara en bytes
+    const tamaño=5*1024*1024; //lo calculo en bytes pues el tamaño se compara en bytes con .size
     let fichero=campo.files[0];
 
         if(fichero.type !== tipo){
@@ -464,8 +476,8 @@ const validarImagen = (campo, span)=>{
         return true;
 };
 
-const validarNum = (contenido, span)=>{
-    let numero=parseInt(contenido);
+const validarNum = (contenido, span)=>{ //gestiono el campo y el span del mismo en esta función
+    let numero=parseInt(contenido.value); //obtengo el value del campo
 
     if(isNaN(numero)){
         span.style.display="inline";

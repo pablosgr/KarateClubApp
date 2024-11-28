@@ -9,6 +9,7 @@
 
 //función para cabecera ----------------------------------------------------------------
 
+    //dibuja la cabecera con las rutas pasadas por parámetro
     function dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit){
         $resultado='';
         $resultado.="
@@ -40,15 +41,15 @@
         $consulta->execute();
         $consulta->bind_result($total);
         while($consulta->fetch()){
-            $total=intval($total); // convertir a entero
+            $total=intval($total); // convierto a entero
         }
         $consulta->close();
 
-        $num_paginas=round($total/4); //ceil redondea siempre hacia arriba, floor hacia abajo
+        $num_paginas=round($total/4); //obtengo el numero de paginas a imprimir basado en el nº de consultas en la bd. ceil redondea siempre hacia arriba, floor hacia abajo, round estándar
 
         for($i=1; $i<=$num_paginas; $i++){
             if($pagina == $i){
-                $resultado.="<a href='noticias.php?pagina=$i'><li class='marcado'>$i</li></a>"; //si es el de la página actual, lo marco
+                $resultado.="<a href='noticias.php?pagina=$i'><li class='marcado'>$i</li></a>"; //si esta en la página actual, lo marco
             }else{
                 $resultado.="<a href='noticias.php?pagina=$i'><li>$i</li></a>"; //imprimo un li por cada 4 noticias
             }
@@ -85,12 +86,12 @@
         $sql = 'SELECT id, titulo, contenido, imagen, fecha_publicacion
         FROM noticia
         WHERE fecha_publicacion <= CURDATE()
-        ORDER BY fecha_publicacion DESC
+        ORDER BY fecha_publicacion DESC, id DESC
         LIMIT 3';
         //ordenará por fecha y por hora
         $ruta_index=true;
 
-        $resultado=generarListaNoticias($sql, $conexion, $ruta_index);
+        $resultado=generarListaNoticias($sql, $conexion, $ruta_index); //llama a la funcion que genera las noticias listadas
 
         return $resultado;
     }
@@ -98,18 +99,20 @@
 //funciones noticias ----------------------------------------------------------------
 
     function imprimirNoticias($conexion, $pagina){
-        $offset = ($pagina - 1) * 4; //para que calcule el offset de 4 en 4 según el número de página (las noticias de cada página)
+        $offset = ($pagina - 1) * 4; //para que calcule el offset de 4 en 4 según el número de página empezando en 0 (las noticias de cada página)
         $sql="SELECT id,titulo,contenido,imagen,fecha_publicacion
         FROM noticia 
         WHERE fecha_publicacion <= CURDATE()
-        ORDER BY fecha_publicacion DESC LIMIT 4 OFFSET $offset";
+        ORDER BY fecha_publicacion DESC, id DESC
+        LIMIT 4 OFFSET $offset";
         $ruta_index=false;
 
-        $resultado=generarListaNoticias($sql, $conexion, $ruta_index);
+        $resultado=generarListaNoticias($sql, $conexion, $ruta_index); //llama a la funcion que genera las noticias listadas
 
         return $resultado;
     }
 
+    //genera la noticia completa
     function generarNoticia($conexion, $id){
         $resultado='';
         $sql="SELECT * FROM noticia WHERE id=?";
@@ -152,6 +155,7 @@
 
 //funciones socios ----------------------------------------------------------------
 
+    //imprime todos los socios de la bd en formato card
     function imprimirSociosComp($conexion){
         $resultado='';
         $sql='SELECT id,nombre,usuario,edad,telefono,foto FROM socio';
@@ -177,7 +181,7 @@
     }
 
     function imprimirSociosBuscados($conexion, $texto){
-        $texto="%".$texto."%";
+        $texto="%".$texto."%"; //al usarse en un LIKE, añado a la variable los % directamente
         $sql="SELECT id,nombre,usuario,edad,telefono,foto FROM socio
         WHERE nombre LIKE ?
         OR telefono LIKE ?
@@ -187,7 +191,7 @@
         $consulta=$conexion->prepare($sql);
         $consulta->bind_param("ss", $texto, $texto);
         $consulta->execute();
-        $consulta->store_result(); // Necesario para contar filas en SELECT
+        $consulta->store_result(); // Necesario para contar filas que devuelve la consulta
         $consulta->bind_result($id, $nombre, $usuario, $edad, $telefono, $foto);
 
         if($consulta -> num_rows > 0){
@@ -211,10 +215,10 @@
         return $resultado;
     }
 
-
+    //imprime el formulario de modificacion del socio
     function imprimirModificarSocio($conexion, $id){
         $resultado='';
-        $sql='SELECT nombre,usuario,edad,telefono,foto FROM socio WHERE id=?';
+        $sql='SELECT nombre,usuario,edad,telefono,foto FROM socio WHERE id=?'; //recojo los datos del socio pasado por id para cargarlos por defecto
 
         $consulta=$conexion->prepare($sql);
         $consulta->bind_param("i", $id);
@@ -252,6 +256,7 @@
 
     function añadirSocio($conexion, $nombre, $edad, $pass, $usuario, $tlfn, $ruta_img){
         $resultado='';
+        //compruebo con dos consultas que el telefono y ususario no estén ya en uso
         $check='SELECT * FROM socio WHERE telefono=?';
         $check2='SELECT * FROM socio WHERE usuario=?';
 
@@ -260,6 +265,7 @@
         $consulta_check->execute();
         $consulta_check->store_result(); 
         if($consulta_check->num_rows > 0){
+            //de estar en uso, imprimo mensaje de error
             $resultado.="<h2 class='centrado red'>El teléfono ya está en uso</h2>";
             $consulta_check->close();
             return $resultado;
@@ -271,12 +277,14 @@
         $consulta_check2->execute();
         $consulta_check2->store_result(); 
         if($consulta_check2->num_rows > 0){
+            //de estar en uso, imprimo mensaje de error
             $resultado.="<h2 class='centrado red'>El nombre de usuario ya está en uso</h2>";
             $consulta_check2->close();
             return $resultado;
         }
         $consulta_check2->close();
 
+        //si no están en uso, continuo con el INSERT
         $sql='INSERT INTO socio (nombre, edad, pass, usuario, telefono, foto) 
         VALUES (?, ?, ?, ?, ?, ?)';
         $consulta=$conexion->prepare($sql);
@@ -292,10 +300,12 @@
         $resultado='';
 
         if($ruta === ''){
+            //compruebo si la foto se ha actualizado o no
             $sql='UPDATE socio SET nombre=?, usuario=?, edad=?, telefono=? WHERE id=?';
             $consulta=$conexion->prepare($sql);
             $consulta->bind_param("ssisi", $nombre, $usuario, $edad, $telefono, $id);
         }else{
+            //si la foto se ha actualizado, la incluyo en el UPDATE
             $sql='UPDATE socio SET nombre=?, usuario=?, edad=?, telefono=?, foto=? WHERE id=?';
             $consulta=$conexion->prepare($sql);
             $consulta->bind_param("ssissi", $nombre, $usuario, $edad, $telefono, $ruta, $id);
@@ -442,15 +452,15 @@ function actualizarServicio($conexion, $id, $descripcion, $duracion, $ud_duracio
     
 function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
     $mes_actual = sprintf("%02d", $mes_actual); //formateo de mes para que tenga dos digitos (necesario)
-    $dias_mes=cal_days_in_month(CAL_GREGORIAN, $mes_actual, $anno_actual);
+    $dias_mes=cal_days_in_month(CAL_GREGORIAN, $mes_actual, $anno_actual); //función para obtener el número de días del mes
     $contador_semana=7;
-    $dias=['Lun', 'Mar', 'Miér', 'Jue', 'Vie', 'Sáb', 'Dom'];
-    $act_date=date("Y-m-d");
+    $dias=['Lun', 'Mar', 'Miér', 'Jue', 'Vie', 'Sáb', 'Dom']; //guardo los nombres de los días para imprimir la cabecera automáticamente
+    $act_date=date("Y-m-d"); //obtendo la fecha actual
 
     $primer_dia=mktime(0, 0, 0, $mes_actual, 1, $anno_actual); // crear una marca de tiempo para el primer día del mes
-    $pos_semana=date("N", $primer_dia); // obtener el día de la semana del primer día del mes
+    $pos_semana=date("N", $primer_dia); // obtener el día de la semana del primer día del mes (en número)
 
-    $array_fechas=[];
+    $array_fechas=[]; //aqui guardaré toda slas fechas de la bd
     $sql='SELECT fecha FROM citas'; //también podría lanzar una consulta al imprimir cada día (si hubiera un gran número de citas)
     
     $consulta=$conexion->prepare($sql);
@@ -461,6 +471,7 @@ function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
     }
     $consulta->close();
 
+    //uso el archivo traduccion.php para acceder al array $meses y obtener los nombres de los meses en español
     $resultado="
         <div class='cal'>
         <div class='contenedor-cal'>
@@ -481,7 +492,7 @@ function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
         <tr>
     ";
 
-    for($i=1; $i<=$dias_mes; $i++){
+    for($i=1; $i<=$dias_mes; $i++){ //for para imprimir todos los dias del mes
         if($pos_semana > 1){
             $resultado.="<td></td>"; //añado celda vacía por cada día que no coincida con el lunes (1)
             $pos_semana--; //le resto 1 a la posicion de la semana para volver a comprobar
@@ -491,6 +502,7 @@ function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
             $fecha="$anno_actual-$mes_actual-$dia_format";
             //compruebo que la fecha esté presente en el array de fechas para marcar el día
             if(in_array($fecha, $array_fechas)){
+                //compruebo que la fecha esté en el array para marcar el día (tiene citas)
                 $resultado.="
                 <td class='dia-selecc'>
                     <a href='citas-info.php?fecha=$fecha'>";
@@ -624,6 +636,7 @@ function modificarCita($conexion, $socio, $servicio, $fecha, $hora, $cancel, $ac
     $fecha_obj = new DateTime($fecha);
     $fecha_actual_obj = new DateTime($fecha_actual);
 
+    //paso la accion a realizar (delete o update) por una variable 'accion' en GET y, según su valor, ejecuto una u otra consulta
     if ($fecha_obj > $fecha_actual_obj){
         if($accion==='d'){
             $consulta=$conexion->prepare($sqld);
@@ -799,7 +812,7 @@ function imprimirCitasBuscadas($conexion, $texto){
                         <p><span class='resaltado'>Servicio:</span> $nombre_servicio</p>
                         <p><span class='resaltado'>Fecha:</span> $fecha_cita</p>
                         <p><span class='resaltado'>Hora:</span> $hora</p>";
-                            
+                //segun el valor de $cancel (campo en la bd), imprimo un botón u otro entre cancelar o borrar, y establezco su acción pasando una variable 'accion' por GET
                 if($cancel === 0){
                     $resultado.="<button class='actived'>Activa</button>
                                 </div><div class='cita-btn'>

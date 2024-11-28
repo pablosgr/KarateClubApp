@@ -9,7 +9,7 @@ CREATE TABLE socio (
     nombre VARCHAR(150) NOT NULL,
     edad INTEGER NOT NULL,
     pass VARCHAR(20) NOT NULL,
-    usuario VARCHAR(255) NOT NULL UNIQUE, -- generar mensaje de error al intentar añadir duplicadas
+    usuario VARCHAR(255) NOT NULL UNIQUE,
     telefono VARCHAR(15) NOT NULL UNIQUE,
     foto VARCHAR(255)
 );
@@ -44,7 +44,7 @@ CREATE TABLE citas (
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
     cancelada TINYINT DEFAULT 0,
-    PRIMARY KEY (socio, servicio, fecha, hora),
+    PRIMARY KEY (socio, servicio, fecha, hora), --establezco estos campos como PK para evitar duplicidades completas de los mismos
     FOREIGN KEY (socio) REFERENCES socio (id) ON DELETE CASCADE,
     FOREIGN KEY (servicio) REFERENCES servicio (id) ON DELETE CASCADE
 );
@@ -100,10 +100,10 @@ INSERT INTO noticia (titulo, contenido, imagen, fecha_publicacion) VALUES
  '../../pics/equipos.jpg', '2024-11-15');
 
 INSERT INTO socio (nombre, edad, pass, usuario, telefono, foto) VALUES
-('Juan Pérez', 56, 'contraseña1', 'juanperez', '+34612345678', '../pics/avatar3.jpg'),
-('María López', 42, 'contraseña2', 'marialopez', '+34623456789', '../pics/avatar1.jpg'),
-('Pedro Gómez', 25, 'contraseña3', 'pedrogomez', '+34634567890', '../pics/avatar2.jpg'),
-('Lauren Tsai', 28, 'contraseña4', 'ltsai23', '+34667124890', '../pics/avatar4.jpg');
+('Juan Pérez', 56, 'contraseña1', 'juanperez', '+34612345678', '../../pics/avatar3.jpg'),
+('María López', 42, 'contraseña2', 'marialopez', '+34623456789', '../../pics/avatar1.jpg'),
+('Pedro Gómez', 25, 'contraseña3', 'pedrogomez', '+34634567890', '../../pics/avatar2.jpg'),
+('Lauren Tsai', 28, 'contraseña4', 'ltsai23', '+34667124890', '../../pics/avatar4.jpg');
 
 INSERT INTO testimonio (autor, contenido, fecha) VALUES
 (1, 'Este club ha cambiado mi vida, he mejorado en disciplina y condición física.', '2024-09-20'),
@@ -119,4 +119,7 @@ INSERT INTO citas (socio, servicio, fecha, hora, cancelada) VALUES
 (4, 3, '2025-01-15', '20:00:00', 0),
 (3, 5, '2025-02-03', '10:30:00', 0),
 (4, 2, '2024-02-07', '18:00:00', 1),
-(2, 2, '2024-12-10', '19:00:00', 1);
+(2, 2, '2024-12-10', '19:00:00', 1),
+(1, 4, '2024-12-02', '17:15:00', 0),
+(1, 2, '2024-12-02', '19:30:00', 0),
+(4, 5, '2024-12-02', '18:00:00', 0);

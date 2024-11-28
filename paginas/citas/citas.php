@@ -50,6 +50,7 @@
             <div class='contenido-citas'>
 
             <?php
+                //obtengo el año y mes actuales para pasarlos a la función del calendario
                 $anno_actual=date("Y");
                 $mes_actual=date("m");
                 

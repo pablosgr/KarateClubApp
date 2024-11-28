@@ -17,8 +17,8 @@
             require_once './php/funciones.php';
             require_once './php/config.php';
             $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
-            // include './php/cabecera.php';
-            //getcwd() devuelve el directorio actual
+            // include './php/cabecera.php';  para incluir el archivo con cabecera
+            //getcwd() devuelve el directorio actual, otra opción
             $ruta_i="#";
             $ruta_soc="./paginas/socios/socios.php";
             $ruta_serv="./paginas/servicios/servicios.php";
