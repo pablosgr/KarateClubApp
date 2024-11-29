@@ -231,7 +231,7 @@ const validarEdadSocio = (campo) =>{
     let contenido=campo.value.trim();
     let span=campo.nextElementSibling;
 
-    if(!validarNum(contenido, span)){
+    if(!validarNum(campo, span)){
         return false;
     }else if(contenido < 18){
         span.style.display="inline";
@@ -478,7 +478,7 @@ const validarImagen = (campo, span)=>{
 
 const validarNum = (contenido, span)=>{ //gestiono el campo y el span del mismo en esta función
     let numero=parseInt(contenido.value); //obtengo el value del campo
-
+    console.log("funcionNum");
     if(isNaN(numero)){
         span.style.display="inline";
         span.innerText="Escribe un número";
