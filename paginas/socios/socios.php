@@ -43,7 +43,7 @@
                     $edad_socio=$_POST["edad"];
                     $tlfn_socio=$_POST["tlfn"];
                     $pass_socio=$_POST["pass"];
-                    $ruta="../pics/default.jpg";
+                    $ruta="../../pics/default.jpg";
 
                     if(isset($_FILES["foto-avatar"]) && $_FILES["foto-avatar"]["error"] === UPLOAD_ERR_OK){
                         $avatar_socio=$_FILES["foto-avatar"]["name"];

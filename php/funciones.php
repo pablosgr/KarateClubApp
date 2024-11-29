@@ -299,6 +299,20 @@
     function actualizarSocio($conexion, $id, $nombre, $usuario, $edad, $telefono, $ruta){
         $resultado='';
 
+        $consulta_check="SELECT * FROM socio WHERE (telefono=? OR usuario=?) AND nombre!=?"; //compruebo si hay alguien con datos iguales que no sea el propio usuario
+        $consulta_check=$conexion->prepare($consulta_check);
+        $consulta_check->bind_param("sss", $telefono, $usuario, $nombre);
+        $consulta_check->execute();
+        $consulta_check->store_result(); 
+
+        if($consulta_check->num_rows > 0){
+            $consulta_check->close();
+            $resultado.="<h2 class='centrado red'>El usuario o teléfono ya están en uso</h2>
+            <h2 class='centrado'>Volviendo a la página de socios en 3 segundos...</h2>";
+            return $resultado;
+        }
+        $consulta_check->close();
+
         if($ruta === ''){
             //compruebo si la foto se ha actualizado o no
             $sql='UPDATE socio SET nombre=?, usuario=?, edad=?, telefono=? WHERE id=?';
