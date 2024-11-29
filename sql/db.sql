@@ -44,7 +44,7 @@ CREATE TABLE citas (
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
     cancelada TINYINT DEFAULT 0,
-    PRIMARY KEY (socio, servicio, fecha, hora), --establezco estos campos como PK para evitar duplicidades completas de los mismos
+    PRIMARY KEY (socio, servicio, fecha, hora),
     FOREIGN KEY (socio) REFERENCES socio (id) ON DELETE CASCADE,
     FOREIGN KEY (servicio) REFERENCES servicio (id) ON DELETE CASCADE
 );
