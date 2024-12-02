@@ -36,7 +36,7 @@
 
                         $imagen=$_FILES["pic"]["name"];
                         $imagen_tmp=$_FILES["pic"]["tmp_name"];
-                        $ruta_img="../pics/".$imagen;
+                        $ruta_img="../../pics/".$imagen;
                         move_uploaded_file($imagen_tmp, $ruta_img);
 
                         echo añadirNoticia($conexion, $ruta_img, $titulo, $contenido, $fecha);
