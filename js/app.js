@@ -327,7 +327,7 @@ const validarPrecioServicio=(campo)=>{
     let span=campo.nextElementSibling;
     let numero=parseInt(contenido);
 
-    if(isNaN(numero) || numero < 1){
+    if(isNaN(numero) || numero < 0){
         span.style.display="inline";
         span.innerText="Escribe un precio válido";
         return false;
