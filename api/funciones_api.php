@@ -13,12 +13,12 @@ function listarProductos($conexion, $condicion_sql, $tipos, $parametros){
 
         while($row = $resultado -> fetch_assoc()){
             $data[] = [
-                "id_producto" => $row["id"],
+                "id" => $row["id"],
                 "nombre" => $row["nombre"],
                 "precio" => $row["precio"],
                 "categoria" => $row["categoria"],
-                "disponibilidad" => $row["disponible"],
-                "stock" => $row["cantidad"]
+                "disponible" => $row["disponible"],
+                "cantidad" => $row["cantidad"]
             ];
         }
 

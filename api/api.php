@@ -8,7 +8,7 @@ require_once "../php/funciones.php";
 require_once "funciones_api.php";
 
 try {
-    $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db_tienda);
+    $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
 } catch (mysqli_sql_exception $err) {
     http_response_code(500);
     echo json_encode(["error" => "Error al conectar con la BD"]);
@@ -21,7 +21,7 @@ if($metodo == "POST" || $metodo == "PUT"){
 
 switch($metodo){
     case "GET":
-        //SE ESTABLECEN LAS VARIABLES
+        //SE ESTABLECEN LAS VARIABLES, página 1 default y límite 10
 
         $nombre_busqueda = $_GET["nombre"] ?? null;
         $precio_busqueda = $_GET["precio"] ?? null;
