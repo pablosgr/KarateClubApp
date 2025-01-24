@@ -55,7 +55,15 @@ CREATE TABLE productos (
     precio FLOAT NOT NULL,
     categoria VARCHAR(150) NOT NULL,
     disponible TINYINT(1) NOT NULL DEFAULT 1,
-    cantidad INTEGER NOT NULL DEFAULT 0
+    cantidad INTEGER NOT NULL DEFAULT 1
+);
+
+CREATE TABLE api_keys (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_socio INT NOT NULL,
+    api_key VARCHAR(255) NOT NULL UNIQUE,
+    creada_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+    activa TINYINT(1) DEFAULT 1
 );
 
 -- INSERTs

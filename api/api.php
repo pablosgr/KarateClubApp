@@ -16,15 +16,17 @@ try {
 
 $metodo = $_SERVER["REQUEST_METHOD"];
 if($metodo == "POST" || $metodo == "PUT"){
+    //OBTENGO LOS PARÁMETROS EN CASO DE HACER UN INSERT O UN UPDATE
     $entrada = json_decode(file_get_contents("php://input"), true);
 }
 
 switch($metodo){
     case "GET":
-        //SE ESTABLECEN LAS VARIABLES, página 1 default y límite 10
+        //SE ESTABLECEN LAS VARIABLES; PARA PAGINADO: pAgina 1, limite 10 por defecto
 
         $nombre_busqueda = $_GET["nombre"] ?? null;
-        $precio_busqueda = $_GET["precio"] ?? null;
+        $precio_busqueda_superior = $_GET["precioSup"] ?? null;
+        $precio_busqueda_inferior = $_GET["precioInf"] ?? null;
         $categoria_busqueda = $_GET["categoria"] ?? null;
         $disponibilidad_busqueda = $_GET["disponible"] ?? null;
         $pagina = isset($_GET["pagina"]) && is_numeric($_GET["pagina"]) ? (int)$_GET["pagina"] : 1;
@@ -42,12 +44,25 @@ switch($metodo){
             $params[] = "%" . $nombre_busqueda . "%";
         }
 
-        if(isset($precio_busqueda)){
-            if(is_numeric($precio_busqueda)){
-                $precio_busqueda = (float)$precio_busqueda; //cast a float, pues cualquier valor pasado por GET se toma como String
+        if(isset($precio_busqueda_inferior)){
+            if(is_numeric($precio_busqueda_inferior)){
+                $precio_busqueda_inferior = (float)$precio_busqueda_inferior; //cast a float, pues cualquier valor pasado por GET se toma como String
                 $condicion_sql .= $condicion_sql == "" ? " WHERE precio <= ?" : " AND precio <= ?";
                 $tipos .= "d"; //d para float
-                $params[] = $precio_busqueda;
+                $params[] = $precio_busqueda_inferior;
+            } else {
+                http_response_code(400); //bad request
+                echo json_encode(["error" => "Error en el precio, valor no admitido"]);
+                die(); //si no hago die(), el código seguirá
+            }
+        }
+
+        if(isset($precio_busqueda_superior)){
+            if(is_numeric($precio_busqueda_superior)){
+                $precio_busqueda_superior = (float)$precio_busqueda_superior; //cast a float, pues cualquier valor pasado por GET se toma como String
+                $condicion_sql .= $condicion_sql == "" ? " WHERE precio >= ?" : " AND precio >= ?";
+                $tipos .= "d"; //d para float
+                $params[] = $precio_busqueda_superior;
             } else {
                 http_response_code(400); //bad request
                 echo json_encode(["error" => "Error en el precio, valor no admitido"]);
@@ -78,18 +93,91 @@ switch($metodo){
             http_response_code(400); //bad request
             echo json_encode(["error" => "Valores de paginación no válidos"]);
             die();
-        } else {
-            $offset = ($pagina - 1) * $limite_pagina;
-            $condicion_sql .= " LIMIT ? OFFSET ?";
-            $tipos .= "ii";
-            $params = array_merge($params, [$limite_pagina, $offset]);
         }
+
+        $datos = array(
+            "tipos" => $tipos,
+            "parametros" => $params,
+            "pagina" => $pagina,
+            "limite" => $limite_pagina
+        );
 
         //LLAMADA A LA FUNCIÓN QUE REALIZA LA CONSULTA
         
-        $resultado = listarProductos($conexion, $condicion_sql, $tipos, $params);
+        $resultado = listarProductos($conexion, $condicion_sql, $datos);
         http_response_code($resultado["http"]);
         echo json_encode($resultado["respuesta"]);
 
         break;
+    
+    case "POST":
+        //USO $entrada PARA OBTENER LOS VALORES PASADOS POR POST
+        if(isset($entrada["nombre"]) 
+        && isset($entrada["precio"]) 
+        && isset($entrada["categoria"])){
+
+            $producto = array(
+                "nombre" => $entrada["nombre"],
+                "precio" => $entrada["precio"],
+                "categoria" => $entrada["categoria"]
+            );
+
+            if(isset($entrada["cantidad"])){
+                $producto = array_merge($producto, ["cantidad" => $entrada["cantidad"]]);
+            }
+
+            $resultado = addProducto($conexion, $producto);
+            http_response_code($resultado["http"]);
+            echo json_encode($resultado["respuesta"]);
+        } else {
+            http_response_code(400);
+			echo json_encode(["error" => "Faltan datos para el método POST"]);
+        }
+
+        break;
+
+    case "PUT":
+        //USO $entrada PARA OBTENER LOS VALORES PASADOS POR POST (obtengo el id por post también, es mejor no combinar envío de datos por diferentes vías)
+        if(isset($entrada["id"]) 
+        && isset($entrada["nombre"]) 
+        && isset($entrada["precio"]) 
+        && isset($entrada["categoria"]) 
+        && isset($entrada["cantidad"])){
+
+            $producto = array(
+                "nombre" => $entrada["nombre"],
+                "precio" => $entrada["precio"],
+                "categoria" => $entrada["categoria"],
+                "cantidad" => $entrada["cantidad"]
+            );
+
+            $resultado = modificarProducto($conexion, $entrada["id"], $producto);
+            http_response_code($resultado["http"]);
+            echo json_encode($resultado["respuesta"]);
+        } else {
+            http_response_code(400);
+			echo json_encode(["error" => "Faltan datos para el método PUT"]);
+        }
+
+        break;
+
+        case "DELETE":
+
+            if(isset($_GET["id"])){
+                $resultado = eliminarProducto($conexion, $_GET["id"]);
+                http_response_code($resultado["http"]);
+                echo json_encode($resultado["respuesta"]);
+            } else {
+                http_response_code(400);
+                echo json_encode(["error" => "Faltan datos para el método DELETE"]);
+            }
+    
+            break;
+        
+            default:
+                http_response_code(405); //bad request
+                json_encode(["error" => "Método no soportado"]);
+
 }
+
+$conexion -> close();

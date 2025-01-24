@@ -257,32 +257,19 @@
     function añadirSocio($conexion, $nombre, $edad, $pass, $usuario, $tlfn, $ruta_img){
         $resultado='';
         //compruebo con dos consultas que el telefono y ususario no estén ya en uso
-        $check='SELECT * FROM socio WHERE telefono=?';
-        $check2='SELECT * FROM socio WHERE usuario=?';
+        $check='SELECT * FROM socio WHERE telefono = ? OR usuario = ?';
 
         $consulta_check=$conexion->prepare($check);
-        $consulta_check->bind_param("s", $tlfn);
+        $consulta_check->bind_param("ss", $tlfn, $usuario);
         $consulta_check->execute();
         $consulta_check->store_result(); 
         if($consulta_check->num_rows > 0){
             //de estar en uso, imprimo mensaje de error
-            $resultado.="<h2 class='centrado red'>El teléfono ya está en uso</h2>";
+            $resultado.="<h2 class='centrado red'>El teléfono o nombre de usuario ya están en uso</h2>";
             $consulta_check->close();
             return $resultado;
         }
         $consulta_check->close();
-
-        $consulta_check2=$conexion->prepare($check2);
-        $consulta_check2->bind_param("s", $usuario);
-        $consulta_check2->execute();
-        $consulta_check2->store_result(); 
-        if($consulta_check2->num_rows > 0){
-            //de estar en uso, imprimo mensaje de error
-            $resultado.="<h2 class='centrado red'>El nombre de usuario ya está en uso</h2>";
-            $consulta_check2->close();
-            return $resultado;
-        }
-        $consulta_check2->close();
 
         //si no están en uso, continuo con el INSERT
         $sql='INSERT INTO socio (nombre, edad, pass, usuario, telefono, foto) 
@@ -290,7 +277,10 @@
         $consulta=$conexion->prepare($sql);
         $consulta->bind_param("sissss", $nombre, $edad, $pass, $usuario, $tlfn, $ruta_img);
         $consulta->execute();
+        $id_insertado = $consulta -> insert_id;
         $consulta->close();
+
+        generarApiKey($conexion, $id_insertado);
 
         return $resultado;
     }
@@ -850,5 +840,25 @@ function imprimirCitasBuscadas($conexion, $texto){
             $resultado.="<h1 class='centrado'>No se han encontrado citas</h1>";
         }
         return $resultado;
+    }
+
+    /*
+        Genera una Api Key cada vez que añado un usuario.
+        Le paso el ID del socio generado (al que se asigna) por parámetro
+    */
+    function generarApiKey($conexion, $id){
+        $api_key = bin2hex(random_bytes(32)); //genera la API Key de 64 caractéres
+
+        $consulta = "INSERT INTO api_keys (id_socio, api_key) VALUES (?, ?)";
+        $stmt = $conexion -> prepare($consulta);
+        $stmt -> bind_param("is", $id, $api_key);
+
+        if($stmt -> execute()){ //devuelve true o false en función de la ejecución exitosa de la consulta
+            $stmt -> close();
+            return $api_key;
+        } else {
+            $stmt -> close();
+            throw new Exception("Error al generar la API Key");
+        }
     }
 ?>
