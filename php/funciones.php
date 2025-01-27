@@ -17,11 +17,14 @@
         <h1><a href='$ruta_i'>糸東流</a></h1>
             <nav>
                 <ul>
-                    <li><a href='$ruta_soc'>SOCIOS</a></li>
-                    <li><a href='$ruta_serv'>SERVICIOS</a></li>
-                    <li><a href='$ruta_tes'>TESTIMONIOS</a></li>
                     <li><a href='$ruta_not'>NOTICIAS</a></li>
+                    <li><a href='$ruta_serv'>SERVICIOS</a></li>
+                    <li><a href=''>PRODUCTOS</a></li>
+                    <li><a href=''>DOJO</a></li>
+                    <li><a href='$ruta_tes'>TESTIMONIOS</a></li>
+                    <li><a href='$ruta_soc'>SOCIOS</a></li>
                     <li><a href='$ruta_cit'>CITAS</a></li>
+                    <li><a href=''><img src='../../pics/user.png' class='login-img'></a></li>
                 </ul>
             </nav>
         <button id='menu-btn' aria-label='Toggle menu'>&#9776;</button>

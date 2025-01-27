@@ -11,6 +11,29 @@ function listarProductos($conexion, $condicion_sql, $datos){
     $limite_pagina = $datos["limite"];
     $parametros = $datos["parametros"];
     $tipos = $datos["tipos"];
+    $total_productos = 0;
+
+    if($condicion_sql == ""){
+        //CONSULTA PARA OBTENER EL TOTAL DE PRODUCTOS (EN CASO DE LISTADO COMPLETO)
+        $consulta = "SELECT count(*) FROM productos";
+		$resultado = $conexion -> query($consulta);
+		$fila = $resultado -> fetch_row();
+		$total_productos = $fila[0];
+    } else {
+        // Calcular el total de productos con filtros
+        $consulta_total = "SELECT count(*) FROM productos " . $condicion_sql;
+        $stmt_total = $conexion->prepare($consulta_total);
+    
+        if ($tipos != "") {
+            $stmt_total->bind_param($tipos, ...$parametros);
+        }
+    
+        $stmt_total->execute();
+        $resultado_total = $stmt_total->get_result();
+        $fila_total = $resultado_total->fetch_row();
+        $total_productos = $fila_total[0];
+        $stmt_total->close();
+    }
 
     //AÑADO LOS PARÁMETROS DEL PAGINADO
     $offset = ($pagina - 1) * $limite_pagina;
@@ -25,6 +48,7 @@ function listarProductos($conexion, $condicion_sql, $datos){
     }
     $stmt -> execute();
     $resultado = $stmt -> get_result();
+    
     if($resultado -> num_rows > 0){
         $data = [];
 
@@ -39,20 +63,15 @@ function listarProductos($conexion, $condicion_sql, $datos){
             ];
         }
 
-        //CONSULTA PARA OBTENER EL TOTAL DE PRODUCTOS
-        $consulta = "SELECT count(*) FROM productos";
-		$resultado = $conexion -> query($consulta);
-		$fila = $resultado -> fetch_row();
-		$total = $fila[0];
-
         $response["http"] = 200;
         $response["respuesta"] = [
             "datos" => $data,
             "pagina" => $pagina,
             "limite" => $limite_pagina,
-            "siguiente" => $pagina < ceil($total / $limite_pagina) ? "http://localhost/club_karate/api/api.php?pagina=".($pagina + 1)."&limite=".$limite_pagina : null,
+            "siguiente" => $pagina < ceil($total_productos / $limite_pagina) ? "http://localhost/club_karate/api/api.php?pagina=".($pagina + 1)."&limite=".$limite_pagina : null,
             "anterior" => $pagina > 1 ? "http://localhost/club_karate/api/api.php?pagina=".($pagina - 1)."&limite=".$limite_pagina : null,
-            "total_paginas" => ceil($total / $limite_pagina)
+            "total_paginas" => ceil($total_productos / $limite_pagina),
+            "total_resultados" => $total_productos
         ];
     } else {
         $response["http"] = 404;

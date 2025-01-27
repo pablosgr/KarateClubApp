@@ -22,7 +22,7 @@ if($metodo == "POST" || $metodo == "PUT"){
 
 switch($metodo){
     case "GET":
-        //SE ESTABLECEN LAS VARIABLES; PARA PAGINADO: pAgina 1, limite 10 por defecto
+        //SE ESTABLECEN LAS VARIABLES; PARA PAGINADO: pagina 1, limite 10 por defecto
 
         $nombre_busqueda = $_GET["nombre"] ?? null;
         $precio_busqueda_superior = $_GET["precioSup"] ?? null;
