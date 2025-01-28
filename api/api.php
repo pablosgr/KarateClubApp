@@ -99,7 +99,8 @@ switch($metodo){
             "tipos" => $tipos,
             "parametros" => $params,
             "pagina" => $pagina,
-            "limite" => $limite_pagina
+            "limite" => $limite_pagina,
+            "filtros" => $_GET //paso todos los parámetros que tenga por GET para mantenerlos en el paginado
         );
 
         //LLAMADA A LA FUNCIÓN QUE REALIZA LA CONSULTA

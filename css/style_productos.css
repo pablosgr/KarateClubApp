@@ -1,0 +1,19 @@
+section.dojo{
+    width: 73%;
+    max-width: 1180px;
+    align-self: center;
+    padding: 60px 0px 60px 0px;
+}
+
+section.dojo h1{
+    font-size: 40px; 
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: black;
+}
+
+div.contenido-dojo{
+    padding-left: 30px;
+    display: flex;
+    flex-direction: column;
+}
