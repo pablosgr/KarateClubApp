@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shito-Ryu Club | Productos</title>
     <link rel="stylesheet" href="../../css/style.css">
-    <link rel="stylesheet" href="../../css/style_productos.css">
+    <link rel="stylesheet" href="../../css/style_socios.css">
     <script defer src="../../js/app.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,33 +36,11 @@
             </form> -->
 
             <?php
-                //LLAMADA A LA API CON cURL
-                $api_url = "http://localhost/club_karate/api/api.php";
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $api_url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                    "Content-Type: application/json"
-                ));
-                $respuesta = curl_exec($ch);
-                $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-                if($http_code != 200){
-                    echo "<h2>Error al recuperar datos</h2>";
-                    die();
-                } else {
-                    $datos = json_decode($respuesta, true);
-                }
-
-                curl_close($ch);
+                
             ?>
 
             <div class='contenido-productos'>
-                <div>
-                    <h3><?php echo $datos['datos'][0]['nombre'] ?></h3>
-                    <p><?php echo $datos['datos'][0]["precio"] ?></p>
-                    <img src='<?php echo $datos['datos'][0]["imagen"] ?>' width='300px'></img>
-                </div>
+
             </div>
 
         </section>

@@ -54,6 +54,7 @@ CREATE TABLE productos (
     nombre VARCHAR(255) NOT NULL UNIQUE,
     precio FLOAT NOT NULL,
     categoria VARCHAR(150) NOT NULL,
+    imagen VARCHAR(255),
     disponible TINYINT(1) NOT NULL DEFAULT 1,
     cantidad INTEGER NOT NULL DEFAULT 1
 );
@@ -141,24 +142,24 @@ INSERT INTO citas (socio, servicio, fecha, hora, cancelada) VALUES
 (1, 2, '2024-12-02', '19:30:00', 0),
 (4, 5, '2024-12-02', '18:00:00', 0);
 
-INSERT INTO productos (nombre, precio, categoria, disponible, cantidad) VALUES 
-('Cinturón Blanco', 10.50, 'Cinturones', 1, 15),
-('Cinturón Negro', 25.00, 'Cinturones', 0, 0),
-('Cinturón Azul', 12.00, 'Cinturones', 1, 10),
-('Karategui Básico', 45.00, 'Karateguis', 1, 13),
-('Karategui Avanzado', 85.00, 'Karateguis', 1, 15),
-('Guantillas de Entrenamiento', 20.00, 'Protecciones', 1, 25),
-('Guantillas de Competición', 30.00, 'Protecciones', 1, 10),
-('Protector Bucal Infantil', 5.00, 'Protecciones', 1, 8),
-('Protector Bucal Adulto', 7.00, 'Protecciones', 0, 0),
-('Espinilleras', 18.00, 'Protecciones', 1, 10),
-('Casco Protector', 55.00, 'Protecciones', 1, 5),
-('Protector de Pecho', 40.00, 'Protecciones', 1, 7),
-('Bebida Isotónica 500ml', 2.50, 'Bebidas', 1, 25),
-('Pack de 6 Bebidas Isotónicas', 14.00, 'Bebidas', 1, 10),
-('Bálsamo para Dolores Musculares', 8.50, 'Salud', 1, 20),
-('Tobilleras de Compresión', 12.00, 'Salud', 1, 30),
-('Cinta Kinesiológica', 12.00, 'Salud', 1, 25),
-('Cuerda para Saltar', 10.00, 'Accesorios', 1, 20),
-('Bolsa de Entrenamiento', 35.00, 'Accesorios', 1, 4),
-('DVD Técnicas Básicas de Kárate', 15.00, 'Material Didáctico', 1, 10);
+INSERT INTO productos (nombre, precio, categoria, imagen, disponible, cantidad) VALUES 
+('Cinturón Blanco', 10.50, 'Cinturones', '../../pics/products/white_belt.jpg', 1, 15),
+('Cinturón Negro', 25.00, 'Cinturones', '../../pics/products/black_belt.webp', 0, 0),
+('Cinturón Azul', 12.00, 'Cinturones', null, 1, 10),
+('Karategui Básico', 45.00, 'Karateguis', null, 1, 13),
+('Karategui Avanzado', 85.00, 'Karateguis', null, 1, 15),
+('Guantillas de Entrenamiento', 20.00, 'Protecciones', null, 1, 25),
+('Guantillas de Competición', 30.00, 'Protecciones', null, 1, 10),
+('Protector Bucal Infantil', 5.00, 'Protecciones', null, 1, 8),
+('Protector Bucal Adulto', 7.00, 'Protecciones', null, 0, 0),
+('Espinilleras', 18.00, 'Protecciones', null, 1, 10),
+('Casco Protector', 55.00, 'Protecciones', null, 1, 5),
+('Protector de Pecho', 40.00, 'Protecciones', null, 1, 7),
+('Bebida Isotónica 500ml', 2.50, 'Bebidas', null, 1, 25),
+('Pack de 6 Bebidas Isotónicas', 14.00, 'Bebidas', null, 1, 10),
+('Bálsamo para Dolores Musculares', 8.50, 'Salud', null, 1, 20),
+('Tobilleras de Compresión', 12.00, 'Salud', null, 1, 30),
+('Cinta Kinesiológica', 12.00, 'Salud', null, 1, 25),
+('Cuerda para Saltar', 10.00, 'Accesorios', null, 1, 20),
+('Bolsa de Entrenamiento', 35.00, 'Accesorios', null, 1, 4),
+('DVD Técnicas Básicas de Kárate', 15.00, 'Material Didáctico', null, 1, 10);

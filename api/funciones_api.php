@@ -70,6 +70,7 @@ function listarProductos($conexion, $condicion_sql, $datos){
                 "nombre" => $row["nombre"],
                 "precio" => $row["precio"],
                 "categoria" => $row["categoria"],
+                "imagen" => $row["imagen"],
                 "disponible" => $row["disponible"],
                 "cantidad" => $row["cantidad"]
             ];

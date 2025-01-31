@@ -1,3 +1,7 @@
+/* *{
+    border: 1px solid rgb(233, 137, 120);
+} */
+
 section.dojo{
     width: 73%;
     max-width: 1180px;
@@ -12,8 +16,104 @@ section.dojo h1{
     color: black;
 }
 
-div.contenido-dojo{
+section.dojo p{
+    font-size: 1.3em;
+    text-align: justify;
+    line-height: 33px;
+}
+
+.video-dojo, .searchbar-dojo{
     padding-left: 30px;
     display: flex;
+}
+
+/*-video searchbar-*/
+
+.searchbar-dojo{
+    padding: 30px;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+.searchbar-dojo button{
+    border-radius: 30px;
+    border: 1px solid rgb(54, 54, 54);
+    width: 170px;
+    min-width: 135px;
+    text-align: center;
+    background-color: inherit;
+    color: black;
+    font-size: 1.15em;
+    padding: 10px;
+    transition: 0.3s ease;
+}
+
+button.active{
+    background-color: rgb(80, 206, 80);
+    border: 1px solid rgb(80, 206, 80);
+    color: white;
+    font-weight: 600;
+}
+
+.searchbar-dojo button.buscar{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.searchbar-dojo .search-topic:hover{
+    background-color: #8ae487;
+    border: 1px solid #8ae487;
+}
+
+.searchbar-dojo button.buscar:hover{
+    background-color: #6c757d;
+    border: 1px solid #6c757d;
+}
+
+.searchbar-dojo button.buscar:hover,
+.searchbar-dojo .search-topic:hover{
+    cursor: pointer;
+    color: white;
+}
+
+/*-video (con display:flex)-*/
+
+.video-dojo{
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px;
+    margin: 40px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 25px rgba(54, 54, 54, .3);
+}
+
+.frame-video{
+    width: 690px;
+    height: 390px;
+    margin: 0;
+    margin-right: 40px;
+    border: 0;
+}
+
+.video-info{
+    width: 310px;
+    display: flex;
     flex-direction: column;
+    gap: 30px;
+}
+
+.video-info h2{
+    font-family: 1.5em;
+}
+
+.quota{
+    margin-top: 20px;
+    flex: 1;
+    color: tomato;
 }
