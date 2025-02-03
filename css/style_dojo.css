@@ -113,7 +113,6 @@ button.active{
 }
 
 .quota{
-    margin-top: 20px;
     flex: 1;
     color: tomato;
 }
