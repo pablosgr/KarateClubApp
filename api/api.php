@@ -30,7 +30,7 @@ switch($metodo){
         $categoria_busqueda = $_GET["categoria"] ?? null;
         $disponibilidad_busqueda = $_GET["disponible"] ?? null;
         $pagina = isset($_GET["pagina"]) && is_numeric($_GET["pagina"]) ? (int)$_GET["pagina"] : 1;
-        $limite_pagina = isset($_GET["limite"]) && is_numeric($_GET["limite"]) ? (int)$_GET["limite"] : 10;
+        $limite_pagina = isset($_GET["limite"]) && is_numeric($_GET["limite"]) ? (int)$_GET["limite"] : 9;
 
         $condicion_sql = "";
         $tipos = "";

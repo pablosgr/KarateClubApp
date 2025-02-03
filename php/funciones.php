@@ -845,6 +845,8 @@ function imprimirCitasBuscadas($conexion, $texto){
         return $resultado;
     }
 
+    /* ---------NUEVAS FUNCIONES--------- */
+
     /*
         Genera una Api Key cada vez que añado un usuario.
         Le paso el ID del socio generado (al que se asigna) por parámetro
@@ -864,4 +866,46 @@ function imprimirCitasBuscadas($conexion, $texto){
             throw new Exception("Error al generar la API Key");
         }
     }
-?>
+
+    function generarListadoProductos($datos){
+        $respuesta = "";
+        $array_productos = $datos["datos"];
+        foreach($array_productos as $prod){
+            $respuesta .= "
+                <article class='producto'>
+                <h2>{$prod['nombre']}</h2>
+                <img src='{$prod['imagen']}'>
+                <p>Precio: {$prod['precio']} &#8364</p>
+            ";
+
+            if($prod['disponible'] != 1){
+                $respuesta .= "<p>No disponible</p>";
+            } else {
+                $respuesta .= "<p>Disponible</p>";
+            }
+
+            $respuesta .= "
+                <p>Categoría: {$prod['categoria']}</p>
+                <section class='prod-options'>
+                    <a href='' class='btn-modificar-php'>Eliminar</a>
+                    <a href='' class='btn-modificar-php'>Modificar</a>
+                </section>
+                </article>
+            ";
+        }
+        return $respuesta;
+    }
+
+    function generarPaginadoProductos($datos, $parametros){
+        $respuesta = "<ul>";
+        for($i = 1; $i <= $datos['total_paginas']; $i++){
+            if($parametros == ""){
+                $respuesta .= "<li><a href='productos.php?pag=$i'>$i</a></li>";
+            } else {
+                $respuesta .= "<li><a href='productos.php$parametros&pagina=$i'>$i</a></li>";
+            }
+        }
+        $respuesta .= "</ul>";
+
+        return $respuesta;
+    }

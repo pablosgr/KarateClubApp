@@ -215,7 +215,7 @@ article.noticia img {
     display: block; /* Evita un pequeño espacio debajo de la imagen */
 }
 
-article:hover{
+article.noticia:hover{
     scale: 1.02;
     cursor: pointer;
 }

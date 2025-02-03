@@ -17,7 +17,7 @@ fetch('../../php/apikey_request.php')
       apiKey = datos.apikey;
       generarVideo(); //window.onload = function;
     } else {
-      console.log("aa");
+      console.log("Error al obtener la API Key");
     }
   });
 

@@ -15,5 +15,22 @@ section.productos h1{
 div.contenido-productos{
     padding-left: 30px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 60px;
+}
+
+/*--card producto--*/
+
+.producto{
+    width: 250px;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(54, 54, 54, .4);
+}
+
+.producto img{
+    min-width: 150px;
+    width: 80%;
+    height: auto;
 }

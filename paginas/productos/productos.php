@@ -29,15 +29,44 @@
         <section class='productos'>
             <h1>Productos</h1>
 
-            <!-- <form action="socios-src.php" method='post' id='buscador'  name='buscar-servicios'>
-                <input type="text" placeholder='Nombre o teléfono del socio...' name='texto' id='texto-buscado'>
+            <form action="productos.php" method='post' id='buscador'  name='buscar-productos'>
+                <input type="text" placeholder='Nombre o precio del producto...' name='query'>
                 <span class="error"></span>
                 <button type="submit">Buscar</button>
-            </form> -->
+            </form>
 
             <?php
-                //LLAMADA A LA API CON cURL
+
+                //RECOJO LOS PARÁMETROS (GET Y POST) PASADOS A LA PÁGINA
                 $api_url = "http://localhost/club_karate/api/api.php";
+                $api_params = "";
+                
+                if(isset($_POST["query"])){
+                    $text = $_POST["query"];
+                    if(is_numeric($text)){
+                        $api_params .= $api_params == "" ? "?precioInf=$text" : "&precioInf=$text";
+                    } elseif($text != "") {
+                        //si se ha buscado sin ningún texto, no añado nada a los parámetros, se lista todo
+                        $api_params .= $api_params == "" ? "?nombre=$text" : "&nombre=$text";
+                    }
+                }
+
+                if(isset($_GET["pagina"])){
+                    $api_params .=  $api_params == "" ? "?pagina={$_GET['pagina']}" : "&pagina={$_GET['pagina']}";
+                }
+
+                if(isset($_GET["precioInf"])){
+                    $api_params .=  $api_params == "" ? "?precioInf={$_GET['precioInf']}" : "&precioInf={$_GET['precioInf']}";
+                }
+
+                if(isset($_GET["nombre"])){
+                    $api_params .=  $api_params == "" ? "?nombre={$_GET['nombre']}" : "&nombre={$_GET['nombre']}";
+                }
+
+                //AÑADO LOS PARÁMETROS A LA URL DE LA API ANTES DE LLAMARLA
+                $api_url .= $api_params;
+                
+                //LLAMADA A LA API CON cURL
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $api_url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -46,23 +75,21 @@
                 ));
                 $respuesta = curl_exec($ch);
                 $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                $datos = json_decode($respuesta, true);
 
                 if($http_code != 200){
-                    echo "<h2>Error al recuperar datos</h2>";
+                    echo "<h2>{$datos['error']}</h2>"; //recupero el mensaje de error de la API
                     die();
-                } else {
-                    $datos = json_decode($respuesta, true);
                 }
 
                 curl_close($ch);
             ?>
 
             <div class='contenido-productos'>
-                <div>
-                    <h3><?php echo $datos['datos'][0]['nombre'] ?></h3>
-                    <p><?php echo $datos['datos'][0]["precio"] ?></p>
-                    <img src='<?php echo $datos['datos'][0]["imagen"] ?>' width='300px'></img>
-                </div>
+                <?php
+                    echo generarListadoProductos($datos);
+                    echo generarPaginadoProductos($datos, $api_params);
+                ?>
             </div>
 
         </section>
