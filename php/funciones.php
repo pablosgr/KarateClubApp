@@ -887,8 +887,8 @@ function imprimirCitasBuscadas($conexion, $texto){
             $respuesta .= "
                 <p>Categoría: {$prod['categoria']}</p>
                 <section class='prod-options'>
-                    <a href='' class='btn-modificar-php'>Eliminar</a>
-                    <a href='' class='btn-modificar-php'>Modificar</a>
+                    <a href='productos-del.php?id={$prod['id']}' class='btn-modificar-php'>Eliminar</a>
+                    <a href='productos-mod.php?id={$prod['id']}' class='btn-modificar-php'>Modificar</a>
                 </section>
                 </article>
             ";
@@ -896,13 +896,21 @@ function imprimirCitasBuscadas($conexion, $texto){
         return $respuesta;
     }
 
-    function generarPaginadoProductos($datos, $parametros){
+    function generarPaginadoProductos($datos, $parametros, $pagina){
         $respuesta = "<ul>";
         for($i = 1; $i <= $datos['total_paginas']; $i++){
-            if($parametros == ""){
-                $respuesta .= "<li><a href='productos.php?pag=$i'>$i</a></li>";
+
+            //COMPRUEBO SI EL PARÁMETRO PÁGINA VIENE EN LOS PARÁMETROS PARA NO DUPLICARLO
+            if(!empty($parametros) || !empty($pagina)){
+                if(empty($pagina)){
+                    $respuesta .= "<li><a href='productos.php?$parametros&pagina=$i'>$i</a></li>";
+                } elseif(empty($parametros)){
+                    $respuesta .= "<li><a href='productos.php?pagina=$i'>$i</a></li>";
+                } else {
+                    $respuesta .= "<li><a href='productos.php?pagina=$i&$parametros'>$i</a></li>";
+                }
             } else {
-                $respuesta .= "<li><a href='productos.php$parametros&pagina=$i'>$i</a></li>";
+                $respuesta .= "<li><a href='productos.php?pagina=$i'>$i</a></li>";
             }
         }
         $respuesta .= "</ul>";

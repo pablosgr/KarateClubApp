@@ -40,31 +40,50 @@
                 //RECOJO LOS PARÁMETROS (GET Y POST) PASADOS A LA PÁGINA
                 $api_url = "http://localhost/club_karate/api/api.php";
                 $api_params = "";
+                $num_pagina = "";
                 
+                //PARÁMETROS DEL BUSCADOR
                 if(isset($_POST["query"])){
-                    $text = $_POST["query"];
+                    $text = trim($_POST["query"]);
+
                     if(is_numeric($text)){
-                        $api_params .= $api_params == "" ? "?precioInf=$text" : "&precioInf=$text";
-                    } elseif($text != "") {
-                        //si se ha buscado sin ningún texto, no añado nada a los parámetros, se lista todo
-                        $api_params .= $api_params == "" ? "?nombre=$text" : "&nombre=$text";
+                        $api_params .= empty($api_params) ? "precioInf=$text" : "&precioInf=$text";
+                    } elseif(!empty($text)) {
+                        $api_params .= empty($api_params) ? "nombre=$text" : "&nombre=$text";
                     }
+
+                    // if (!empty($api_params)) {
+                    //     $api_url .= "?" . $api_params;
+                    // }
                 }
 
+                // Si hay parámetros, los agregamos correctamente a la URL
+
                 if(isset($_GET["pagina"])){
-                    $api_params .=  $api_params == "" ? "?pagina={$_GET['pagina']}" : "&pagina={$_GET['pagina']}";
+                    $num_pagina = $_GET['pagina'];
+                    var_dump($num_pagina);
                 }
 
                 if(isset($_GET["precioInf"])){
-                    $api_params .=  $api_params == "" ? "?precioInf={$_GET['precioInf']}" : "&precioInf={$_GET['precioInf']}";
+                    $api_params .=  $api_params == "" ? "precioInf={$_GET['precioInf']}" : "&precioInf={$_GET['precioInf']}";
                 }
 
                 if(isset($_GET["nombre"])){
-                    $api_params .=  $api_params == "" ? "?nombre={$_GET['nombre']}" : "&nombre={$_GET['nombre']}";
+                    $api_params .=  $api_params == "" ? "nombre={$_GET['nombre']}" : "&nombre={$_GET['nombre']}";
                 }
 
                 //AÑADO LOS PARÁMETROS A LA URL DE LA API ANTES DE LLAMARLA
-                $api_url .= $api_params;
+                if(!empty($num_pagina) || !empty($api_params)){
+                    if(empty($num_pagina)){
+                        $api_url .= "?$api_params";
+                    } elseif(empty($api_params)) {
+                        $api_url .= "?pagina=$num_pagina";
+                    } else {
+                        $api_url .= "?pagina=$num_pagina" . "&" . $api_params;
+                    }
+                }
+
+                var_dump($_POST['query'], $api_params, $api_url);
                 
                 //LLAMADA A LA API CON cURL
                 $ch = curl_init();
@@ -79,6 +98,7 @@
 
                 if($http_code != 200){
                     echo "<h2>{$datos['error']}</h2>"; //recupero el mensaje de error de la API
+                    var_dump($api_url);
                     die();
                 }
 
@@ -88,7 +108,7 @@
             <div class='contenido-productos'>
                 <?php
                     echo generarListadoProductos($datos);
-                    echo generarPaginadoProductos($datos, $api_params);
+                    echo generarPaginadoProductos($datos, $api_params, $num_pagina);
                 ?>
             </div>
 
