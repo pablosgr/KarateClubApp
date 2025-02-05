@@ -867,6 +867,8 @@ function imprimirCitasBuscadas($conexion, $texto){
         }
     }
 
+    /*Funciones Productos*/
+
     function generarListadoProductos($datos){
         $respuesta = "";
         $array_productos = $datos["datos"];
@@ -920,7 +922,7 @@ function imprimirCitasBuscadas($conexion, $texto){
     }
 
 
-    function imprimirModificarProducto($id){
+    function formularioModificarProducto($id){
         $respuesta = "";
         $api_url = "http://localhost/club_karate/api/api.php?id=$id";
 
@@ -943,7 +945,7 @@ function imprimirCitasBuscadas($conexion, $texto){
         $producto = $datos['datos'][0];
         $respuesta.="
             <div class='card-servicio'>
-                <form action='productos-confirm.php' method='post' id='formulario-servicios' enctype='multipart/form-data>
+                <form action='productos-confirm.php' method='post' id='formulario-servicios' enctype='multipart/form-data'>
                         <div class='avatar'><img src='{$producto['imagen']}' style='width: 300px'></div>
                         <textarea name='nombre' id='' placeholder='Nombre del producto'>{$producto['nombre']}</textarea>
                         <span class='error'></span>
@@ -959,10 +961,63 @@ function imprimirCitasBuscadas($conexion, $texto){
                         </label>
                         
                         <input name='id' type='hidden' value='{$producto['id']}'>
+                        <input name='tipo' type='hidden' value='update'>
                         <button class='btn btn-outline-secondary' type='submit'>Actualizar producto</button>
                 </form>
             </div>
             ";
 
         return $respuesta;
+    }
+    
+
+    function modificarProductoApi($parametros, $api_url){
+        $resultado = "";
+        //LLAMADA A LA API CON cURL
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $api_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($parametros));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Content-Type: application/json"
+        ]);
+        $respuesta = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        $datos = json_decode($respuesta, true);
+
+        if($http_code != 200){
+            $resultado = "<h2>{$datos['error']}</h2>"; //recupero el mensaje de error de la API
+        } else {
+            if (isset($datos['error'])) { //isset también comprueba si una clave existe en un array asoc.
+                $resultado = "<h2>{$datos['error']}</h2>";
+            } else {
+                $resultado = "<h2>Producto \"{$datos['producto_modificado']}\"actualizado con éxito</h2>";
+            }
+        }
+
+        return $resultado;
+    }
+
+
+    function addProductoApi($parametros, $api_url){
+        $resultado = "";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $api_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($parametros));
+        $respuesta = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        $datos = json_decode($respuesta, true);
+
+        if($http_code != 200){
+            $resultado = "<h2>{$datos['error']}</h2>"; //recupero el mensaje de error de la API
+        } else {
+            $resultado = "<h2>Producto \"{$datos['producto_insertado']}\"añadido con éxito</h2>";
+        }
+
+        return $resultado;
     }

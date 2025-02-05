@@ -33,6 +33,7 @@
                 <input type="text" placeholder='Nombre o precio del producto...' name='query'>
                 <span class="error"></span>
                 <button type="submit">Buscar</button>
+                <a href="productos-add.php">Añadir producto</a>
             </form>
 
             <?php

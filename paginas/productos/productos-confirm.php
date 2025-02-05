@@ -31,7 +31,10 @@
 
             <div class='contenido-productos'>
                 <?php
-                    if(isset($_POST["nombre-prod"])){
+                $api_url = "http://localhost/club_karate/api/api.php";
+                
+                if(isset($_POST["tipo"])){
+                    if($_POST["tipo"] == "update"){
                         $id = $_POST["id"];
                         $nombre_new = $_POST["nombre"];
                         $categoria_new = $_POST["categoria"];
@@ -58,30 +61,39 @@
                             $parametros["imagen"] = $ruta_new;
                         }
 
-                        $api_url = "http://localhost/club_karate/api/api.php";
-                
-                        //LLAMADA A LA API CON cURL
-                        $ch = curl_init();
-                        curl_setopt($ch, CURLOPT_URL, $api_url);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        curl_setopt($ch, CURLOPT_POST, true);
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($parametros));
-                        $respuesta = curl_exec($ch);
-                        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                        curl_close($ch);
-                        $datos = json_decode($respuesta, true);
-
-                        if($http_code != 200){
-                            echo "<h2>{$datos['error']}</h2>"; //recupero el mensaje de error de la API
-                            header("refresh:3;url=productos.php");
-                        } else {
-                            echo "<h2>Producto \"{$datos['producto_insertado']}\"actualizado con éxito</h2>";
-                            header("refresh:2;url=productos.php");
-                        }
-                        
+                        echo modificarProductoApi($parametros, $api_url);
+                        header("refresh:2;url=productos.php");
                     } else {
-                        echo "<h2>Faltan datos para actualizar</h2>";
-                        header("refresh:3;url=productos.php");
+                        $nombre = $_POST["nombre"];
+                        $categoria = $_POST["categoria"];
+                        $precio = (float)$_POST["precio"];
+                        $cantidad = (int)$_POST["cantidad"];
+                        $ruta_img  = "";
+
+                        if(isset($_FILES["imagen"]) && $_FILES["imagen"]["size"] > 0){
+                            $imagen = $_FILES["imagen"]["name"];
+                            $imagen_tmp = $_FILES["imagen"]["tmp_name"];
+                            $ruta_img = "../../pics/".$imagen;
+                            move_uploaded_file($imagen_tmp, $ruta_img);
+                        }
+
+                        $parametros = array(
+                            "nombre" => $nombre,
+                            "precio" => $precio,
+                            "categoria" => $categoria,
+                            "cantidad" => $cantidad
+                        );
+
+                        if(!empty($ruta_new)) {
+                            $parametros["imagen"] = $ruta_img;
+                        }
+
+                        echo addProductoApi($parametros, $api_url);
+                        header("refresh:2;url=productos.php");
+                    }
+                } else {
+                        echo "<h2>Faltan datos</h2>";
+                        header("refresh:2;url=productos.php");
                     }
                 ?>
             </div>

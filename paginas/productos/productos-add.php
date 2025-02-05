@@ -32,15 +32,25 @@
             <h1>Productos</h1>
             <div class='contenido-servicios'>
 
-                <?php
-                    if(!isset($_GET["id"])){
-                        echo "<h2>El id es necesario</h2>";
-                        die();
-                    } else {}
-                        //obtengo el id del servicio a modificar
-                        $id = $_GET["id"];
-                        echo formularioModificarProducto($id);
-                ?>
+            <div class='card-servicio'>
+                <form action='productos-confirm.php' method='post' id='formulario-servicios' enctype='multipart/form-data'>
+                        <textarea name='nombre' id='' placeholder='Nombre del producto'></textarea>
+                        <span class='error'></span>
+                        <input type='text' name='precio' id='' placeholder='Precio'>
+                        <span class='error'></span>
+                        <textarea name='categoria' id='' placeholder='Categoría'></textarea>
+                        <span class='error'></span>
+                        <input type='text' name='cantidad' id='' placeholder='Cantidad'>
+                        <span class='error'></span>
+                        <label class='input-file-custom'>
+                                <input type='file' name='imagen' id='' accept='image/*'>
+                                Subir imágen
+                        </label>
+                        
+                        <input name='tipo' type='hidden' value='add'>
+                        <button class='btn btn-outline-secondary' type='submit'>Añadir producto</button>
+                </form>
+            </div>
 
             </div>
         </section>

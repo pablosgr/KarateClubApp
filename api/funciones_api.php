@@ -103,7 +103,10 @@ function addProducto($conexion, $datos_producto){
     $nombre = $datos_producto["nombre"];
     $precio = (float)$datos_producto["precio"];
     $categoria = $datos_producto["categoria"];
-    $cantidad = isset($datos_producto["cantidad"]) ? (int)$datos_producto["cantidad"] : 1; //Si no existe el campo, pongo 1 por defecto
+    $cantidad = isset($datos_producto["cantidad"]) && $datos_producto["cantidad"] !== "" 
+        ? (int)$datos_producto["cantidad"] 
+        : 1; //si no existe el campo, pongo 1 por defecto
+    $imagen = isset($datos_producto["imagen"]) ? $datos_producto["imagen"] : "../../pics/default.jpg";
 
     if(trim($nombre) != "" && $precio > 0 && trim($categoria) != "" && $cantidad > 0){
         
@@ -119,9 +122,9 @@ function addProducto($conexion, $datos_producto){
 			$response["respuesta"] = ["error" => "El nombre de producto ya existe"];
         } else {
             //SI PASA LA COMPROBACIÓN, HAGO EL INSERT
-            $consulta = "INSERT INTO productos (nombre, precio, categoria, cantidad) VALUES (?, ?, ?, ?)";
+            $consulta = "INSERT INTO productos (nombre, precio, categoria, cantidad, imagen) VALUES (?, ?, ?, ?, ?)";
             $stmt = $conexion -> prepare($consulta);
-            $stmt -> bind_param("sdsi", $nombre, $precio, $categoria, $cantidad);
+            $stmt -> bind_param("sdsis", $nombre, $precio, $categoria, $cantidad, $imagen);
             $stmt -> execute();
             
             if($conexion -> affected_rows > 0){

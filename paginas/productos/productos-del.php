@@ -55,7 +55,7 @@
 
                 if($http_code != 200){
                     echo "<h1>{$datos['error']}</h1>"; //recupero el mensaje de error de la API
-                    header("refresh:3;url=productos.php");
+                    header("refresh:2;url=productos.php");
                 } else {
                     echo "<h1>{$datos['exito']}</h1>";
                     header("refresh:2;url=productos.php");

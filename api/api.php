@@ -136,8 +136,12 @@ switch($metodo){
                 "categoria" => $entrada["categoria"]
             );
 
-            if(isset($entrada["cantidad"])){
+            if(isset($entrada["cantidad"]) && $entrada["cantidad"] != 0){
                 $producto = array_merge($producto, ["cantidad" => $entrada["cantidad"]]);
+            }
+
+            if(isset($entrada["imagen"])){
+                $producto = array_merge($producto, ["imagen" => $entrada["imagen"]]);
             }
 
             $resultado = addProducto($conexion, $producto);
