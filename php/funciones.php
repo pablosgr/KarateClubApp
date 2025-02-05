@@ -896,6 +896,7 @@ function imprimirCitasBuscadas($conexion, $texto){
         return $respuesta;
     }
 
+
     function generarPaginadoProductos($datos, $parametros, $pagina){
         $respuesta = "<ul>";
         for($i = 1; $i <= $datos['total_paginas']; $i++){
@@ -914,6 +915,54 @@ function imprimirCitasBuscadas($conexion, $texto){
             }
         }
         $respuesta .= "</ul>";
+
+        return $respuesta;
+    }
+
+
+    function imprimirModificarProducto($id){
+        $respuesta = "";
+        $api_url = "http://localhost/club_karate/api/api.php?id=$id";
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $api_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            "Content-Type: application/json"
+        ));
+        $respuesta = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $datos = json_decode($respuesta, true);
+        curl_close($ch);
+
+        if($http_code != 200){
+            $respuesta = "<h2>{$datos['error']}</h2>";
+            return $respuesta;
+        }
+    
+        $producto = $datos['datos'][0];
+        $respuesta.="
+            <div class='card-servicio'>
+                <form action='productos-confirm.php' method='post' id='formulario-servicios' enctype='multipart/form-data>
+                        <div class='avatar'><img src='{$producto['imagen']}' style='width: 300px'></div>
+                        <textarea name='nombre' id='' placeholder='Nombre del producto'>{$producto['nombre']}</textarea>
+                        <span class='error'></span>
+                        <input type='text' name='precio' id='' value='{$producto['precio']}' placeholder='Precio'>
+                        <span class='error'></span>
+                        <textarea name='categoria' id='' placeholder='Categoría'>{$producto['categoria']}</textarea>
+                        <span class='error'></span>
+                        <input type='text' name='cantidad' id='' value='{$producto['cantidad']}' placeholder='Cantidad'>
+                        <span class='error'></span>
+                        <label class='input-file-custom'>
+                                <input type='file' name='imagen' id='' accept='image/*'>
+                                Subir imágen
+                        </label>
+                        
+                        <input name='id' type='hidden' value='{$producto['id']}'>
+                        <button class='btn btn-outline-secondary' type='submit'>Actualizar producto</button>
+                </form>
+            </div>
+            ";
 
         return $respuesta;
     }

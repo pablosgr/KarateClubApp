@@ -37,7 +37,7 @@
 
             <?php
 
-                //RECOJO LOS PARÁMETROS (GET Y POST) PASADOS A LA PÁGINA
+                // RECOJO LOS PARÁMETROS (GET Y POST) PASADOS A LA PÁGINA
                 $api_url = "http://localhost/club_karate/api/api.php";
                 $api_params = "";
                 $num_pagina = "";
@@ -52,16 +52,11 @@
                         $api_params .= empty($api_params) ? "nombre=$text" : "&nombre=$text";
                     }
 
-                    // if (!empty($api_params)) {
-                    //     $api_url .= "?" . $api_params;
-                    // }
                 }
 
-                // Si hay parámetros, los agregamos correctamente a la URL
-
+                // PARAMETROS POR GET
                 if(isset($_GET["pagina"])){
                     $num_pagina = $_GET['pagina'];
-                    var_dump($num_pagina);
                 }
 
                 if(isset($_GET["precioInf"])){
@@ -72,7 +67,7 @@
                     $api_params .=  $api_params == "" ? "nombre={$_GET['nombre']}" : "&nombre={$_GET['nombre']}";
                 }
 
-                //AÑADO LOS PARÁMETROS A LA URL DE LA API ANTES DE LLAMARLA
+                // AGREGO LOS PARÁMETROS EXISTENTES A LA URL
                 if(!empty($num_pagina) || !empty($api_params)){
                     if(empty($num_pagina)){
                         $api_url .= "?$api_params";
@@ -82,8 +77,6 @@
                         $api_url .= "?pagina=$num_pagina" . "&" . $api_params;
                     }
                 }
-
-                var_dump($_POST['query'], $api_params, $api_url);
                 
                 //LLAMADA A LA API CON cURL
                 $ch = curl_init();
@@ -98,7 +91,6 @@
 
                 if($http_code != 200){
                     echo "<h2>{$datos['error']}</h2>"; //recupero el mensaje de error de la API
-                    var_dump($api_url);
                     die();
                 }
 

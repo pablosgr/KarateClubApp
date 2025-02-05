@@ -154,6 +154,7 @@ function modificarProducto($conexion, $id, $datos_producto){
     $precio = (float)$datos_producto["precio"];
     $categoria = $datos_producto["categoria"];
     $cantidad = (int)$datos_producto["cantidad"];
+    $imagen = $datos_producto["imagen"] ?? null;
 
     if(trim($nombre) != "" && $precio > 0 && trim($categoria) != "" && $cantidad > 0){
         
@@ -168,11 +169,18 @@ function modificarProducto($conexion, $id, $datos_producto){
             $response["http"] = 409; //duplicidad
 			$response["respuesta"] = ["error" => "El nombre de producto ya existe"];
         } else {
-            //SI PASA LA COMPROBACIÓN, HAGO EL UPDATE
-            $consulta = "UPDATE productos SET nombre = ?, precio = ?, categoria = ?, cantidad = ? WHERE id = ?";
-            $stmt = $conexion -> prepare($consulta);
-            $stmt -> bind_param("sdsii", $nombre, $precio, $categoria, $cantidad, $id);
-            $stmt -> execute();
+            //SI PASA LA COMPROBACIÓN,COMPRUEBO SI HAY O NO NUEVA IMAGEN, Y HAGO EL UPDATE
+            if($imagen){
+                $consulta = "UPDATE productos SET nombre = ?, precio = ?, categoria = ?, cantidad = ?, imagen = ? WHERE id = ?";
+                $stmt = $conexion -> prepare($consulta);
+                $stmt -> bind_param("sdsisi", $nombre, $precio, $categoria, $cantidad, $imagen, $id);
+                $stmt -> execute();
+            } else {
+                $consulta = "UPDATE productos SET nombre = ?, precio = ?, categoria = ?, cantidad = ? WHERE id = ?";
+                $stmt = $conexion -> prepare($consulta);
+                $stmt -> bind_param("sdsii", $nombre, $precio, $categoria, $cantidad, $id);
+                $stmt -> execute();
+            }
             
             if($conexion -> affected_rows > 0){
                 $response["http"] = 200;

@@ -24,6 +24,7 @@ switch($metodo){
     case "GET":
         //SE ESTABLECEN LAS VARIABLES; PARA PAGINADO: pagina 1, limite 10 por defecto
 
+        $id_busqueda = $_GET["id"] ?? null;
         $nombre_busqueda = $_GET["nombre"] ?? null;
         $precio_busqueda_superior = $_GET["precioSup"] ?? null;
         $precio_busqueda_inferior = $_GET["precioInf"] ?? null;
@@ -37,6 +38,18 @@ switch($metodo){
         $params = [];
 
         //COMPROBACIONES DE VARIABLES PARA FORMAR LA CONDICIÓN DE LA CONSULTA
+
+        if(isset($id_busqueda)){
+            if(!is_numeric($id_busqueda)){
+                http_response_code(400); //bad request
+                echo json_encode(["error" => "Error en el id, debe ser un número"]);
+                die(); //si no hago die(), el código seguirá ejecutándose
+            }
+
+            $condicion_sql .= $condicion_sql == "" ? " WHERE id = ?" : " AND id = ?";
+            $tipos .= "i";
+            $params[] = $id_busqueda;
+        }
 
         if(isset($nombre_busqueda) && isset($nombre_busqueda) != ""){
             $condicion_sql .= $condicion_sql == "" ? " WHERE nombre LIKE ?" : " AND nombre LIKE ?";
@@ -152,6 +165,10 @@ switch($metodo){
                 "cantidad" => $entrada["cantidad"]
             );
 
+            if (isset($entrada["imagen"])) {
+                $producto["imagen"] = $entrada["imagen"];
+            }
+            
             $resultado = modificarProducto($conexion, $entrada["id"], $producto);
             http_response_code($resultado["http"]);
             echo json_encode($resultado["respuesta"]);
