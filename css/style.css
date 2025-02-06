@@ -5,6 +5,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: Manrope;
+    border: 1px solid lightcoral;
 }
 
 body{
@@ -19,7 +20,8 @@ main.principal-testimonios,
 main.principal-servicios,
 main.principal-noticias,
 main.principal-citas,
-main.principal-dojo{
+main.principal-dojo,
+main.principal-productos{
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -329,7 +331,7 @@ form#buscador{
     flex-direction: row;
     justify-content: space-around;
     margin: 30px 0px 60px 0px;
-    width: 60%;
+    width: 70%;
     min-width: 390px;
     height: 50px;
 }
@@ -354,7 +356,7 @@ form#buscador button{
     width: 20%;
     max-width: 150px;
     min-width: 125px;
-    margin: 0px 0px 0px 30px;
+    margin-left: 30px;
 }
 
 form#buscador button:hover{
@@ -389,6 +391,19 @@ form#buscador span{
 }
 
 @media (width <= 1181px) {
+
+    form#buscador{
+        width: fit-content; /*------NEEDS FIX------*/
+        flex-direction: column;
+        height: auto;
+        gap: 20px;
+    }
+
+    form#buscador button{
+        margin-left: 0;
+        min-width: 170px;
+    }
+
     #menu-btn {
         display: inline-block;
     }

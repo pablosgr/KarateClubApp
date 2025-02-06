@@ -870,7 +870,7 @@ function imprimirCitasBuscadas($conexion, $texto){
     /*Funciones Productos*/
 
     function generarListadoProductos($datos){
-        $respuesta = "";
+        $respuesta = "<section class='lista-productos'>";
         $array_productos = $datos["datos"];
         foreach($array_productos as $prod){
             $respuesta .= "
@@ -889,33 +889,53 @@ function imprimirCitasBuscadas($conexion, $texto){
             $respuesta .= "
                 <p>Categoría: {$prod['categoria']}</p>
                 <section class='prod-options'>
-                    <a href='productos-del.php?id={$prod['id']}' class='btn-modificar-php'>Eliminar</a>
-                    <a href='productos-mod.php?id={$prod['id']}' class='btn-modificar-php'>Modificar</a>
+                    <a href='productos-del.php?id={$prod['id']}' class='btn-del-prod'>Eliminar</a>
+                    <a href='productos-mod.php?id={$prod['id']}' class='btn-upd-prod'>Modificar</a>
                 </section>
                 </article>
             ";
         }
+
+        $respuesta .= "</section>";
         return $respuesta;
     }
 
 
     function generarPaginadoProductos($datos, $parametros, $pagina){
-        $respuesta = "<ul>";
-        for($i = 1; $i <= $datos['total_paginas']; $i++){
+        $respuesta = "<ul class='paginado-productos'>";
 
-            //COMPRUEBO SI EL PARÁMETRO PÁGINA VIENE EN LOS PARÁMETROS PARA NO DUPLICARLO
+        for($i = 1; $i <= $datos['total_paginas']; $i++){
+            // COMPRUEBO SI EL PARÁMETRO PÁGINA VIENE EN LOS PARÁMETROS PARA NO DUPLICARLO
             if(!empty($parametros) || !empty($pagina)){
                 if(empty($pagina)){
-                    $respuesta .= "<li><a href='productos.php?$parametros&pagina=$i'>$i</a></li>";
+                    if($pagina == $i){
+                        $respuesta .= "<li class='actual'><a href='productos.php?$parametros&pagina=$i'>$i</a></li>";
+                    } else {
+                        $respuesta .= "<li><a href='productos.php?$parametros&pagina=$i'>$i</a></li>";
+                    }
                 } elseif(empty($parametros)){
-                    $respuesta .= "<li><a href='productos.php?pagina=$i'>$i</a></li>";
+                    if($pagina == $i){
+                        $respuesta .= "<li class='actual'><a href='productos.php?pagina=$i'>$i</a></li>";
+                    } else {
+                        $respuesta .= "<li><a href='productos.php?pagina=$i'>$i</a></li>";
+                    }
                 } else {
-                    $respuesta .= "<li><a href='productos.php?pagina=$i&$parametros'>$i</a></li>";
+                    if($pagina == $i){
+                        $respuesta .= "<li class='actual'><a href='productos.php?pagina=$i&$parametros'>$i</a></li>";
+                    } else {
+                        $respuesta .= "<li><a href='productos.php?pagina=$i&$parametros'>$i</a></li>";
+                    }
                 }
             } else {
-                $respuesta .= "<li><a href='productos.php?pagina=$i'>$i</a></li>";
+                if($pagina == $i){
+                    $respuesta .= "<li class='actual'><a href='productos.php?pagina=$i'>$i</a></li>";
+                } else {
+                    $respuesta .= "<li><a href='productos.php?pagina=$i'>$i</a></li>";
+                }
             }
         }
+        
+
         $respuesta .= "</ul>";
 
         return $respuesta;
