@@ -106,7 +106,7 @@ function addProducto($conexion, $datos_producto){
     $cantidad = isset($datos_producto["cantidad"]) && $datos_producto["cantidad"] !== "" 
         ? (int)$datos_producto["cantidad"] 
         : 1; //si no existe el campo, pongo 1 por defecto
-    $imagen = isset($datos_producto["imagen"]) ? $datos_producto["imagen"] : "../../pics/products/default.jpg";
+    $imagen = isset($datos_producto["imagen"]) ? $datos_producto["imagen"] : "../../pics/products/unavailable.webp";
 
     if(trim($nombre) != "" && $precio > 0 && trim($categoria) != "" && $cantidad > 0){
         
