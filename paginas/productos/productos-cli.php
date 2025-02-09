@@ -43,74 +43,9 @@
                 </form>
                 <i class='material-symbols-outlined cart-icon'>shopping_cart</i>
             </section>
-            
-            <?php
-
-                // RECOJO LOS PARÁMETROS (GET Y POST) PASADOS A LA PÁGINA
-                $api_url = "http://localhost/club_karate/api/api.php";
-                $api_params = "";
-                $num_pagina = "";
-                
-                //PARÁMETROS DEL BUSCADOR
-                if(isset($_POST["query"])){
-                    $text = trim($_POST["query"]);
-
-                    if(is_numeric($text)){
-                        $api_params .= empty($api_params) ? "precioInf=$text" : "&precioInf=$text";
-                    } elseif(!empty($text)) {
-                        $api_params .= empty($api_params) ? "nombre=$text" : "&nombre=$text";
-                    }
-
-                }
-
-                // PARAMETROS POR GET
-                if(isset($_GET["pagina"])){
-                    $num_pagina = $_GET['pagina'];
-                }
-
-                if(isset($_GET["precioInf"])){
-                    $api_params .=  $api_params == "" ? "precioInf={$_GET['precioInf']}" : "&precioInf={$_GET['precioInf']}";
-                }
-
-                if(isset($_GET["nombre"])){
-                    $api_params .=  $api_params == "" ? "nombre={$_GET['nombre']}" : "&nombre={$_GET['nombre']}";
-                }
-
-                // AGREGO LOS PARÁMETROS EXISTENTES A LA URL
-                if(!empty($num_pagina) || !empty($api_params)){
-                    if(empty($num_pagina)){
-                        $api_url .= "?$api_params";
-                    } elseif(empty($api_params)) {
-                        $api_url .= "?pagina=$num_pagina";
-                    } else {
-                        $api_url .= "?pagina=$num_pagina" . "&" . $api_params;
-                    }
-                }
-                
-                //LLAMADA A LA API CON cURL
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $api_url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                    "Content-Type: application/json"
-                ));
-                $respuesta = curl_exec($ch);
-                $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                $datos = json_decode($respuesta, true);
-
-                if($http_code != 200){
-                    echo "<h2>{$datos['error']}</h2>"; //recupero el mensaje de error de la API
-                    die();
-                }
-
-                curl_close($ch);
-            ?>
 
             <div class='contenido-productos' id='contenido-productos'>
-                <?php
-                    echo generarListadoProductosCliente($datos);
-                    echo generarPaginadoProductosCliente($datos, $api_params, $num_pagina);
-                ?>
+                
             </div>
 
         </section>

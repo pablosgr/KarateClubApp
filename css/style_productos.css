@@ -177,6 +177,14 @@ div.contenido-productos{
     color: white;
 }
 
+/*----paginado js----*/
+
+.paginado-js{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
 /*----form----*/
 
 .form-container{
