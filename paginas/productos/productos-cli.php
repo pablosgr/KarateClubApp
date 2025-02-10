@@ -31,6 +31,78 @@
         <section class='productos'>
             <h1>Productos</h1>
 
+            <!-- Carrito -->
+            <div class="cart-overlay show">
+                <aside class="cart">
+                    <button class="cart-close">
+                        <i class="material-symbols-outlined">close</i>
+                    </button>
+                    <header>
+                        <h3 class="text-slanted">Añadido hasta ahora</h3>
+                    </header>
+                    
+                    <section class="cart-items">
+                        <section class="cart-items-list">
+
+                            <article class="item">
+                                <section class="item-body">
+                                    <img src="../../pics/products/black_belt.webp">
+                                    <section class="item-details">
+                                        <h3>Item</h3>
+                                        <p>Categoria</p>
+                                        <p>Precio</p>
+                                    </section>
+                                </section>
+                                <section class="item-foot">
+                                    <button>x</button>
+                                    <button>+</button>
+                                </section>
+                            </article>
+
+                            <article class="item">
+                                <section class="item-body">
+                                    <img src="../../pics/products/black_belt.webp">
+                                    <section class="item-details">
+                                        <h3>Item</h3>
+                                        <p>Categoria</p>
+                                        <p>Precio</p>
+                                    </section>
+                                </section>
+                                <section class="item-foot">
+                                    <button>x</button>
+                                    <button>+</button>
+                                </section>
+                            </article>
+
+                            <article class="item">
+                                <section class="item-body">
+                                    <img src="../../pics/products/black_belt.webp">
+                                    <section class="item-details">
+                                        <h3>Item</h3>
+                                        <p>Categoria</p>
+                                        <p>Precio</p>
+                                    </section>
+                                </section>
+                                <section class="item-foot">
+                                    <button>x</button>
+                                    <button>+</button>
+                                </section>
+                            </article>
+
+                        </section>
+
+                        <section class="cart-total">
+                            <p>Total</p>
+                        </section>
+                    </section>
+
+                    <footer>
+                        <button class="cart-checkout empty-cart"><i class="material-symbols-outlined">delete</i></button>
+                        <button class="cart-checkout place-order">Tramitar pedido</button>
+                    </footer>
+                </aside>
+            </div>
+
             <!--INCORPORAR A PRODUCTOS.PHP-->
 
             <section class="form-cart">
