@@ -44,51 +44,6 @@
                     <section class="cart-items">
                         <section class="cart-items-list">
 
-                            <article class="item">
-                                <section class="item-body">
-                                    <img src="../../pics/products/black_belt.webp">
-                                    <section class="item-details">
-                                        <h3>Item</h3>
-                                        <p>Categoria</p>
-                                        <p>Precio</p>
-                                    </section>
-                                </section>
-                                <section class="item-foot">
-                                    <button>x</button>
-                                    <button>+</button>
-                                </section>
-                            </article>
-
-                            <article class="item">
-                                <section class="item-body">
-                                    <img src="../../pics/products/black_belt.webp">
-                                    <section class="item-details">
-                                        <h3>Item</h3>
-                                        <p>Categoria</p>
-                                        <p>Precio</p>
-                                    </section>
-                                </section>
-                                <section class="item-foot">
-                                    <button>x</button>
-                                    <button>+</button>
-                                </section>
-                            </article>
-
-                            <article class="item">
-                                <section class="item-body">
-                                    <img src="../../pics/products/black_belt.webp">
-                                    <section class="item-details">
-                                        <h3>Item</h3>
-                                        <p>Categoria</p>
-                                        <p>Precio</p>
-                                    </section>
-                                </section>
-                                <section class="item-foot">
-                                    <button>x</button>
-                                    <button>+</button>
-                                </section>
-                            </article>
-
                         </section>
 
                         <section class="cart-total">

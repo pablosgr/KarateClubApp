@@ -901,40 +901,6 @@ function imprimirCitasBuscadas($conexion, $texto){
     }
 
 
-    function generarListadoProductosCliente($datos){
-        $respuesta = "<section class='lista-productos'>";
-        $array_productos = $datos["datos"];
-        foreach($array_productos as $prod){
-            $respuesta .= "
-                <article class='producto'>
-                <h2>{$prod['nombre']}</h2>
-                <img src='{$prod['imagen']}'>
-                <p>Precio: {$prod['precio']} &#8364</p>
-            ";
-
-            if($prod['disponible'] != 1){
-                $respuesta .= "<p>No disponible</p>";
-            } else {
-                $respuesta .= "<p>Disponible</p>";
-            }
-
-            $respuesta .= "
-                <p>Categoría: {$prod['categoria']}</p>
-                <section class='prod-options'>
-                    <button class='add-producto' id='add-producto'>
-                        <i class='material-symbols-outlined'>add_shopping_cart</i>
-                        <span>Añadir al carrito</span>
-                    </button>
-                </section>
-                </article>
-            ";
-        }
-
-        $respuesta .= "</section>";
-        return $respuesta;
-    }
-
-
     function generarPaginadoProductos($datos, $parametros, $pagina){
         $respuesta = "<ul class='paginado-productos'>";
 
@@ -974,48 +940,7 @@ function imprimirCitasBuscadas($conexion, $texto){
 
         return $respuesta;
     }
-
-
-    function generarPaginadoProductosCliente($datos, $parametros, $pagina){
-        $respuesta = "<ul class='paginado-productos'>";
-
-        for($i = 1; $i <= $datos['total_paginas']; $i++){
-            // COMPRUEBO SI EL PARÁMETRO PÁGINA VIENE EN LOS PARÁMETROS PARA NO DUPLICARLO
-            if(!empty($parametros) || !empty($pagina)){
-                if(empty($pagina)){
-                    if($pagina == $i){
-                        $respuesta .= "<li class='actual'><a href='productos-cli.php?$parametros&pagina=$i'>$i</a></li>";
-                    } else {
-                        $respuesta .= "<li><a href='productos-cli.php?$parametros&pagina=$i'>$i</a></li>";
-                    }
-                } elseif(empty($parametros)){
-                    if($pagina == $i){
-                        $respuesta .= "<li class='actual'><a href='productos-cli.php?pagina=$i'>$i</a></li>";
-                    } else {
-                        $respuesta .= "<li><a href='productos-cli.php?pagina=$i'>$i</a></li>";
-                    }
-                } else {
-                    if($pagina == $i){
-                        $respuesta .= "<li class='actual'><a href='productos-cli.php?pagina=$i&$parametros'>$i</a></li>";
-                    } else {
-                        $respuesta .= "<li><a href='productos-cli.php?pagina=$i&$parametros'>$i</a></li>";
-                    }
-                }
-            } else {
-                if($pagina == $i){
-                    $respuesta .= "<li class='actual'><a href='productos-cli.php?pagina=$i'>$i</a></li>";
-                } else {
-                    $respuesta .= "<li><a href='productos-cli.php?pagina=$i'>$i</a></li>";
-                }
-            }
-        }
-        
-
-        $respuesta .= "</ul>";
-
-        return $respuesta;
-    }
-
+    
 
     function formularioModificarProducto($id){
         $resultado = "";

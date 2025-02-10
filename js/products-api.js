@@ -1,6 +1,7 @@
 "use strict";
 
-let datos_productos = recuperarCarrito("lista"); //variable para el localStorage
+const nombre_carrito = "lista";
+let datos_productos = recuperarCarrito(nombre_carrito); //variable para el localStorage
 const contenedor = document.getElementById("contenido-productos");
 const btn_buscar = document.getElementById("btn-buscar");
 const input_busqueda = document.getElementById("texto-busqueda");
@@ -13,22 +14,19 @@ const icono_carrito = document.querySelector(".cart-icon");
 const btn_vaciar_carrito = document.querySelector(".empty-cart");
 const btn_hacer_pedido = document.querySelector(".place-order");
 
-const carrito_productos = document.querySelector(".cart-items");
+const contenedor_carrito = document.querySelector(".cart-items-list");
 
 //Llamo a la API al cargar la página
 listarProductos("", url_api);
 
+//renderizo en el carritop todos los productos en localStorage
+datos_productos.forEach(
+    (p) => {
+        renderProductCart(p);
+    }
+)
 
-//EVENTOS
-
-/*
-    Obtiene los parámetros de búsqueda y llama a la función lista los productos
-*/
-btn_buscar.addEventListener("click", ()=>{
-    texto_busqueda = input_busqueda.value.trim();
-    listarProductos(texto_busqueda, url_api);
-    input_busqueda.value = "";
-});
+//----------------------------EVENTOS
 
 /*
     Mostrar y ocultar el carrito
@@ -38,8 +36,7 @@ icono_carrito.addEventListener("click",
       pagina_carrito.classList.add("show");
     }
 );
-  
-  
+
 cerrar_carrito.addEventListener("click",
     () => {
       pagina_carrito.classList.remove("show");
@@ -47,14 +44,23 @@ cerrar_carrito.addEventListener("click",
 );
 
 /*
+    Obtiene los parámetros de búsqueda y llama a la función que lista e imprime los productos
+*/
+btn_buscar.addEventListener("click", ()=>{
+    texto_busqueda = input_busqueda.value.trim();
+    listarProductos(texto_busqueda, url_api);
+    input_busqueda.value = "";
+});
+
+/*
     Vacía el carrito en el DOM y localStorage
 */
 btn_vaciar_carrito.addEventListener("click", ()=>{
     datos_productos = [];
-    guardarCarrito("lista", datos_productos);
+    guardarCarrito(nombre_carrito, datos_productos);
 })
 
-//FUNCIONES
+//----------------------------FUNCIONES
 
 /*
     Lista los productos con los parámetros de búsqueda
@@ -111,6 +117,8 @@ async function apiRequest(url){
     return datos;
 }
 
+//FUNCIONES RENDER
+
 /*
     Recibe los datos de la API y genera el contenido HTML
     (seccion contenedora y cards de productos)
@@ -161,17 +169,48 @@ function renderCards(datos){
 
             boton.addEventListener("click", ()=>{
                 let item = {
-                    "id": producto["id"],
-                    "nombre": producto["nombre"],
-                    "precio": producto["precio"],
-                    "categoria": producto["categoria"],
-                    "imagen": producto["imagen"],
-                    "disponible": producto["disponible"],
-                    "cantidad": producto["cantidad"],
+                    "detalles": {
+                        "id": producto["id"],
+                        "nombre": producto["nombre"],
+                        "precio": producto["precio"],
+                        "categoria": producto["categoria"],
+                        "imagen": producto["imagen"],
+                        "disponible": producto["disponible"],
+                        "cantidad": producto["cantidad"]
+                    },
+                    "numero": 1
                 };
 
-                datos_productos.push(item);
-                guardarCarrito("lista", datos_productos);
+                //Compruebo si el id del producto ya esta presente en la lista para añadir uno al numero de productos
+                let exists = false;
+                if(datos_productos.length > 0){
+                    let result = datos_productos.findIndex(i => i["detalles"]["id"] == item["detalles"]["id"]);
+                    if(result !== -1){
+                        datos_productos[result]["numero"]++;
+                        exists = true;
+
+                        //Lo actualizo también en el elemento HTML
+                        let array_items = document.querySelectorAll(".item");
+                        array_items.forEach(
+                            (p) => {
+                                if(p.getAttribute("data-id") == item["detalles"]["id"]){
+                                    console.log("producto encontrado");
+                                    let cantidad_elemento = p.querySelector(".number");
+                                    cantidad_elemento.innerText = parseInt(cantidad_elemento.innerText) + 1;
+                                }
+                            }
+                        );
+                    }
+                }
+
+                //Si no estaba previamente, lo añado
+                if(!exists){
+                    datos_productos.push(item);
+                    renderProductCart(item);
+                }
+                
+                guardarCarrito(nombre_carrito, datos_productos);
+                
             })
 
             //añado los elementos hijos a sus padres
@@ -228,6 +267,36 @@ function renderPages(datos){
     paginado.appendChild(boton_prev);
     paginado.appendChild(boton_next);
     contenedor.appendChild(paginado);
+}
+
+/*
+    Renderiza en el carrito el producto pasado por parámetro
+*/
+function renderProductCart(producto){
+
+        let articulo = document.createElement("article");
+        articulo.classList.add("item");
+        articulo.setAttribute("data-id", producto["detalles"]["id"]);
+        articulo.innerHTML = `
+            <section class="item-body">
+                <img src="${producto["detalles"]["imagen"]}">
+                <section class="item-details">
+                    <h3>${producto["detalles"]["nombre"]}</h3>
+                    <p>Categoría: ${producto["detalles"]["categoria"]}</p>
+                    <p>Precio: ${producto["detalles"]["precio"]}</p>
+                </section>
+            </section>
+            <section class="item-foot">
+                <button class='restar-prod'>-</button>
+                <p class='number'>${producto["numero"]}</p>
+                <button class='sumar-prod'>+</button>
+            </section>
+        `;
+
+        contenedor_carrito.appendChild(articulo);
+
+        
+    
 }
 
 //LOCALSTORAGE
