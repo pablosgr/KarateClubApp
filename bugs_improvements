@@ -1,0 +1,13 @@
+--TASKS
+- update routes for dojo and products
+- implement sessions
+
+--IMPROVEMENT/FIXES
+- allow search by name + price in productos.php
+- implement api key system
+- fix text overflow in dojo (break word)
+- make products not buyable if they are not available
+- update products quantity in DB after order
+- add alert in cart icon if has products
+- implement wishlist for cart
+- implement Gemini in external API for searching topics in 1st instance

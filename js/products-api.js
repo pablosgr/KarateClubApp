@@ -9,12 +9,15 @@ let texto_busqueda;
 let url_api = "http://localhost/club_karate/api/api.php";
 
 const pagina_carrito = document.querySelector(".cart-overlay");
+const cart_aside = document.querySelector(".cart");
 const cerrar_carrito = document.querySelector(".cart-close");
 const icono_carrito = document.querySelector(".cart-icon");
 const btn_vaciar_carrito = document.querySelector(".empty-cart");
 const btn_hacer_pedido = document.querySelector(".place-order");
+const alerta_producto = document.querySelector(".add-alert");
 
 const contenedor_carrito = document.querySelector(".cart-items-list");
+
 
 //Llamo a la API al cargar la página
 listarProductos("", url_api);
@@ -43,6 +46,17 @@ cerrar_carrito.addEventListener("click",
     }
 );
 
+const cartOverlay = document.querySelector(".cart-overlay");
+
+/*
+    Cierra el carrito si se hace click fuera del div carrito -aside-
+*/
+pagina_carrito.addEventListener("click", (event) => {
+    if (!cart_aside.contains(event.target)) {
+        pagina_carrito.classList.remove("show");
+    }
+});
+
 /*
     Obtiene los parámetros de búsqueda y llama a la función que lista e imprime los productos
 */
@@ -58,7 +72,21 @@ btn_buscar.addEventListener("click", ()=>{
 btn_vaciar_carrito.addEventListener("click", ()=>{
     datos_productos = [];
     guardarCarrito(nombre_carrito, datos_productos);
-})
+    contenedor_carrito.innerHTML = "";
+    renderTotal();
+});
+
+/*
+    Realiza el pedido (mejorar con bases de datos)
+*/
+btn_hacer_pedido.addEventListener("click", ()=>{
+    datos_productos = [];
+    guardarCarrito(nombre_carrito, datos_productos);
+    contenedor_carrito.innerHTML = "";
+    renderTotal();
+    pagina_carrito.classList.remove("show");
+    renderAlert("Pedido realizado");
+});
 
 //----------------------------FUNCIONES
 
@@ -117,7 +145,7 @@ async function apiRequest(url){
     return datos;
 }
 
-//FUNCIONES RENDER
+//----------------------------FUNCIONES RENDER
 
 /*
     Recibe los datos de la API y genera el contenido HTML
@@ -157,7 +185,7 @@ function renderCards(datos){
             let seccion_boton = document.createElement("section");
             seccion_boton.classList.add("prod-options");
 
-            //botón y evento para el carrito 
+            //botón y evento para añadir al carrito
             let boton = document.createElement("button");
             boton.classList.add("add-producto");
             boton.setAttribute("id", "add-producto");
@@ -181,12 +209,15 @@ function renderCards(datos){
                     "numero": 1
                 };
 
+                renderAlert("Producto añadido");
+
                 //Compruebo si el id del producto ya esta presente en la lista para añadir uno al numero de productos
                 let exists = false;
                 if(datos_productos.length > 0){
                     let result = datos_productos.findIndex(i => i["detalles"]["id"] == item["detalles"]["id"]);
                     if(result !== -1){
                         datos_productos[result]["numero"]++;
+                        renderTotal();
                         exists = true;
 
                         //Lo actualizo también en el elemento HTML
@@ -194,7 +225,6 @@ function renderCards(datos){
                         array_items.forEach(
                             (p) => {
                                 if(p.getAttribute("data-id") == item["detalles"]["id"]){
-                                    console.log("producto encontrado");
                                     let cantidad_elemento = p.querySelector(".number");
                                     cantidad_elemento.innerText = parseInt(cantidad_elemento.innerText) + 1;
                                 }
@@ -282,8 +312,8 @@ function renderProductCart(producto){
                 <img src="${producto["detalles"]["imagen"]}">
                 <section class="item-details">
                     <h3>${producto["detalles"]["nombre"]}</h3>
-                    <p>Categoría: ${producto["detalles"]["categoria"]}</p>
-                    <p>Precio: ${producto["detalles"]["precio"]}</p>
+                    <p>${producto["detalles"]["categoria"]}</p>
+                    <p>Precio: ${producto["detalles"]["precio"]} &#8364</p>
                 </section>
             </section>
             <section class="item-foot">
@@ -294,9 +324,78 @@ function renderProductCart(producto){
         `;
 
         contenedor_carrito.appendChild(articulo);
+        renderTotal();
 
+        //selecciono los botones del propio articulo para que sólo le afecten a él
+        let boton_sumar = articulo.querySelector(".sumar-prod");
+        let boton_restar = articulo.querySelector(".restar-prod");
+
+        boton_sumar.addEventListener("click", (event)=>{
+                    event.stopPropagation();
+                    let result = datos_productos.findIndex(i => i["detalles"]["id"] == producto["detalles"]["id"]);
+                    if(result !== -1){
+                        //actualizo en el carrito
+                        datos_productos[result]["numero"]++;
+                        guardarCarrito(nombre_carrito, datos_productos);
+                        //actualizo en el elemento HTML
+                        let cantidad_elemento = articulo.querySelector(".number");
+                        cantidad_elemento.innerText = parseInt(cantidad_elemento.innerText) + 1;
+
+                        renderTotal();
+                    }
+                }
+            );
+            
         
+        
+        boton_restar.addEventListener("click", (event)=>{
+                    event.stopPropagation();
+                    let result = datos_productos.findIndex(i => i["detalles"]["id"] == producto["detalles"]["id"]);
+                    if(result !== -1){
+                        //actualizo en el carrito
+                        datos_productos[result]["numero"]--;
+                        guardarCarrito(nombre_carrito, datos_productos);
+                        if(datos_productos[result]["numero"] < 1){
+                            datos_productos.splice(result, 1);
+                            guardarCarrito(nombre_carrito, datos_productos);
+                        }
+                        //actualizo en el elemento HTML
+                        let cantidad_elemento = articulo.querySelector(".number");
+                        cantidad_elemento.innerText = parseInt(cantidad_elemento.innerText) - 1;
+                        if(cantidad_elemento.innerText < 1){
+                            articulo.remove();
+                        }
+
+                        renderTotal();
+                    }
+                }
+            );
+            
+}
     
+/*
+    Renderiza el precio total cada vez que se añade o elimina un producto
+*/
+function renderTotal(){
+    let total = document.querySelector(".total span");
+    let total_calculo = 0;
+    datos_productos.forEach(
+        (prod) => {
+            total_calculo += prod["detalles"]["precio"] * prod["numero"];
+        }
+    )
+    total.innerHTML = total_calculo;
+}
+
+/*
+    Renderiza el precio total cada vez que se añade o elimina un producto
+*/
+function renderAlert(mensaje){
+    alerta_producto.innerText = mensaje;
+    alerta_producto.classList.add("show-alert");
+    setTimeout(()=>{
+        alerta_producto.classList.remove("show-alert");
+    }, 1200);
 }
 
 //LOCALSTORAGE

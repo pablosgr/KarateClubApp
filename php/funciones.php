@@ -10,7 +10,7 @@
 //función para cabecera ----------------------------------------------------------------
 
     //dibuja la cabecera con las rutas pasadas por parámetro
-    function dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit){
+    function dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo){
         $resultado='';
         $resultado.="
         <header>
@@ -19,8 +19,8 @@
                 <ul>
                     <li><a href='$ruta_not'>NOTICIAS</a></li>
                     <li><a href='$ruta_serv'>SERVICIOS</a></li>
-                    <li><a href=''>PRODUCTOS</a></li>
-                    <li><a href=''>DOJO</a></li>
+                    <li><a href='$ruta_prod'>PRODUCTOS</a></li>
+                    <li><a href='$ruta_dojo'>DOJO</a></li>
                     <li><a href='$ruta_tes'>TESTIMONIOS</a></li>
                     <li><a href='$ruta_soc'>SOCIOS</a></li>
                     <li><a href='$ruta_cit'>CITAS</a></li>
@@ -29,7 +29,7 @@
             </nav>
         <button id='menu-btn' aria-label='Toggle menu'>&#9776;</button>
         </header>";
-
+        
         return $resultado;
     }
 

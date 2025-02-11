@@ -31,6 +31,14 @@ div.contenido-productos{
     padding: 10px;
     min-width: 170px;
     margin-left: 30px;
+    transition: .3s ease;
+}
+
+.btn-add:hover{
+    border: 1px solid #6c757d;
+    background-color: #6c757d;
+    color: white;
+    cursor: pointer;
 }
 
 /*----cart icono----*/
@@ -53,6 +61,42 @@ div.contenido-productos{
     cursor: pointer;
 }
 
+/*----alerta y aviso, error not found y búsqueda----*/
+
+.alerta-prod{
+    font-size: 2em;
+}
+
+.aviso-prod, .alerta-prod{
+    text-align: center;
+}
+
+/*----alerta al añadir----*/
+
+.add-alert{
+    opacity: 0;
+    visibility: hidden;
+    transition: .3s ease;
+    position: fixed;
+    left: 50%;
+    top: 20%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 100px;
+    background-color: rgb(187, 245, 187);
+    border: 1px solid rgb(58, 194, 58);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4em;
+    color: rgb(43, 139, 43);
+}
+
+.add-alert.show-alert{
+    visibility: visible;
+    opacity: 1;
+}
 
 /*----productos container----*/
 
@@ -62,16 +106,6 @@ div.contenido-productos{
     flex-wrap: wrap;
     gap: 70px;
     width: 100%;
-}
-
-/*----alerta y aviso, error not found y búsqueda----*/
-
-.alerta-prod{
-    font-size: 2em;
-}
-
-.aviso-prod, .alerta-prod{
-    text-align: center;
 }
 
 /*----card producto----*/
@@ -191,9 +225,29 @@ div.contenido-productos{
 /*----paginado js----*/
 
 .paginado-js{
+    width: 100%;
+    align-self: center;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    gap: 35px;
     justify-content: space-around;
+}
+
+.btn-prev, .btn-next{
+    padding: 10px 15px;
+    font-size: 1em;
+    border: 0px;
+    border-bottom: 1px solid black;
+    background: transparent;
+    transition: .3s ease;
+}
+
+.btn-prev:hover, .btn-next:hover{
+    border-bottom: 1px solid #6c757d;
+    background-color: #6c757d;
+    color: white;
+    cursor: pointer;
 }
 
 /*----form productos (añadir y modificar)----*/
@@ -270,6 +324,8 @@ input[type="file"] {
     max-width: 400px;
     background: rgb(255, 255, 255);
     padding: 20px 35px 20px 35px;
+    /* display: flow; */
+    /* overflow-x: hidden; */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -313,15 +369,15 @@ input[type="file"] {
     margin: 20px 0 30px 0;
   }
 
-.cart-items{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
 .cart-items-list{
     display: flex;
     flex-direction: column;
+    max-height: 650px;
+    overflow: auto;
+}
+
+.cart-items-list::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
 }
 
 /*items carrito*/
@@ -344,15 +400,68 @@ input[type="file"] {
     width: 100px;
 }
 
+.item-details{
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.item-foot{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.number{
+    font-size: 1.1em;
+}
+
+.item-foot button{
+    font-size: 1.2em;
+    padding: 5px 10px;
+    width: 40px;
+    background: transparent;
+    border: 1px solid black;
+    border-radius: 10px;
+    transition: .2s ease;
+}
+
+.item-foot button:hover{
+    border: 1px solid #6c757d;
+    background-color: #6c757d;
+    color: white;
+    cursor: pointer;
+}
+
 /*footer carrito*/
 
 .cart-overlay footer{
-    width: 90%;
-    background: transparent;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+    z-index: 110; /*para que quede por encima de los productos*/
+}
+
+.cart-total{
+    color: black;
+    align-self: flex-start;
+    font-size: 1.2em;
+    padding: 0 0 30px 20px;
+}
+
+.total{
+    font-weight: 700;
+}
+
+.footer-buttons{
+    width: 100%;
     display: flex;
     justify-content: center;
     align-self: center;
-    margin-top: auto;
     gap: 40px;
 }
 

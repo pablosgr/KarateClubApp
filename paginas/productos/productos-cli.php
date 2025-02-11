@@ -31,8 +31,10 @@
         <section class='productos'>
             <h1>Productos</h1>
 
+            <div class="add-alert"></div>
+
             <!-- Carrito -->
-            <div class="cart-overlay show">
+            <div class="cart-overlay">
                 <aside class="cart">
                     <button class="cart-close">
                         <i class="material-symbols-outlined">close</i>
@@ -41,19 +43,18 @@
                         <h3 class="text-slanted">Añadido hasta ahora</h3>
                     </header>
                     
-                    <section class="cart-items">
-                        <section class="cart-items-list">
+                    <section class="cart-items-list">
 
-                        </section>
-
-                        <section class="cart-total">
-                            <p>Total</p>
-                        </section>
                     </section>
 
                     <footer>
-                        <button class="cart-checkout empty-cart"><i class="material-symbols-outlined">delete</i></button>
-                        <button class="cart-checkout place-order">Tramitar pedido</button>
+                        <section class="cart-total">
+                            <p class="total">Total: <span>0</span> &#8364</p>
+                        </section>
+                        <section class="footer-buttons">
+                            <button class="cart-checkout empty-cart"><i class="material-symbols-outlined">delete</i></button>
+                            <button class="cart-checkout place-order">Tramitar pedido</button>
+                        </section>
                     </footer>
                 </aside>
             </div>
