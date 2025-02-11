@@ -25,7 +25,9 @@
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="../noticias/noticias.php";
             $ruta_cit="../citas/citas.php";
-            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit);
+            $ruta_prod = "productos.php";
+            $ruta_dojo = "../dojo/dojo.php";
+            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo);
         ?>
 
         <section class='productos'>

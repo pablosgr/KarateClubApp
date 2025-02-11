@@ -28,7 +28,9 @@
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="../noticias/noticias.php";
             $ruta_cit="../citas/citas.php";
-            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit);
+            $ruta_prod = "../productos/productos-cli.php";
+            $ruta_dojo = "#";
+            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo);
 
             // cargo el archivo .env a partir del directorio actual (__DIR__) y subiendo dos niveles con dirname()
             // $dotenv = Dotenv::createImmutable(dirname(__DIR__, 2));
@@ -44,15 +46,6 @@
             </p>
 
             <section class="video-dojo" id="dojo-content">
-
-                <iframe class="frame-video"
-                    src="https://www.youtube.com/embed/-e_3Cg9GZFU">
-                </iframe>
-                
-                <section class="video-info">
-                    <h2>Título del video</h2>
-                    <p>Esta es la descripción del vídeo, es un poco larga, quizás demasiado. Temazo.</p>
-                </section>
                 
             </section>
 
