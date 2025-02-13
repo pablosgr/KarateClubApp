@@ -14,6 +14,9 @@
 <body>
     <main class='principal-citas'>
         <?php
+            session_start();
+            $usuario = isset($_SESSION["tipo"]) ? $_SESSION["nombre"] : "";
+
             require_once '../../php/funciones.php';
             require_once '../../php/config.php';
             require_once '../../php/traduccion.php';
@@ -27,7 +30,8 @@
             $ruta_cit="citas.php";
             $ruta_prod = "../productos/productos-cli.php";
             $ruta_dojo = "../dojo/dojo.php";
-            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo);
+            $ruta_acc = "../acceder";
+            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario);
         ?>
 
         <section class='citas'>

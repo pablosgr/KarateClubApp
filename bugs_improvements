@@ -2,6 +2,8 @@
 - implement sessions
 
 --IMPROVEMENT/FIXES
+- fix modify user (names already in use bug)
+
 - allow search by name + price in productos.php
 - implement api key system
 - fix text overflow in dojo (break word)
@@ -10,3 +12,5 @@
 - add alert in cart icon if has products
 - implement wishlist for cart
 - implement Gemini in external API for searching topics in 1st instance
+
+- delete $conexion where is not being used

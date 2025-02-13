@@ -10,25 +10,39 @@
 //función para cabecera ----------------------------------------------------------------
 
     //dibuja la cabecera con las rutas pasadas por parámetro
-    function dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo){
+    function dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario){
         $resultado='';
         $resultado.="
         <header>
-        <h1><a href='$ruta_i'>糸東流</a></h1>
-            <nav>
-                <ul>
-                    <li><a href='$ruta_not'>NOTICIAS</a></li>
-                    <li><a href='$ruta_serv'>SERVICIOS</a></li>
-                    <li><a href='$ruta_prod'>PRODUCTOS</a></li>
-                    <li><a href='$ruta_dojo'>DOJO</a></li>
-                    <li><a href='$ruta_tes'>TESTIMONIOS</a></li>
-                    <li><a href='$ruta_soc'>SOCIOS</a></li>
-                    <li><a href='$ruta_cit'>CITAS</a></li>
-                    <li><a href=''><img src='../../pics/user.png' class='login-img'></a></li>
-                </ul>
-            </nav>
-        <button id='menu-btn' aria-label='Toggle menu'>&#9776;</button>
-        </header>";
+            <h1><a href='$ruta_i'>糸東流</a></h1>
+                <nav>
+                    <ul>
+                        <li><a href='$ruta_not'>NOTICIAS</a></li>
+                        <li><a href='$ruta_serv'>SERVICIOS</a></li>
+                        <li><a href='$ruta_prod'>PRODUCTOS</a></li>
+                        <li><a href='$ruta_dojo'>DOJO</a></li>
+                        <li><a href='$ruta_tes'>TESTIMONIOS</a></li>
+                        <li><a href='$ruta_cit'>CITAS</a></li>
+                        <li><a href='$ruta_soc'>SOCIOS</a></li>
+        ";
+
+        //compruebo si hay un nombre de usuario (sesión iniciada) para cambiar el botón de la cabecera
+        if($usuario != "") {
+            if($usuario == "admin"){
+                $resultado .= "<li><a href='$ruta_acc/cerrar-sesion.php'>CERRAR SESIÓN DE ADMINISTRADOR</a></li>";
+            } else {
+                $resultado .= "<li><a href='$ruta_acc/cerrar-sesion.php'>CERRAR SESIÓN DE $usuario</a></li>";
+            }
+        } else {
+            $resultado .= "<li><a href='$ruta_acc/acceso.php'>ACCEDER</a></li>";
+        }
+
+        $resultado .= "
+                    </ul>
+                </nav>
+            <button id='menu-btn' aria-label='Toggle menu'>&#9776;</button>
+            </header>
+        ";
         
         return $resultado;
     }
@@ -273,17 +287,22 @@
             return $resultado;
         }
         $consulta_check->close();
-
+        
         //si no están en uso, continuo con el INSERT
-        $sql='INSERT INTO socio (nombre, edad, pass, usuario, telefono, foto) 
-        VALUES (?, ?, ?, ?, ?, ?)';
+        $sql='INSERT INTO socio (nombre, edad, pass, tipo, usuario, telefono, foto) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)';
+
+        //hasheo la contraseña y establezco el tipo (en principio, siempre será 'socio')
+        $hash_pass = password_hash($pass, PASSWORD_BCRYPT);
+        $tipo = "socio";
+
         $consulta=$conexion->prepare($sql);
-        $consulta->bind_param("sissss", $nombre, $edad, $pass, $usuario, $tlfn, $ruta_img);
+        $consulta->bind_param("sisssss", $nombre, $edad, $hash_pass, $tipo, $usuario, $tlfn, $ruta_img);
         $consulta->execute();
         $id_insertado = $consulta -> insert_id;
         $consulta->close();
 
-        generarApiKey($conexion, $id_insertado);
+        // generarApiKey($conexion, $id_insertado);
 
         return $resultado;
     }

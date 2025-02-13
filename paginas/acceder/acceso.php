@@ -3,26 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shito-Ryu Club | Dojo</title>
+    <title>Shito-Ryu Club | Acceso</title>
     <link rel="stylesheet" href="../../css/style.css">
-    <link rel="stylesheet" href="../../css/style_dojo.css">
+    <link rel="stylesheet" href="../../css/style_acceder.css">
     <script defer src="../../js/app.js"></script>
-    <script defer src="../../js/public_api.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
 </head>
 <body>
-    <main class='principal-dojo'>
+    <main class='principal-acceder'>
         <?php
             session_start();
             $usuario = isset($_SESSION["tipo"]) ? $_SESSION["nombre"] : "";
-
+            
             require_once '../../php/funciones.php';
             require_once '../../php/config.php';
-            
-            $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../../index.php";
             $ruta_soc="../socios/socios.php";
             $ruta_serv="../servicios/servicios.php";
@@ -30,29 +26,22 @@
             $ruta_not="../noticias/noticias.php";
             $ruta_cit="../citas/citas.php";
             $ruta_prod = "../productos/productos-cli.php";
-            $ruta_dojo = "#";
-            $ruta_acc = "../acceder";
+            $ruta_dojo = "../dojo/dojo.php";
+            $ruta_acc = ".";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario);
         ?>
 
-        <section class='dojo'>
-            <h1>Dojo</h1>
-            <p>
-            En nuestro Dojo online, te ofrecemos los <strong>mejores contenidos audiovisuales</strong> sobre kárate, incluyendo técnicas, kumite y katas, para que puedas aprender y practicar desde casa. 
-            Elige la temática e idioma que más te interese y, ¡encuentra nuevo contenido <strong>a tu gusto!</strong>
-            </p>
+        <section class='acceder'>
+            <h1>Acceder</h1>
 
-            <section class="video-dojo" id="dojo-content">
-                
-            </section>
-
-            <section class="searchbar-dojo">
-                <button class="search-topic" data-value="kumite">Kumite</button>
-                <button class="search-topic" data-value="kata">Katas</button>
-                <button class="search-topic" data-value="tecnicas">Técnicas</button>
-                <button class="search-topic" data-value="español">Español</button>
-                <button id="search" class="buscar"><i class="material-symbols-outlined">search</i><span>Buscar</span></button>
-            </section>
+            <div class='contenido-acceder'>
+                <form action="iniciar-sesion.php" method="post" class="login-form">
+                    <input type="text" name="username" id="" class="login-name" placeholder="Nombre de usuario">
+                    <input type="password" name="passwd" id="" class="login-pass" placeholder="Contraseña">
+                    <input type="hidden" name="origen" value="<?php basename($_SERVER['PHP_SELF']) ?>">
+                    <button type="submit" class="login-submit">Iniciar Sesión</button>
+                </form>
+            </div>
 
         </section>
 
@@ -60,7 +49,6 @@
 
     <?php 
         include '../../php/footer.php';
-        $conexion->close();
     ?>
 </body>
 </html>
