@@ -15,7 +15,8 @@
     <main class='principal-testimonios'>
         <?php
             session_start();
-            $usuario = isset($_SESSION["tipo"]) ? $_SESSION["nombre"] : "";
+            $usuario = isset($_SESSION["nombre"]) ? $_SESSION["nombre"] : "";
+            $tipo_sesion = isset($_SESSION["tipo"]) ? $_SESSION["tipo"] : "";
 
             require_once '../../php/funciones.php';
             require_once '../../php/config.php';
@@ -29,7 +30,7 @@
             $ruta_prod = "../productos/productos-cli.php";
             $ruta_dojo = "../dojo/dojo.php";
             $ruta_acc = "../acceder";
-            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario);
+            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario, $tipo_sesion);
         ?>
 
         <section class='noticia-comp'>
