@@ -17,13 +17,12 @@
             session_start();
             $usuario = isset($_SESSION["nombre"]) ? $_SESSION["nombre"] : "";
             $tipo_sesion = isset($_SESSION["tipo"]) ? $_SESSION["tipo"] : "";
-            $id_usuario = isset($_SESSION["id_usuario"]) ? $_SESSION["id_usuario"] : "";
 
             require_once '../../php/funciones.php';
             require_once '../../php/config.php';
             $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../../index.php";
-            $ruta_soc="#";
+            $ruta_soc="socios.php";
             $ruta_serv="../servicios/servicios.php";
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="../noticias/noticias.php";
@@ -41,41 +40,33 @@
         ?>
 
         <section class='socios'>
-            <h1>Mi Perfil</h1>  
 
-            <div class='contenido-socios'>
                 <?php
-                    $sql = "SELECT nombre, usuario, edad, telefono, foto FROM socio WHERE id = ?";
-                    $consulta = $conexion -> prepare($sql);
-                    $consulta -> bind_param("i", $id_usuario);
-                    $consulta -> execute();
-                    $consulta -> bind_result($nombre, $usuario, $edad, $telefono, $foto);
-                    
-                    if($consulta -> fetch()) {
-                        echo "
-                            <section class='perfil'>
-                                <section class='contenedor-img-perfil'>
-                                    <img src='$foto' class='img-perfil'>
-                                </section>
-                                <section class='detalles-perfil'>
-                                    <h2>$nombre</h2>
-                                    <p>$edad</p>
-                                    <p>$usuario</p>
-                                    <p>$telefono</p>
-                                    <a href='modificar-perfil.php?id=$id_usuario'><button>Modificar datos</button></a>
-                                </section>
-                            </section>
-                        ";
-                    }
+                    if(isset($_POST["id"])){
+                        $id = $_POST["id"];
+                        $tlfn_new = $_POST["tlfn"];
+                        $pass_new = $_POST["pass"];
+                        $ruta_new = '';
 
-                    $consulta -> close();
+                        if(isset($_FILES["avatar"]) && $_FILES["avatar"]["size"] > 0){
+                            $imagen=$_FILES["avatar"]["name"];
+                            $imagen_tmp=$_FILES["avatar"]["tmp_name"];
+                            $ruta_new="../../pics/".$imagen;
+                            move_uploaded_file($imagen_tmp, $ruta_new);
+                        }
+
+                        echo modificarPerfil($conexion, $id, $tlfn_new, $pass_new, $ruta_new);
+                    } else {
+                        echo "<h1>Error al obtener datos, volviendo..</h1>";
+                    }
                 ?>
-            </div>
+
         </section>
 
     </main>
 
     <?php 
+        header("refresh:3;url=perfil-socio.php");
         include '../../php/footer.php';
         $conexion->close();
     ?>

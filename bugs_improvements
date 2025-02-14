@@ -1,8 +1,9 @@
 --TASKS
-- implement sessions
+
+- style profile and login pages
+- fix modify user -both admin and profile- (names already in use bug)
 
 --IMPROVEMENT/FIXES
-- fix modify user (names already in use bug)
 
 - allow search by name + price in productos.php
 - implement api key system

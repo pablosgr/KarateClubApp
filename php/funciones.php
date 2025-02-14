@@ -29,7 +29,6 @@
             $resultado .= "
                 <li><a href='$ruta_not'>NOTICIAS</a></li>
                 <li><a href='$ruta_serv'>SERVICIOS</a></li>
-                <li><a href='$ruta_prod'>PRODUCTOS</a></li>
                 <li><a href='$ruta_dojo'>DOJO</a></li>
                 <li><a href='$ruta_tes'>TESTIMONIOS</a></li>
                 <li><a href='$ruta_cit'>CITAS</a></li>
@@ -41,11 +40,13 @@
         if($sesion != "") {
             if($sesion == "admin"){
                 $resultado .= "
+                    <li><a href='$ruta_prod/productos.php'>PRODUCTOS</a></li>
                     <li><a href='$ruta_soc/socios.php'>SOCIOS</a></li>
                     <li><a href='$ruta_acc/cerrar-sesion.php'>CERRAR SESIÓN DE ADMINISTRADOR</a></li>
                 ";
             } else {
                 $resultado .= "
+                    <li><a href='$ruta_prod/productos-cli.php'>PRODUCTOS</a></li>
                     <li><a href='$ruta_soc/perfil-socio.php'>PERFIL</a></li>
                     <li><a href='$ruta_acc/cerrar-sesion.php'>CERRAR SESIÓN DE $usuario</a></li>
                 ";
@@ -192,22 +193,25 @@
     //imprime todos los socios de la bd en formato card
     function imprimirSociosComp($conexion){
         $resultado='';
-        $sql='SELECT id,nombre,usuario,edad,telefono,foto FROM socio';
+        $sql='SELECT id, nombre, usuario, edad, telefono, foto, tipo FROM socio';
 
         $consulta=$conexion->prepare($sql);
         $consulta->execute();
-        $consulta->bind_result($id, $nombre, $usuario, $edad, $tlfn, $ruta_avatar);
+        $consulta->bind_result($id, $nombre, $usuario, $edad, $tlfn, $ruta_avatar, $tipo);
         while($consulta->fetch()){
-            $resultado.="
-                <div class='tarjeta_socio'>
-                    <div class='avatar'><img src='$ruta_avatar'></div>
-                    <h3>$nombre</h3>
-                    <p>Usuario: $usuario</p>
-                    <p>Edad: $edad</p>
-                    <p>Tlfn: $tlfn</p>
-                    <a href='socios-mod.php?id=$id' class='boton'>Modificar</a>
-                </div>
-            ";
+            if($tipo != "admin") {
+                //imprimo a todos los socios salvo al administrador
+                $resultado.="
+                    <div class='tarjeta_socio'>
+                        <div class='avatar'><img src='$ruta_avatar'></div>
+                        <h3>$nombre</h3>
+                        <p>Usuario: $usuario</p>
+                        <p>Edad: $edad</p>
+                        <p>Tlfn: $tlfn</p>
+                        <a href='socios-mod.php?id=$id' class='boton'>Modificar</a>
+                    </div>
+                ";
+            }
         }
         $consulta->close();
 
@@ -1005,8 +1009,6 @@ function imprimirCitasBuscadas($conexion, $texto){
         $datos = json_decode($respuesta, true);
         curl_close($ch);
 
-       
-
         if($http_code != 200){
             $respuesta = "<h2>{$datos['error']}</h2>";
             return $respuesta;
@@ -1089,5 +1091,94 @@ function imprimirCitasBuscadas($conexion, $texto){
             $resultado = "<h2>Producto \"{$datos['producto_insertado']}\"añadido con éxito</h2>";
         }
 
+        return $resultado;
+    }
+
+
+    //imprime el formulario de modificacion de datos propios del socio
+    function imprimirModificarPerfil($conexion, $id) {
+        $resultado='';
+        $sql='SELECT telefono, foto FROM socio WHERE id=?';
+
+        $consulta=$conexion->prepare($sql);
+        $consulta->bind_param("i", $id);
+        $consulta->execute();
+        $consulta->bind_result($telefono, $foto);
+
+        while($consulta->fetch()){
+            $resultado.="<section class='modificar-perfil'>
+                <form action='perfil-confirm.php' method='post' id='formulario-socios' enctype='multipart/form-data'>
+                    <div class='avatar'><img src='$foto'></div>
+                    <label class='input-file-custom'>
+                            <input type='file' name='avatar' id='campo-foto' accept='image/*'>
+                            Subir nueva imágen
+                    </label>
+                    <span class='error'></span>
+                    <input type='text' name='pass' placeholder='Nueva contraseña' id='campo-pass'>
+                    <span class='error'></span>
+                    <input type='text' value='$telefono' name='tlfn' placeholder='Teléfono' id='campo-tlfn'>
+                    <span class='error'></span>
+                    <input type='hidden' value='$id' name='id'>
+                    <button type='submit'>Actualizar datos</button>
+                </form>
+            </section>
+            ";
+        }
+
+        $consulta->close();
+        return $resultado;
+    }
+
+
+    //modifica los datos del perfil del socio
+    function modificarPerfil($conexion, $id, $tlfn, $pass, $ruta) {
+        $resultado='';
+
+        $consulta_check="SELECT * FROM socio WHERE telefono = ?"; //compruebo si hay alguien con el mismo teléfono
+        $consulta_check=$conexion->prepare($consulta_check);
+        $consulta_check->bind_param("s", $tlfn);
+        $consulta_check->execute();
+        $consulta_check->store_result(); 
+
+        if($consulta_check->num_rows > 0){
+            $consulta_check->close();
+            $resultado.="<h2 class='centrado red'>El teléfono ya está en uso</h2>
+            <h2 class='centrado'>Volviendo a la página de socios en 3 segundos...</h2>";
+            return $resultado;
+        }
+        $consulta_check->close();
+
+        //guardo los campos y parámetros para construir la consulta
+        $campos = ["telefono=?"]; //el teléfono siempre se actualiza, pues se autorellena en el formulario
+        $parametros = ["s", $tlfn];
+
+        if ($ruta !== '') {
+            $campos[] = "foto=?";
+            $parametros[0] .= "s";
+            $parametros[] = $ruta;
+        }
+
+        if ($pass !== '') {
+            $campos[] = "pass=?";
+            $parametros[0] .= "s";
+            $parametros[] = $pass;
+        }
+
+        $sql = "UPDATE socio SET " . implode(", ", $campos) . " WHERE id=?";
+        $parametros[0] .= "i";
+        $parametros[] = $id;
+
+        $consulta = $conexion->prepare($sql);
+        $consulta->bind_param(...$parametros);
+        $consulta->execute();
+
+        if($consulta){
+            $resultado.="<h1 class='centrado'>Datos actualizado</h1>
+            <h2 class='centrado'>Volviendo al perfil en 3 segundos...</h2>";
+        }else{
+            $resultado.="<h1 class='centrado'>Error</h1>";
+        }
+
+        $consulta->close();
         return $resultado;
     }

@@ -17,13 +17,12 @@
             session_start();
             $usuario = isset($_SESSION["nombre"]) ? $_SESSION["nombre"] : "";
             $tipo_sesion = isset($_SESSION["tipo"]) ? $_SESSION["tipo"] : "";
-            $id_usuario = isset($_SESSION["id_usuario"]) ? $_SESSION["id_usuario"] : "";
 
             require_once '../../php/funciones.php';
             require_once '../../php/config.php';
             $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../../index.php";
-            $ruta_soc="#";
+            $ruta_soc="socios.php";
             $ruta_serv="../servicios/servicios.php";
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="../noticias/noticias.php";
@@ -41,35 +40,18 @@
         ?>
 
         <section class='socios'>
-            <h1>Mi Perfil</h1>  
-
+            <h1>Modificar mis datos</h1>
             <div class='contenido-socios'>
-                <?php
-                    $sql = "SELECT nombre, usuario, edad, telefono, foto FROM socio WHERE id = ?";
-                    $consulta = $conexion -> prepare($sql);
-                    $consulta -> bind_param("i", $id_usuario);
-                    $consulta -> execute();
-                    $consulta -> bind_result($nombre, $usuario, $edad, $telefono, $foto);
-                    
-                    if($consulta -> fetch()) {
-                        echo "
-                            <section class='perfil'>
-                                <section class='contenedor-img-perfil'>
-                                    <img src='$foto' class='img-perfil'>
-                                </section>
-                                <section class='detalles-perfil'>
-                                    <h2>$nombre</h2>
-                                    <p>$edad</p>
-                                    <p>$usuario</p>
-                                    <p>$telefono</p>
-                                    <a href='modificar-perfil.php?id=$id_usuario'><button>Modificar datos</button></a>
-                                </section>
-                            </section>
-                        ";
-                    }
 
-                    $consulta -> close();
+                <?php
+                    if(isset($_GET["id"])){
+                        $id_mod = $_GET["id"];
+                        echo imprimirModificarPerfil($conexion, $id_mod);
+                    } else {
+                        echo "<h2>Error al obtener la ID</h2>";
+                    }
                 ?>
+
             </div>
         </section>
 
