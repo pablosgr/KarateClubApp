@@ -17,13 +17,14 @@
     <main class='principal-servicios'>
         <?php
             session_start();
-            $usuario = isset($_SESSION["tipo"]) ? $_SESSION["nombre"] : "";
+            $usuario = isset($_SESSION["nombre"]) ? $_SESSION["nombre"] : "";
+            $tipo_sesion = isset($_SESSION["tipo"]) ? $_SESSION["tipo"] : "";
 
             require_once '../../php/funciones.php';
             require_once '../../php/config.php';
             $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../../index.php";
-            $ruta_soc="../socios/socios.php";
+            $ruta_soc="../socios";
             $ruta_serv="servicios.php";
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="../noticias/noticias.php";
@@ -31,7 +32,13 @@
             $ruta_prod = "../productos/productos-cli.php";
             $ruta_dojo = "../dojo/dojo.php";
             $ruta_acc = "../acceder";
-            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario);
+            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario, $tipo_sesion);
+
+            //en caso de acceso no permitido, acabo el programa
+            if($tipo_sesion == ""){
+                echo "<section class='servicios'><h1>Acceso restringido</h1></section>";
+                die();
+            }
         ?>
 
         <section class='servicios'>
@@ -39,6 +46,7 @@
 
             <form action="servicios-src.php" method='post' id='buscador' name='buscar-servicios'>
                 <input type="text" placeholder='Nombre del servicio...' name='texto' id='texto-buscado'>
+                <span class="error"></span>
                 <button type="submit">Buscar</button>
             </form>
 
@@ -47,7 +55,7 @@
                 <?php
                 if(isset($_POST["texto"])){
                     $texto=$_POST["texto"];
-                    echo imprimirServiciosBuscados($conexion, $texto);
+                    echo imprimirServiciosBuscados($conexion, $texto, $tipo_sesion);
                 }else{
                     echo "<h1 class='centrado'>Error al realizar la búsqueda</h1>";
                 }

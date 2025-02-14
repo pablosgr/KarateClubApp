@@ -10,28 +10,45 @@
 //función para cabecera ----------------------------------------------------------------
 
     //dibuja la cabecera con las rutas pasadas por parámetro
-    function dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario){
+    function dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario, $sesion){
         $resultado='';
         $resultado.="
-        <header>
-            <h1><a href='$ruta_i'>糸東流</a></h1>
-                <nav>
-                    <ul>
-                        <li><a href='$ruta_not'>NOTICIAS</a></li>
-                        <li><a href='$ruta_serv'>SERVICIOS</a></li>
-                        <li><a href='$ruta_prod'>PRODUCTOS</a></li>
-                        <li><a href='$ruta_dojo'>DOJO</a></li>
-                        <li><a href='$ruta_tes'>TESTIMONIOS</a></li>
-                        <li><a href='$ruta_cit'>CITAS</a></li>
-                        <li><a href='$ruta_soc'>SOCIOS</a></li>
+            <header>
+                <h1><a href='$ruta_i'>糸東流</a></h1>
+                    <nav>
+                        <ul>
         ";
 
-        //compruebo si hay un nombre de usuario (sesión iniciada) para cambiar el botón de la cabecera
-        if($usuario != "") {
-            if($usuario == "admin"){
-                $resultado .= "<li><a href='$ruta_acc/cerrar-sesion.php'>CERRAR SESIÓN DE ADMINISTRADOR</a></li>";
+        if($sesion == ""){
+            //si el usuario no está logeado
+            $resultado .= "
+                <li><a href='$ruta_serv'>SERVICIOS</a></li>
+                <li><a href='$ruta_tes'>TESTIMONIOS</a></li>
+            ";
+        } else {
+            $resultado .= "
+                <li><a href='$ruta_not'>NOTICIAS</a></li>
+                <li><a href='$ruta_serv'>SERVICIOS</a></li>
+                <li><a href='$ruta_prod'>PRODUCTOS</a></li>
+                <li><a href='$ruta_dojo'>DOJO</a></li>
+                <li><a href='$ruta_tes'>TESTIMONIOS</a></li>
+                <li><a href='$ruta_cit'>CITAS</a></li>
+                
+            ";
+        }
+
+        //compruebo si se ha iniciado sesión para cambiar las rutas de los botones en la cabecera
+        if($sesion != "") {
+            if($sesion == "admin"){
+                $resultado .= "
+                    <li><a href='$ruta_soc/socios.php'>SOCIOS</a></li>
+                    <li><a href='$ruta_acc/cerrar-sesion.php'>CERRAR SESIÓN DE ADMINISTRADOR</a></li>
+                ";
             } else {
-                $resultado .= "<li><a href='$ruta_acc/cerrar-sesion.php'>CERRAR SESIÓN DE $usuario</a></li>";
+                $resultado .= "
+                    <li><a href='$ruta_soc/perfil-socio.php'>PERFIL</a></li>
+                    <li><a href='$ruta_acc/cerrar-sesion.php'>CERRAR SESIÓN DE $usuario</a></li>
+                ";
             }
         } else {
             $resultado .= "<li><a href='$ruta_acc/acceso.php'>ACCEDER</a></li>";
@@ -389,22 +406,22 @@ function añadirTestimonio($conexion, $autor, $contenido){
 
 //funciones servicios ----------------------------------------------------------------
 
-function imprimirServiciosComp($conexion){
+function imprimirServiciosComp($conexion, $sesion){
     $sql='SELECT id, descripcion, duracion, unidad_duracion, precio FROM servicio
     ORDER BY descripcion ASC';
 
-    $resultado=imprimirServicios($conexion, $sql);
+    $resultado = imprimirServicios($conexion, $sql, $sesion);
     return $resultado;
 }
 
 
-function imprimirServiciosBuscados($conexion, $texto){
+function imprimirServiciosBuscados($conexion, $texto, $sesion){
     $texto="%".$texto."%";
     $sql="SELECT id, descripcion, duracion, unidad_duracion, precio FROM servicio
     WHERE descripcion LIKE ?
     ORDER BY descripcion ASC";
 
-    $resultado=imprimirServiciosPrep($conexion, $sql, $texto);
+    $resultado=imprimirServiciosPrep($conexion, $sql, $texto, $sesion);
     return $resultado;
 }
 
@@ -768,7 +785,7 @@ function imprimirCitasBuscadas($conexion, $texto){
         return $resultado;
     }
 
-    function imprimirServicios($conexion, $sql){
+    function imprimirServicios($conexion, $sql, $sesion){
         $resultado='';
 
         $consulta=$conexion->prepare($sql);
@@ -776,24 +793,30 @@ function imprimirCitasBuscadas($conexion, $texto){
         $consulta->store_result(); 
         $consulta->bind_result($id, $descripcion, $duracion, $unidad_duracion, $precio);
 
- 
             while($consulta->fetch()){
                 $resultado.="
                     <div class='p-5 text-center bg-body-secondary rounded-4 custom-serv'>
                         <h1 class='text-body-emphasis'>$descripcion</h1>
                         <p class='lead'>Este servicio cuenta con una duración de <span>$duracion $unidad_duracion</span> y un precio de <span>$precio Euros</span>.</p>
-                        <a href='servicios-mod.php?id=$id'>
-                            <button class='btn btn-primary d-inline-flex align-items-center btn-custom'>
-                                Modificar
-                            </button>
-                        </a>
-                    </div>
-                ";
+                    ";
+
+                    if($sesion == "admin"){
+                        $resultado .= "
+                            <a href='servicios-mod.php?id=$id'>
+                                <button class='btn btn-primary d-inline-flex align-items-center btn-custom'>
+                                    Modificar
+                                </button>
+                            </a>
+                        ";
+                    }
+
+                    $resultado .= "</div>";
         }
+
         return $resultado;
     }
 
-    function imprimirServiciosPrep($conexion, $sql, $texto){
+    function imprimirServiciosPrep($conexion, $sql, $texto, $sesion){
         $resultado='';
 
         $consulta=$conexion->prepare($sql);
@@ -808,14 +831,20 @@ function imprimirCitasBuscadas($conexion, $texto){
                     <div class='p-5 text-center bg-body-secondary rounded-4 custom-serv'>
                         <h1 class='text-body-emphasis'>$descripcion</h1>
                         <p class='lead'>Este servicio cuenta con una duración de <span>$duracion $unidad_duracion</span> y un precio de <span>$precio Euros</span>.</p>
-                        <a href='servicios-mod.php?id=$id'>
-                            <button class='btn btn-primary d-inline-flex align-items-center btn-custom'>
-                                Modificar
-                            </button>
-                        </a>
-                    </div>
-                ";
-            }
+                    ";
+
+                    if($sesion == "admin"){
+                        $resultado .= "
+                            <a href='servicios-mod.php?id=$id'>
+                                <button class='btn btn-primary d-inline-flex align-items-center btn-custom'>
+                                    Modificar
+                                </button>
+                            </a>
+                        ";
+                    }
+
+                    $resultado .= "</div>";
+        }
         }else{
             $resultado.="
                 <h1 class='centrado'>No se han encontrado resultados...</h1>

@@ -16,12 +16,13 @@
         <?php
             session_start();
             $usuario = isset($_SESSION["tipo"]) ? $_SESSION["nombre"] : "";
+            $tipo_sesion = isset($_SESSION["tipo"]) ? $_SESSION["tipo"] : "";
 
             require_once '../../php/funciones.php';
             require_once '../../php/config.php';
             $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../../index.php";
-            $ruta_soc="../socios/socios.php";
+            $ruta_soc="../socios";
             $ruta_serv="../servicios/servicios.php";
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="../noticias/noticias.php";
@@ -29,7 +30,7 @@
             $ruta_prod = "../productos/productos-cli.php";
             $ruta_dojo = "../dojo/dojo.php";
             $ruta_acc = ".";
-            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario);
+            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario, $tipo_sesion);
         ?>
 
         <section class='acceder'>
@@ -52,8 +53,10 @@
                             $consulta -> fetch(); //hago el fetch sin bucle porque sólo devuelve una fila
 
                             if(password_verify($pass, $hash_usuario)) {
+                                //establezco las variables de sesión necesarias para la aplicación
                                 $_SESSION["nombre"] = $usuario;
                                 $_SESSION["tipo"] = $tipo_usuario;
+                                $_SESSION["id_usuario"] = $id_usuario;
                                 header("Location:acceso.php"); //lo puedo devolver a la página donde estaba (login) con $_POST[origen]
                             } else {
                                 echo "<h2>Contraseña incorrecta, volviendo..</h2>";

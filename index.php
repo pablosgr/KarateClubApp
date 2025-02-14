@@ -15,7 +15,8 @@
     <main class='principal-index'>
         <?php
             session_start();
-            $usuario = isset($_SESSION["tipo"]) ? $_SESSION["nombre"] : "";
+            $usuario = isset($_SESSION["nombre"]) ? $_SESSION["nombre"] : "";
+            $tipo_sesion = isset($_SESSION["tipo"]) ? $_SESSION["tipo"] : "";
 
             require_once './php/funciones.php';
             require_once './php/config.php';
@@ -23,7 +24,7 @@
             // include './php/cabecera.php';  para incluir el archivo con cabecera
             //getcwd() devuelve el directorio actual, otra opción
             $ruta_i="#";
-            $ruta_soc="./paginas/socios/socios.php";
+            $ruta_soc="./paginas/socios";
             $ruta_serv="./paginas/servicios/servicios.php";
             $ruta_tes="./paginas/testimonios/testimonios.php";
             $ruta_not="./paginas/noticias/noticias.php";
@@ -31,7 +32,7 @@
             $ruta_prod = "./paginas/productos/productos-cli.php";
             $ruta_dojo = "./paginas/dojo/dojo.php";
             $ruta_acc = "./paginas/acceder";
-            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario);
+            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario, $tipo_sesion);
         ?>
 
         <section class='banner-index'>

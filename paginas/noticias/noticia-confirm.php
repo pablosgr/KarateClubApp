@@ -21,7 +21,7 @@
             require_once '../../php/config.php';
             $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../../index.php";
-            $ruta_soc="../socios/socios.php";
+            $ruta_soc="../socios";
             $ruta_serv="../servicios/servicios.php";
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="noticias.php";

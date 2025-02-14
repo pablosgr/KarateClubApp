@@ -15,12 +15,13 @@
     <main class='principal-acceder'>
         <?php
             session_start();
-            $usuario = isset($_SESSION["tipo"]) ? $_SESSION["nombre"] : "";
+            $usuario = isset($_SESSION["nombre"]) ? $_SESSION["nombre"] : "";
+            $tipo_sesion = isset($_SESSION["tipo"]) ? $_SESSION["tipo"] : "";
             
             require_once '../../php/funciones.php';
             require_once '../../php/config.php';
             $ruta_i="../../index.php";
-            $ruta_soc="../socios/socios.php";
+            $ruta_soc="../socios";
             $ruta_serv="../servicios/servicios.php";
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="../noticias/noticias.php";
@@ -28,7 +29,7 @@
             $ruta_prod = "../productos/productos-cli.php";
             $ruta_dojo = "../dojo/dojo.php";
             $ruta_acc = ".";
-            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario);
+            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario, $tipo_sesion);
         ?>
 
         <section class='acceder'>

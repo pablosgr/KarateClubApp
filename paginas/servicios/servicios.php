@@ -17,13 +17,14 @@
     <main class='principal-servicios'>
         <?php
             session_start();
-            $usuario = isset($_SESSION["tipo"]) ? $_SESSION["nombre"] : "";
+            $usuario = isset($_SESSION["nombre"]) ? $_SESSION["nombre"] : "";
+            $tipo_sesion = isset($_SESSION["tipo"]) ? $_SESSION["tipo"] : "";
 
             require_once '../../php/funciones.php';
             require_once '../../php/config.php';
             $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../../index.php";
-            $ruta_soc="../socios/socios.php";
+            $ruta_soc="../socios";
             $ruta_serv="#";
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="../noticias/noticias.php";
@@ -31,18 +32,23 @@
             $ruta_prod = "../productos/productos-cli.php";
             $ruta_dojo = "../dojo/dojo.php";
             $ruta_acc = "../acceder";
-            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario);
+            echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario, $tipo_sesion);
         ?>
 
         <section class='servicios'>
             <h1>Servicios</h1>
 
-            <form action="servicios-src.php" method='post' id='buscador' name='buscar-servicios'>
-                <input type="text" placeholder='Nombre del servicio...' name='texto' id='texto-buscado'>
-                <span class="error"></span>
-                <button type="submit">Buscar</button>
-            </form>
-            
+            <?php
+                if($tipo_sesion != "") {
+                    echo "
+                        <form action='servicios-src.php' method='post' id='buscador' name='buscar-servicios'>
+                            <input type='text' placeholder='Nombre del servicio...' name='texto' id='texto-buscado'>
+                            <span class='error'></span>
+                            <button type='submit'>Buscar</button>
+                        </form>
+                    ";
+                }
+            ?>
 
             <div class='contenido-servicios'>
 
@@ -55,27 +61,31 @@
                     añadirServicio($conexion, $descripcion, $duracion, $ud_duracion, $precio);
                 }
 
-                echo imprimirServiciosComp($conexion);
+                echo imprimirServiciosComp($conexion, $tipo_sesion);
+                
+                if($tipo_sesion == "admin"){
+                    echo "
+                        <div class='card-servicio'>
+                            <form action='servicios.php' method='post' id='formulario-servicios'>
+                                <textarea name='contenido-serv' id='contenido-servicio' placeholder='Descripción del servicio'></textarea>
+                                <span class='error'></span>
+                                <input type='text' name='duracion' id='duracion-servicio' placeholder='Duración'>
+                                <span class='error'></span>
+                                <select name='u-duracion' id='u-duracion-servicio'>
+                                    <option value=''>Selecciona una unidad</option>
+                                    <option value='minutos'>Minutos</option>
+                                    <option value='horas'>Horas</option>
+                                </select>
+                                <span class='error'></span>
+                                <input type='text' name='precio' id='precio-servicio' placeholder='Precio'>
+                                <span class='error'></span>
+                                <button class='btn btn-outline-secondary' type='submit'>Añadir servicio</button>
+                            </form>
+                        </div>
+                    ";
+                }
+
                 ?>
-
-                <div class='card-servicio'>
-                    <form action="servicios.php" method='post' id='formulario-servicios'>
-                        <textarea name="contenido-serv" id="contenido-servicio" placeholder='Descripción del servicio'></textarea>
-                        <span class='error'></span>
-                        <input type="text" name="duracion" id="duracion-servicio" placeholder='Duración'>
-                        <span class='error'></span>
-                        <select name="u-duracion" id="u-duracion-servicio">
-                            <option value="">Selecciona una unidad</option>
-                            <option value="minutos">Minutos</option>
-                            <option value="horas">Horas</option>
-                        </select>
-                        <span class='error'></span>
-                        <input type="text" name="precio" id="precio-servicio" placeholder='Precio'>
-                        <span class='error'></span>
-                        <button class="btn btn-outline-secondary" type="submit">Añadir servicio</button>
-                    </form>
-                </div>
-
             </div>
         </section>
 
