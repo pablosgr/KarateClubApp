@@ -13,5 +13,5 @@
 - add alert in cart icon if has products
 - implement wishlist for cart
 - implement Gemini in external API for searching topics in 1st instance
-
+- redesign admin products view
 - delete $conexion where is not being used

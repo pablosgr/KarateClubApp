@@ -27,14 +27,14 @@
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="../noticias/noticias.php";
             $ruta_cit="../citas/citas.php";
-            $ruta_prod = "productos.php";
+            $ruta_prod = ".";
             $ruta_dojo = "../dojo/dojo.php";
             $ruta_acc = "../acceder";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario, $tipo_sesion);
 
             //en caso de acceso no permitido, acabo el programa
             if($tipo_sesion != "admin"){
-                echo "<section class='servicios'><h1>Acceso restringido, necesitas ser Administrador</h1></section>";
+                echo "<section class='productos'><h1>Acceso restringido, necesitas ser Administrador</h1></section>";
                 die();
             }
         ?>
