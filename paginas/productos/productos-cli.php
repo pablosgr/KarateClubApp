@@ -19,6 +19,7 @@
             session_start();
             $usuario = isset($_SESSION["nombre"]) ? $_SESSION["nombre"] : "";
             $tipo_sesion = isset($_SESSION["tipo"]) ? $_SESSION["tipo"] : "";
+            $id_usuario = isset($_SESSION["id_usuario"]) ? $_SESSION["id_usuario"] : "";
 
             require_once '../../php/funciones.php';
             require_once '../../php/config.php';
@@ -29,7 +30,7 @@
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="../noticias/noticias.php";
             $ruta_cit="../citas/citas.php";
-            $ruta_prod = "#";
+            $ruta_prod = ".";
             $ruta_dojo = "../dojo/dojo.php";
             $ruta_acc = "../acceder";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario, $tipo_sesion);
@@ -66,18 +67,17 @@
                 </aside>
             </div>
 
-            <!--INCORPORAR A PRODUCTOS.PHP-->
-
             <section class="form-cart">
                 <form action="" method='post' id='buscador'  name='buscar-productos'>
                     <input type="text" placeholder='Nombre o precio del producto...' name='query' id="texto-busqueda">
                     <span class="error"></span>
                     <button type="button" id="btn-buscar">Buscar</button>
-
-                    <!-- <a href="productos-add.php" class="btn-add">Añadir producto</a> -->
                 </form>
                 <i class='material-symbols-outlined cart-icon'>shopping_cart</i>
             </section>
+
+            <!--Guardo la id del usuario para recuperarla en JS, para guardarla en el carrito. Necesito imprimir la variable con un echo-->
+            <input type="hidden" id="id_cliente" value=<?php echo $id_usuario ?>>
 
             <div class='contenido-productos' id='contenido-productos'>
                 

@@ -1,17 +1,22 @@
 --TASKS
 
-- style profile and login pages
-- fix modify user -both admin and profile- (names already in use bug)
+
 
 --IMPROVEMENT/FIXES
 
-- allow search by name + price in productos.php
 - implement api key system
+- re-style opinions section
 - fix text overflow in dojo (break word)
 - make products not buyable if they are not available
 - update products quantity in DB after order
 - add alert in cart icon if has products
 - implement wishlist for cart
 - implement Gemini in external API for searching topics in 1st instance
-- redesign admin products view
+- redesign admin products view?
 - delete $conexion where is not being used
+- mark past appointments
+
+--DOCUMENTATION
+
+- client shopping cart use
+- products management for admin

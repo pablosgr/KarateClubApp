@@ -27,7 +27,7 @@
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="../noticias/noticias.php";
             $ruta_cit="../citas/citas.php";
-            $ruta_prod = "#";
+            $ruta_prod = ".";
             $ruta_dojo = "../dojo/dojo.php";
             $ruta_acc = "../acceder";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario, $tipo_sesion);
@@ -56,19 +56,22 @@
                 $api_params = "";
                 $num_pagina = "";
                 
-                //PARÁMETROS DEL BUSCADOR
+                //PARÁMETROS DEL BUSCADOR (POST)
                 if(isset($_POST["query"])){
                     $text = trim($_POST["query"]);
+                    $array = explode(" ", $text);
 
-                    if(is_numeric($text)){
-                        $api_params .= empty($api_params) ? "precioInf=$text" : "&precioInf=$text";
-                    } elseif(!empty($text)) {
-                        $api_params .= empty($api_params) ? "nombre=$text" : "&nombre=$text";
+                    foreach($array as $item){
+                        if(is_numeric($item)){
+                            $api_params .= empty($api_params) ? "precioInf=$item" : "&precioInf=$item";
+                        } elseif(!empty($item)) {
+                            $api_params .= empty($api_params) ? "nombre=$item" : "&nombre=$item";
+                        }
                     }
 
                 }
 
-                // PARAMETROS POR GET
+                // PARAMETROS POR URL (GET)
                 if(isset($_GET["pagina"])){
                     $num_pagina = $_GET['pagina'];
                 }

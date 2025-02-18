@@ -29,7 +29,7 @@
             $ruta_tes="./paginas/testimonios/testimonios.php";
             $ruta_not="./paginas/noticias/noticias.php";
             $ruta_cit="./paginas/citas/citas.php";
-            $ruta_prod = "./paginas/productos/productos-cli.php";
+            $ruta_prod = "./paginas/productos";
             $ruta_dojo = "./paginas/dojo/dojo.php";
             $ruta_acc = "./paginas/acceder";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario, $tipo_sesion);

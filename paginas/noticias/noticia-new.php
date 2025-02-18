@@ -34,13 +34,13 @@
 
             //en caso de acceso no permitido, acabo el programa
             if($tipo_sesion != "admin"){
-                echo "<section class='servicios'><h1>Acceso restringido, necesitas ser Administrador</h1></section>";
+                echo "<section class='noticias'><h1>Acceso restringido, necesitas ser Administrador</h1></section>";
                 die();
             }
         ?>
 
         <section class='noticias'>
-            <h1>Nueva noticia</h1>
+            <h1>Añadir noticia</h1>
             <div class='contenido-form'>
 
                 <form action="noticia-confirm.php" method='post' id='formulario-noticias' enctype='multipart/form-data'>

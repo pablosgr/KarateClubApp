@@ -22,7 +22,7 @@
             require_once '../../php/config.php';
             $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../../index.php";
-            $ruta_soc="socios.php";
+            $ruta_soc=".";
             $ruta_serv="../servicios/servicios.php";
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="../noticias/noticias.php";
@@ -34,19 +34,19 @@
 
             //en caso de acceso no permitido, acabo el programa
             if($tipo_sesion != "socio"){
-                echo "<section class='servicios'><h1>Acceso restringido, necesitas ser Socio</h1></section>";
+                echo "<section class='socios'><h1>Acceso restringido, necesitas ser Socio</h1></section>";
                 die();
             }
         ?>
 
         <section class='socios'>
-            <h1>Modificar mis datos</h1>
+            <h1>Modifica tus datos</h1>
             <div class='contenido-socios'>
 
                 <?php
                     if(isset($_GET["id"])){
                         $id_mod = $_GET["id"];
-                        echo imprimirModificarPerfil($conexion, $id_mod);
+                        echo imprimirModificarPerfil($conexion, $id_mod, $usuario);
                     } else {
                         echo "<h2>Error al obtener la ID</h2>";
                     }

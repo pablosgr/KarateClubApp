@@ -22,7 +22,7 @@
             require_once '../../php/config.php';
             $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../../index.php";
-            $ruta_soc="socios.php";
+            $ruta_soc=".";
             $ruta_serv="../servicios/servicios.php";
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="../noticias/noticias.php";
@@ -34,7 +34,7 @@
 
             //en caso de acceso no permitido, acabo el programa
             if($tipo_sesion != "socio"){
-                echo "<section class='servicios'><h1>Acceso restringido, necesitas ser Socio</h1></section>";
+                echo "<section class='socios'><h1>Acceso restringido, necesitas ser Socio</h1></section>";
                 die();
             }
         ?>
@@ -44,6 +44,7 @@
                 <?php
                     if(isset($_POST["id"])){
                         $id = $_POST["id"];
+                        $user = $_POST["username"];
                         $tlfn_new = $_POST["tlfn"];
                         $pass_new = $_POST["pass"];
                         $ruta_new = '';
@@ -55,7 +56,7 @@
                             move_uploaded_file($imagen_tmp, $ruta_new);
                         }
 
-                        echo modificarPerfil($conexion, $id, $tlfn_new, $pass_new, $ruta_new);
+                        echo modificarPerfil($conexion, $id, $user, $tlfn_new, $pass_new, $ruta_new);
                     } else {
                         echo "<h1>Error al obtener datos, volviendo..</h1>";
                     }

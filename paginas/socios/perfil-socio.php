@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shito-Ryu Club | Mi Perfil</title>
+    <title>Shito-Ryu Club | Mi perfil</title>
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/style_socios.css">
     <script defer src="../../js/app.js"></script>
@@ -23,7 +23,7 @@
             require_once '../../php/config.php';
             $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../../index.php";
-            $ruta_soc="#";
+            $ruta_soc=".";
             $ruta_serv="../servicios/servicios.php";
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="../noticias/noticias.php";
@@ -35,13 +35,13 @@
 
             //en caso de acceso no permitido, acabo el programa
             if($tipo_sesion != "socio"){
-                echo "<section class='servicios'><h1>Acceso restringido, necesitas ser Socio</h1></section>";
+                echo "<section class='socios'><h1>Acceso restringido, necesitas ser Socio</h1></section>";
                 die();
             }
         ?>
 
         <section class='socios'>
-            <h1>Mi Perfil</h1>  
+            <h1>Mi perfil</h1>  
 
             <div class='contenido-socios'>
                 <?php
@@ -59,10 +59,10 @@
                                 </section>
                                 <section class='detalles-perfil'>
                                     <h2>$nombre</h2>
-                                    <p>$edad</p>
-                                    <p>$usuario</p>
-                                    <p>$telefono</p>
-                                    <a href='modificar-perfil.php?id=$id_usuario'><button>Modificar datos</button></a>
+                                    <p>Usuario: $usuario</p>
+                                    <p>Edad: $edad</p>
+                                    <p>Teléfono: $telefono</p>
+                                    <a href='modificar-perfil.php?id=$id_usuario'>Modificar datos</a>
                                 </section>
                             </section>
                         ";

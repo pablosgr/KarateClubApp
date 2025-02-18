@@ -120,29 +120,30 @@ INSERT INTO noticia (titulo, contenido, imagen, fecha_publicacion) VALUES
 
 INSERT INTO socio (id, nombre, edad, pass, tipo, usuario, telefono, foto) VALUES
 (1, 'Administrador', null, '$2y$10$zPLa7gF1W/v7aTpgOK0bYORTpZwEM3ssaf2fijbjvKUy/1cyzUdiG', 'admin', 'admin', null, null),
-(2, 'Juan Pérez', 56, '$2y$10$MqYuPUN94KcvdxZxkIjeduFkzggaMr.XKeeU3xzGIh2p1sv5grmIO', 'socio', 'juanperez', '+34612345678', '../../pics/avatar3.jpg');
--- ('María López', 42, 'contraseña2', 'socio', 'marialopez', '+34623456789', '../../pics/avatar1.jpg'),
--- ('Pedro Gómez', 25, 'contraseña3', 'socio', 'pedrogomez', '+34634567890', '../../pics/avatar2.jpg'),
--- ('Lauren Tsai', 28, 'contraseña4', 'socio', 'lautsai', '+34667124890', '../../pics/avatar4.jpg');
+(2, 'Juan Pérez', 56, '$2y$10$MqYuPUN94KcvdxZxkIjeduFkzggaMr.XKeeU3xzGIh2p1sv5grmIO', 'socio', 'juanperez', '+34612345678', '../../pics/avatar3.jpg'),
+(3, 'María López', 42, '$2y$10$jVkwLxktfkIn7UqW7769wec8ZH1C6.z74fwIbZaZZ6Ar.IFxrGP0e', 'socio', 'marialopez', '+34623456789', '../../pics/avatar1.jpg'),
+(4, 'Pedro Gómez', 25, '$2y$10$idjaaatNg9Cu6ARNmH1ip.tZmgwEzE5ZkaoJ6g4nqgwjSW1IDTGQe', 'socio', 'pedrogomez', '+34634567890', '../../pics/avatar2.jpg'),
+(5, 'Lauren Tsai', 28, '$2y$10$sDw1Zky5owtlmy/uovDIT.j/JyLAmN7jzkQjigc3Qp4pcjDndigZC', 'socio', 'ltsai', '+34667124890', '../../pics/avatar4.jpg');
+-- contraseña1, contraseña2..
 
 INSERT INTO testimonio (autor, contenido, fecha) VALUES
 (2, 'Este club ha cambiado mi vida, he mejorado en disciplina y condición física.', '2024-09-20'),
-(2, 'Las clases son excelentes, los entrenadores son muy profesionales y amables.', '2024-10-05'),
-(2, 'El ambiente es increíble, siempre es motivador venir a entrenar.', '2024-11-20'),
-(2, 'Me siento parte de una familia. Es un lugar que recomiendo a todos.', '2024-11-25');
+(5, 'Las clases son excelentes, los entrenadores son muy profesionales y amables.', '2024-10-05'),
+(3, 'El ambiente es increíble, siempre es motivador venir a entrenar.', '2024-11-20'),
+(4, 'Me siento parte de una familia. Es un lugar que recomiendo a todos.', '2024-11-25');
 
 INSERT INTO citas (socio, servicio, fecha, hora, cancelada) VALUES
 (2, 1, '2024-10-10', '18:00:00', 0),
-(2, 2, '2024-11-15', '19:00:00', 0),
-(2, 3, '2024-11-15', '19:00:00', 1),
-(2, 1, '2024-12-05', '17:30:00', 0),
-(2, 3, '2025-01-15', '20:00:00', 0),
+(3, 2, '2024-11-15', '19:00:00', 0),
+(4, 3, '2024-11-15', '19:00:00', 1),
+(5, 1, '2024-12-05', '17:30:00', 0),
+(5, 3, '2025-01-15', '20:00:00', 0),
 (2, 5, '2025-02-03', '10:30:00', 0),
-(2, 2, '2024-02-07', '18:00:00', 1),
-(2, 2, '2024-12-10', '19:00:00', 1),
+(4, 2, '2024-02-07', '18:00:00', 1),
+(3, 2, '2024-12-10', '19:00:00', 1),
 (2, 4, '2024-12-02', '17:15:00', 0),
 (2, 2, '2024-12-02', '19:30:00', 0),
-(2, 5, '2024-12-02', '18:00:00', 0);
+(5, 5, '2024-12-02', '18:00:00', 0);
 
 INSERT INTO productos (nombre, precio, categoria, imagen, disponible, cantidad) VALUES 
 ('Cinturón Blanco', 10.50, 'Cinturones', '../../pics/products/white_belt.jpg', 1, 15),

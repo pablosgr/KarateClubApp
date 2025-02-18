@@ -57,7 +57,7 @@
                                 $_SESSION["nombre"] = $usuario;
                                 $_SESSION["tipo"] = $tipo_usuario;
                                 $_SESSION["id_usuario"] = $id_usuario;
-                                header("Location:acceso.php"); //lo puedo devolver a la página donde estaba (login) con $_POST[origen]
+                                header("Location:../../index.php"); //lo puedo devolver a la página donde estaba (login) con $_POST[origen]
                             } else {
                                 echo "<h2>Contraseña incorrecta, volviendo..</h2>";
                                 header("refresh:2;url=acceso.php");

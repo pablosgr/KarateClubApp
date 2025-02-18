@@ -40,7 +40,7 @@
                     <input type="text" name="username" id="" class="login-name" placeholder="Nombre de usuario">
                     <input type="password" name="passwd" id="" class="login-pass" placeholder="Contraseña">
                     <input type="hidden" name="origen" value="<?php basename($_SERVER['PHP_SELF']) ?>">
-                    <button type="submit" class="login-submit">Iniciar Sesión</button>
+                    <button type="submit" class="login-submit">Iniciar sesión</button>
                 </form>
             </div>
 

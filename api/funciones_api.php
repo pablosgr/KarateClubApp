@@ -159,7 +159,7 @@ function modificarProducto($conexion, $id, $datos_producto){
     $cantidad = (int)$datos_producto["cantidad"];
     $imagen = $datos_producto["imagen"] ?? null;
 
-    if(trim($nombre) != "" && $precio > 0 && trim($categoria) != "" && $cantidad > 0){
+    if(trim($nombre) != "" && $precio > 0 && trim($categoria) != "" && $cantidad >= 0){
         
         //CONSULTA DE COMPROBACIÓN
         $check_query = "SELECT * FROM productos WHERE nombre = ? AND id != ?";

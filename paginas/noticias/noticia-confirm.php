@@ -34,7 +34,7 @@
 
             //en caso de acceso no permitido, acabo el programa
             if($tipo_sesion != "admin"){
-                echo "<section class='servicios'><h1>Acceso restringido, necesitas ser Administrador</h1></section>";
+                echo "<section class='noticias'><h1>Acceso restringido, necesitas ser Administrador</h1></section>";
                 die();
             }
         ?>

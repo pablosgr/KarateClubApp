@@ -17,6 +17,7 @@
             session_start();
             $usuario = isset($_SESSION["nombre"]) ? $_SESSION["nombre"] : "";
             $tipo_sesion = isset($_SESSION["tipo"]) ? $_SESSION["tipo"] : "";
+            $id_usuario = isset($_SESSION["id_usuario"]) ? $_SESSION["id_usuario"] : "";
 
             require_once '../../php/funciones.php';
             require_once '../../php/config.php';
@@ -33,6 +34,12 @@
             $ruta_dojo = "../dojo/dojo.php";
             $ruta_acc = "../acceder";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario, $tipo_sesion);
+
+            //en caso de acceso no permitido, acabo el programa
+            if($tipo_sesion == ""){
+                echo "<section class='citas'><h1>Acceso restringido, necesitas ser Administrador o Socio</h1></section>";
+                die();
+            }
         ?>
 
         <section class='citas'>
@@ -49,11 +56,11 @@
             <?php
                 //compruebo si los datos se mandan por post (buscador) o por get (selección de día)
                 if(isset($_GET["fecha"])){
-                    $fecha=$_GET["fecha"];
-                    echo imprimirCitas($conexion, $fecha);
+                    $fecha = $_GET["fecha"];
+                    echo imprimirCitas($conexion, $fecha, $id_usuario, $tipo_sesion);
                 }else if($_POST["texto"]){
-                    $texto=$_POST["texto"];
-                    echo imprimirCitasBuscadas($conexion, $texto);
+                    $busqueda = $_POST["texto"];
+                    echo imprimirCitasBuscadas($conexion, $busqueda, $id_usuario, $tipo_sesion);
                 }
                 
             ?>

@@ -1,7 +1,5 @@
 "use strict";
 
-const nombre_carrito = "lista";
-let datos_productos = recuperarCarrito(nombre_carrito); //variable para el localStorage
 const contenedor = document.getElementById("contenido-productos");
 const btn_buscar = document.getElementById("btn-buscar");
 const input_busqueda = document.getElementById("texto-busqueda");
@@ -17,6 +15,9 @@ const btn_hacer_pedido = document.querySelector(".place-order");
 const alerta_producto = document.querySelector(".add-alert");
 
 const contenedor_carrito = document.querySelector(".cart-items-list");
+const id_cliente = document.getElementById("id_cliente");
+const nombre_carrito = "lista" + id_cliente.getAttribute("value"); //creo una variable propia por cada usuario
+let datos_productos = recuperarCarrito(nombre_carrito); //variable para el localStorage
 
 
 //Llamo a la API al cargar la página
@@ -77,7 +78,7 @@ btn_vaciar_carrito.addEventListener("click", ()=>{
 });
 
 /*
-    Realiza el pedido (mejorar con bases de datos)
+    Realiza el pedido
 */
 btn_hacer_pedido.addEventListener("click", ()=>{
     datos_productos = [];
@@ -405,6 +406,8 @@ function renderAlert(mensaje){
     convertida a String
 */
 function guardarCarrito(variable, datos){
+    //incluyo el id del usuario en el objeto (no es necesario)
+    // datos.id_cliente ??= id_cliente.getAttribute("value");
     localStorage.setItem(variable, JSON.stringify(datos));
 }
 

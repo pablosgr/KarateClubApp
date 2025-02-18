@@ -42,7 +42,7 @@
         ?>
 
         <section class='productos'>
-            <h1>Modificar Producto</h1>
+            <h1>Modificar producto</h1>
             <div class='contenido-productos'>
 
                 <?php

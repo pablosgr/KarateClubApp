@@ -22,7 +22,7 @@
             require_once '../../php/config.php';
             $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../../index.php";
-            $ruta_soc="#";
+            $ruta_soc=".";
             $ruta_serv="../servicios/servicios.php";
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="../noticias/noticias.php";
@@ -34,7 +34,7 @@
 
             //en caso de acceso no permitido, acabo el programa
             if($tipo_sesion != "admin"){
-                echo "<section class='servicios'><h1>Acceso restringido, necesitas ser Administrador</h1></section>";
+                echo "<section class='socios'><h1>Acceso restringido, necesitas ser Administrador</h1></section>";
                 die();
             }
         ?>
@@ -72,27 +72,27 @@
 
             <div class='contenido-socios'>
 
-                <?php echo imprimirSociosComp($conexion); ?>
-
                 <div class='tarjeta_socio'>
-                    <form action="socios.php" method='post' enctype='multipart/form-data' id='formulario-socios'>
-                        <label class="input-file-custom">
-                            <input type="file" name='foto-avatar' id="campo-foto" accept="image/*">Subir imágen
-                        </label>
-                        <span class="error"></span>
-                        <input type='text' placeholder='Nombre completo' name='nombre_comp' id="campo-nombre">
-                        <span class="error"></span>
-                        <input type='text' placeholder='Nombre de usuario' name='nombre_user' id="campo-usuario">
-                        <span class="error"></span>
-                        <input type='text' placeholder='Edad' name='edad' id="campo-edad">
-                        <span class="error"></span>
-                        <input type='text' placeholder='Teléfono (+34)' name='tlfn' id="campo-tlfn">
-                        <span class="error"></span>
-                        <input type='password' placeholder='Contraseña' name='pass' id="campo-pass">
-                        <span class="error"></span>
-                        <button type='submit'>Añadir socio</button>
-                    </form>
-                </div>
+                        <form action="socios.php" method='post' enctype='multipart/form-data' id='formulario-socios'>
+                            <label class="input-file-custom">
+                                <input type="file" name='foto-avatar' id="campo-foto" accept="image/*">Subir imágen
+                            </label>
+                            <span class="error"></span>
+                            <input type='text' placeholder='Nombre completo' name='nombre_comp' id="campo-nombre">
+                            <span class="error"></span>
+                            <input type='text' placeholder='Nombre de usuario' name='nombre_user' id="campo-usuario">
+                            <span class="error"></span>
+                            <input type='text' placeholder='Edad' name='edad' id="campo-edad">
+                            <span class="error"></span>
+                            <input type='text' placeholder='Teléfono (+34)' name='tlfn' id="campo-tlfn">
+                            <span class="error"></span>
+                            <input type='password' placeholder='Contraseña' name='pass' id="campo-pass">
+                            <span class="error"></span>
+                            <button type='submit'>Añadir socio</button>
+                        </form>
+                    </div>
+
+                <?php echo imprimirSociosComp($conexion); ?>
 
             </div>
         </section>

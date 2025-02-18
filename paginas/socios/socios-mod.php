@@ -22,7 +22,7 @@
             require_once '../../php/config.php';
             $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../../index.php";
-            $ruta_soc="socios.php";
+            $ruta_soc=".";
             $ruta_serv="../servicios/servicios.php";
             $ruta_tes="../testimonios/testimonios.php";
             $ruta_not="../noticias/noticias.php";
@@ -34,7 +34,7 @@
 
             //en caso de acceso no permitido, acabo el programa
             if($tipo_sesion != "admin"){
-                echo "<section class='servicios'><h1>Acceso restringido, necesitas ser Administrador</h1></section>";
+                echo "<section class='socios'><h1>Acceso restringido, necesitas ser Administrador</h1></section>";
                 die();
             }
         ?>

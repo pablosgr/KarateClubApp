@@ -17,6 +17,7 @@
             session_start();
             $usuario = isset($_SESSION["nombre"]) ? $_SESSION["nombre"] : "";
             $tipo_sesion = isset($_SESSION["tipo"]) ? $_SESSION["tipo"] : "";
+            $id_usuario = isset($_SESSION["id_usuario"]) ? $_SESSION["id_usuario"] : "";
 
             require_once '../../php/funciones.php';
             require_once '../../php/config.php';
@@ -33,13 +34,25 @@
             $ruta_dojo = "../dojo/dojo.php";
             $ruta_acc = "../acceder";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario, $tipo_sesion);
+
+            //en caso de acceso no permitido, acabo el programa
+            if($tipo_sesion == ""){
+                echo "<section class='citas'><h1>Acceso restringido, necesitas ser Administrador o Socio</h1></section>";
+                die();
+            }
         ?>
 
         <section class='citas'>
             <h1>Citas</h1>
 
             <form action="citas-info.php" method='post' id='buscador' name='buscar-citas'>
-                <input type="text" placeholder='Nombre del socio, servicio o fecha' name='texto' id='texto-buscado'>
+                <?php 
+                    if($tipo_sesion != "admin") {
+                        echo "<input type='text' placeholder='Servicio o fecha' name='texto' id='texto-buscado'>";
+                    } else {
+                        echo "<input type='text' placeholder='Nombre del socio, servicio o fecha' name='texto' id='texto-buscado'>";
+                    }
+                ?>
                 <span class="error"></span>
                 <button type="submit">Buscar</button>
             </form>
@@ -69,8 +82,11 @@
                     }
                 }
                 
-                echo imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual);
-                echo imprimirFormularioCita($conexion);
+                echo imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual, $id_usuario, $tipo_sesion);
+                
+                if($tipo_sesion == "admin"){
+                    echo imprimirFormularioCita($conexion);
+                }
             ?>
 
             </div>

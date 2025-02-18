@@ -48,7 +48,7 @@
                 $resultado .= "
                     <li><a href='$ruta_prod/productos-cli.php'>PRODUCTOS</a></li>
                     <li><a href='$ruta_soc/perfil-socio.php'>PERFIL</a></li>
-                    <li><a href='$ruta_acc/cerrar-sesion.php'>CERRAR SESIÓN DE $usuario</a></li>
+                    <li class ='close-session'><a href='$ruta_acc/cerrar-sesion.php'>CERRAR SESIÓN DE $usuario</a></li>
                 ";
             }
         } else {
@@ -303,7 +303,7 @@
         $consulta_check->store_result(); 
         if($consulta_check->num_rows > 0){
             //de estar en uso, imprimo mensaje de error
-            $resultado.="<h2 class='centrado red'>El teléfono o nombre de usuario ya están en uso</h2>";
+            $resultado.="<h1 class='centrado red'>El teléfono o nombre de usuario ya están en uso</h1>";
             $consulta_check->close();
             return $resultado;
         }
@@ -340,7 +340,7 @@
 
         if($consulta_check->num_rows > 0){
             $consulta_check->close();
-            $resultado.="<h2 class='centrado red'>El usuario o teléfono ya están en uso</h2>
+            $resultado.="<h1 class='centrado red'>El usuario o teléfono ya están en uso</h1>
             <h2 class='centrado'>Volviendo a la página de socios en 3 segundos...</h2>";
             return $resultado;
         }
@@ -497,7 +497,7 @@ function actualizarServicio($conexion, $id, $descripcion, $duracion, $ud_duracio
 
 //funciones citas ----------------------------------------------------------------
     
-function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
+function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual, $id_socio, $tipo_sesion){
     $mes_actual = sprintf("%02d", $mes_actual); //formateo de mes para que tenga dos digitos (necesario)
     $dias_mes=cal_days_in_month(CAL_GREGORIAN, $mes_actual, $anno_actual); //función para obtener el número de días del mes
     $contador_semana=7;
@@ -507,10 +507,18 @@ function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
     $primer_dia=mktime(0, 0, 0, $mes_actual, 1, $anno_actual); // crear una marca de tiempo para el primer día del mes
     $pos_semana=date("N", $primer_dia); // obtener el día de la semana del primer día del mes (en número)
 
-    $array_fechas=[]; //aqui guardaré toda slas fechas de la bd
-    $sql='SELECT fecha FROM citas'; //también podría lanzar una consulta al imprimir cada día (si hubiera un gran número de citas)
+    $array_fechas=[]; //aqui guardaré todas las fechas de citas del usuario identificado
+
+    if($tipo_sesion != "admin") {
+        //compruebo si el que está accediendo es admin para imprimir (o no) todas las citas
+        $sql='SELECT fecha FROM citas WHERE socio = ?'; //también podría lanzar una consulta al imprimir cada día (si hubiera un gran número de citas)
+        $consulta=$conexion->prepare($sql);
+        $consulta -> bind_param("i", $id_socio);
+    } else {
+        $sql='SELECT fecha FROM citas';
+        $consulta=$conexion->prepare($sql);
+    }
     
-    $consulta=$conexion->prepare($sql);
     $consulta->execute();
     $consulta->bind_result($f);
     while($consulta->fetch()){
@@ -546,7 +554,7 @@ function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
             $i--; //resto 1 a la variable del for para que no avance en los días del mes
         }else{
             $dia_format=sprintf("%02d", $i); //formateo el día a dos digitos
-            $fecha="$anno_actual-$mes_actual-$dia_format";
+            $fecha = "$anno_actual-$mes_actual-$dia_format";
             //compruebo que la fecha esté presente en el array de fechas para marcar el día
             if(in_array($fecha, $array_fechas)){
                 //compruebo que la fecha esté en el array para marcar el día (tiene citas)
@@ -598,7 +606,7 @@ function imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual){
 }
 
 function imprimirFormularioCita($conexion){
-    $sql_socios='SELECT id,nombre FROM socio';
+    $sql_socios='SELECT id,nombre FROM socio WHERE tipo != "admin"';
     $sql_servicios='SELECT id,descripcion FROM servicio';
     
     $consulta1=$conexion->prepare($sql_socios);
@@ -708,41 +716,58 @@ function modificarCita($conexion, $socio, $servicio, $fecha, $hora, $cancel, $ac
     return $resultado;
 }
 
-function imprimirCitas($conexion, $fecha){
+function imprimirCitas($conexion, $fecha, $id_usuario, $tipo_sesion){
     $sql='SELECT socio.nombre,servicio.descripcion,socio,servicio,fecha,hora,cancelada 
     FROM citas 
     JOIN servicio ON servicio.id=citas.servicio
     JOIN socio ON socio.id=citas.socio
-    WHERE fecha=?';
+    WHERE fecha = ?
+    ';
 
-    $consulta=$conexion->prepare($sql);
-    $consulta->bind_param("s", $fecha);
+    if($tipo_sesion != "admin") {
+        $sql .= 'AND socio = ?';
+        $consulta=$conexion->prepare($sql);
+        $consulta->bind_param("si", $fecha, $id_usuario);
+    } else {
+        $consulta=$conexion->prepare($sql);
+        $consulta->bind_param("s", $fecha);
+    }
+
     $consulta->execute();
     $consulta->store_result(); 
     $consulta->bind_result($nombre_socio, $nombre_servicio, $id_socio, $id_servicio, $fecha_cita, $hora, $cancel);
 
-    $resultado=listaCitas($consulta);
+    $resultado = listaCitas($consulta, $tipo_sesion);
 
     return $resultado;
 }
 
-function imprimirCitasBuscadas($conexion, $texto){
+function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
     $texto="%".$texto."%";
     $sql='SELECT socio.nombre,servicio.descripcion,socio,servicio,fecha,hora,cancelada 
     FROM citas 
     JOIN servicio ON servicio.id=citas.servicio
     JOIN socio ON socio.id=citas.socio
-    WHERE socio.nombre LIKE ?
+    WHERE (socio.nombre LIKE ?
     OR servicio.descripcion LIKE ?
-    OR fecha LIKE ?
-    ORDER BY fecha DESC';
+    OR fecha LIKE ?)';
 
-    $consulta=$conexion->prepare($sql);
-    $consulta->bind_param("sss", $texto, $texto, $texto);
+    if($tipo_sesion != "admin") {
+        $sql .= 'AND socio = ?
+            ORDER BY fecha DESC
+        ';
+        $consulta=$conexion->prepare($sql);
+        $consulta->bind_param("sssi", $texto, $texto, $texto, $id_usuario);
+    } else {
+        $sql .= 'ORDER BY fecha DESC';
+        $consulta=$conexion->prepare($sql);
+        $consulta->bind_param("sss", $texto, $texto, $texto);
+    }
+
     $consulta->execute();
     $consulta->store_result();
 
-    $resultado=listaCitas($consulta);
+    $resultado = listaCitas($consulta, $tipo_sesion);
 
     return $resultado;
 }
@@ -858,7 +883,7 @@ function imprimirCitasBuscadas($conexion, $texto){
         return $resultado;
     }
 
-    function listaCitas($consulta){
+    function listaCitas($consulta, $tipo_sesion){
         $resultado='';
 
         $consulta->bind_result($nombre_socio, $nombre_servicio, $id_socio, $id_servicio, $fecha_cita, $hora, $cancel);
@@ -866,26 +891,43 @@ function imprimirCitasBuscadas($conexion, $texto){
             while($consulta->fetch()){
                 $resultado.="
                     <div class='cita'>
-                        <div class='cita-contenido'>
-                        <p><span class='resaltado'>Socio:</span> $nombre_socio</p>
-                        <p><span class='resaltado'>Servicio:</span> $nombre_servicio</p>
-                        <p><span class='resaltado'>Fecha:</span> $fecha_cita</p>
-                        <p><span class='resaltado'>Hora:</span> $hora</p>";
+                    <div class='cita-contenido'>
+                ";
+
+                if($tipo_sesion == "admin") {
+                    $resultado .= "<p><span class='resaltado'>Socio:</span> $nombre_socio</p>";
+                }
+                        
+                $resultado .= "
+                    <p><span class='resaltado'>Servicio:</span> $nombre_servicio</p>
+                    <p><span class='resaltado'>Fecha:</span> $fecha_cita</p>
+                    <p><span class='resaltado'>Hora:</span> $hora</p>
+                ";
+                
                 //segun el valor de $cancel (campo en la bd), imprimo un botón u otro entre cancelar o borrar, y establezco su acción pasando una variable 'accion' por GET
                 if($cancel === 0){
-                    $resultado.="<button class='actived'>Activa</button>
-                                </div><div class='cita-btn'>
-                                <a href='citas-confirm.php?socio=$id_socio&servicio=$id_servicio&fecha=$fecha_cita&hora=$hora&cancel=$cancel&action=c'>
-                                    <button class='btn'>Cancelar</button>
-                                </a>
-                                ";
+                    $resultado .= "<button class='actived'>Activa</button>";
+
+                    if($tipo_sesion == "admin") {
+                        $resultado .= "
+                            </div><div class='cita-btn'>
+                            <a href='citas-confirm.php?socio=$id_socio&servicio=$id_servicio&fecha=$fecha_cita&hora=$hora&cancel=$cancel&action=c'>
+                                <button class='btn'>Cancelar</button>
+                            </a>
+                        ";
+                    }
+                                
                 }else{
-                    $resultado.="<button class='cancelled'>Cancelada</button>
-                                </div><div class='cita-btn'>
-                                <a href='citas-confirm.php?socio=$id_socio&servicio=$id_servicio&fecha=$fecha_cita&hora=$hora&cancel=$cancel&action=d'>
-                                    <button class='btn'>Borrar</button>
-                                </a>
-                                ";
+                    $resultado.="<button class='cancelled'>Cancelada</button>";
+
+                    if($tipo_sesion == "admin") {
+                        $resultado .= "</div><div class='cita-btn'>
+                            <a href='citas-confirm.php?socio=$id_socio&servicio=$id_servicio&fecha=$fecha_cita&hora=$hora&cancel=$cancel&action=d'>
+                                <button class='btn'>Borrar</button>
+                            </a>
+                        ";
+                    }
+                                
                 }
     
                 $resultado.="</div>
@@ -1096,9 +1138,9 @@ function imprimirCitasBuscadas($conexion, $texto){
 
 
     //imprime el formulario de modificacion de datos propios del socio
-    function imprimirModificarPerfil($conexion, $id) {
+    function imprimirModificarPerfil($conexion, $id, $usuario) {
         $resultado='';
-        $sql='SELECT telefono, foto FROM socio WHERE id=?';
+        $sql='SELECT telefono, foto FROM socio WHERE id = ?';
 
         $consulta=$conexion->prepare($sql);
         $consulta->bind_param("i", $id);
@@ -1107,18 +1149,19 @@ function imprimirCitasBuscadas($conexion, $texto){
 
         while($consulta->fetch()){
             $resultado.="<section class='modificar-perfil'>
-                <form action='perfil-confirm.php' method='post' id='formulario-socios' enctype='multipart/form-data'>
+                <form action='perfil-confirm.php' method='post' id='formulario-socios' enctype='multipart/form-data' class='formulario-perfil'>
                     <div class='avatar'><img src='$foto'></div>
                     <label class='input-file-custom'>
                             <input type='file' name='avatar' id='campo-foto' accept='image/*'>
                             Subir nueva imágen
                     </label>
                     <span class='error'></span>
-                    <input type='text' name='pass' placeholder='Nueva contraseña' id='campo-pass'>
+                    <input type='password' name='pass' placeholder='Nueva contraseña' id='campo-pass'>
                     <span class='error'></span>
                     <input type='text' value='$telefono' name='tlfn' placeholder='Teléfono' id='campo-tlfn'>
                     <span class='error'></span>
                     <input type='hidden' value='$id' name='id'>
+                    <input type='hidden' value='$usuario' name='username'>
                     <button type='submit'>Actualizar datos</button>
                 </form>
             </section>
@@ -1131,19 +1174,19 @@ function imprimirCitasBuscadas($conexion, $texto){
 
 
     //modifica los datos del perfil del socio
-    function modificarPerfil($conexion, $id, $tlfn, $pass, $ruta) {
+    function modificarPerfil($conexion, $id, $user, $tlfn, $pass, $ruta) {
         $resultado='';
 
-        $consulta_check="SELECT * FROM socio WHERE telefono = ?"; //compruebo si hay alguien con el mismo teléfono
+        $consulta_check="SELECT * FROM socio WHERE telefono = ? AND usuario != ?"; //compruebo si hay alguien con el mismo teléfono
         $consulta_check=$conexion->prepare($consulta_check);
-        $consulta_check->bind_param("s", $tlfn);
+        $consulta_check->bind_param("ss", $tlfn, $user);
         $consulta_check->execute();
         $consulta_check->store_result(); 
 
         if($consulta_check->num_rows > 0){
             $consulta_check->close();
-            $resultado.="<h2 class='centrado red'>El teléfono ya está en uso</h2>
-            <h2 class='centrado'>Volviendo a la página de socios en 3 segundos...</h2>";
+            $resultado.="<h1 class='centrado red'>El teléfono ya está en uso</h1>
+            <h2 class='centrado'>Volviendo al perfil en 3 segundos...</h2>";
             return $resultado;
         }
         $consulta_check->close();
@@ -1173,7 +1216,7 @@ function imprimirCitasBuscadas($conexion, $texto){
         $consulta->execute();
 
         if($consulta){
-            $resultado.="<h1 class='centrado'>Datos actualizado</h1>
+            $resultado.="<h1 class='centrado'>Datos actualizados</h1>
             <h2 class='centrado'>Volviendo al perfil en 3 segundos...</h2>";
         }else{
             $resultado.="<h1 class='centrado'>Error</h1>";
