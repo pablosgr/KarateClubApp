@@ -81,12 +81,16 @@ btn_vaciar_carrito.addEventListener("click", ()=>{
     Realiza el pedido
 */
 btn_hacer_pedido.addEventListener("click", ()=>{
-    datos_productos = [];
-    guardarCarrito(nombre_carrito, datos_productos);
-    contenedor_carrito.innerHTML = "";
-    renderTotal();
-    pagina_carrito.classList.remove("show");
-    renderAlert("Pedido realizado");
+    if(datos_productos.length > 0) {
+        //compruebo que el carrito no esté vacío
+        datos_productos = [];
+        guardarCarrito(nombre_carrito, datos_productos);
+        contenedor_carrito.innerHTML = "";
+        renderTotal();
+        pagina_carrito.classList.remove("show");
+        renderAlert("Pedido realizado");
+    }
+    
 });
 
 //----------------------------FUNCIONES

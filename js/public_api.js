@@ -96,7 +96,6 @@ async function youtubeQuery(key, topics, lang_preference){
   let random = Math.floor(Math.random()*2);
   topics = encodeURIComponent(topics); //codifico el texto para evitar los espacios en la URL
   let url = `https://www.googleapis.com/youtube/v3/search?key=${key}&part=snippet&type=video&q=${topics}&maxResults=${maxResults}&order=${order_options[random]}&videoEmbeddable=true`;
-  console.log(url);
   if(lang_preference){
     url += "&relevanceLanguage=es";
   }

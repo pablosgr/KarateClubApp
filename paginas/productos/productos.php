@@ -55,10 +55,12 @@
                 $api_url = "http://localhost/club_karate/api/api.php";
                 $api_params = "";
                 $num_pagina = "";
+                $texto_busqueda = "";
                 
                 //PARÁMETROS DEL BUSCADOR (POST)
                 if(isset($_POST["query"])){
                     $text = trim($_POST["query"]);
+                    $texto_busqueda = $text;
                     $array = explode(" ", $text);
 
                     foreach($array as $item){
@@ -72,9 +74,11 @@
                 }
 
                 // PARAMETROS POR URL (GET)
-                if(isset($_GET["pagina"])){
-                    $num_pagina = $_GET['pagina'];
-                }
+                // if(isset($_GET["pagina"])){
+                //     $num_pagina = $_GET['pagina'];
+                // }
+                    
+                $num_pagina = isset($_GET["pagina"]) ? $_GET['pagina'] : 1;
 
                 if(isset($_GET["precioInf"])){
                     $api_params .=  $api_params == "" ? "precioInf={$_GET['precioInf']}" : "&precioInf={$_GET['precioInf']}";
@@ -116,6 +120,9 @@
 
             <div class='contenido-productos'>
                 <?php
+                    if(!empty($texto_busqueda)){
+                        echo "<h2 class='aviso-prod'>Resultados para \"$texto_busqueda\"</h2>";
+                    }
                     echo generarListadoProductos($datos);
                     echo generarPaginadoProductos($datos, $api_params, $num_pagina);
                 ?>

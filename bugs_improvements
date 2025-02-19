@@ -1,6 +1,6 @@
 --TASKS
 
-
+- client products INTRO key not working as intended (check form)
 
 --IMPROVEMENT/FIXES
 
@@ -15,8 +15,3 @@
 - redesign admin products view?
 - delete $conexion where is not being used
 - mark past appointments
-
---DOCUMENTATION
-
-- client shopping cart use
-- products management for admin

@@ -46,7 +46,7 @@
             <div class='contenido-productos'>
 
             <div class='form-container'>
-                <form action='productos-confirm.php' method='post' class='formulario-prod' id='formulario-productos' enctype='multipart/form-data'>
+                <form action='productos-confirm.php' method='post' class='formulario-prod mg-top' id='formulario-productos' enctype='multipart/form-data'>
                         <textarea name='nombre' id='' placeholder='Nombre del producto'></textarea>
                         <span class='error'></span>
                         <input type='text' name='precio' id='' placeholder='Precio'>

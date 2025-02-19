@@ -296,6 +296,10 @@ input[type="file"] {
     cursor: pointer;
 }
 
+.mg-top{
+    margin-top: 100px;
+}
+
 /*----carrito----*/
 
 .cart-overlay {

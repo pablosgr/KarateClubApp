@@ -47,6 +47,7 @@
                 //COMPRUEBO SI SE HA PASADO EL ID POR GET
                 if(!isset($_GET['id'])){
                     echo "<h1>No se ha proporcionado una ID</h1>";
+                    header("refresh:2;url=productos.php");
                     die();
                 }
 
