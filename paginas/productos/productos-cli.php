@@ -67,12 +67,9 @@
                 </aside>
             </div>
 
-            <section class="form-cart">
-                <form action="" method='post' id='buscador'  name='buscar-productos'>
+            <section class="form-cart" id='buscador'>
                     <input type="text" placeholder='Nombre o precio del producto...' name='query' id="texto-busqueda">
-                    <span class="error"></span>
                     <button type="button" id="btn-buscar">Buscar</button>
-                </form>
                 <i class='material-symbols-outlined cart-icon'>shopping_cart</i>
             </section>
 

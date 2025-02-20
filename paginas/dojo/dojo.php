@@ -34,13 +34,19 @@
             $ruta_dojo = "";
             $ruta_acc = "../acceder";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario, $tipo_sesion);
+
+            //en caso de acceso no permitido, acabo el programa
+            if($tipo_sesion == ""){
+                echo "<section class='dojo'><h1>Acceso restringido, necesitas ser Administrador o Socio</h1></section>";
+                die();
+            }
         ?>
 
         <section class='dojo'>
             <h1>Dojo</h1>
             <p>
             En nuestro Dojo online, te ofrecemos los <strong>mejores contenidos audiovisuales</strong> sobre kárate, incluyendo técnicas, kumite y katas, para que puedas aprender y practicar desde casa. 
-            Elige la temática e idioma que más te interese y, ¡encuentra nuevo contenido <strong>a tu gusto</strong>!
+            Disfruta nuestras recomendaciones o elige la temática e idioma que más te interese y, ¡encuentra nuevo contenido <strong>a tu gusto</strong>!
             </p>
 
             <section class="video-dojo" id="dojo-content">

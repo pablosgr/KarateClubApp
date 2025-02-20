@@ -48,14 +48,16 @@ form#formulario-testimonio{
 form#formulario-testimonio textarea{
     font-size: 1.15em;
     height: 100px;
-    width: 80%;
+    width: 70%;
+    min-width: 230px;
     margin-bottom: 7px;
 }
 
 form#formulario-testimonio button{
     border-radius: 10px;
     border: 0;
-    width: 30%;
+    width: 70%;
+    min-width: 230px;
     text-align: center;
     background-color: #c5c5c5;
     color: black;

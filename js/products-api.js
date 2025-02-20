@@ -177,7 +177,7 @@ function renderCards(datos){
             let imagen = document.createElement("img");
             imagen.src = producto["imagen"];
             let precio = document.createElement("p");
-            precio.innerHTML = "Precio: " + producto["precio"] + "&#8364";
+            precio.innerHTML = "Precio: <b>" + producto["precio"] + " &#8364</b>";
             let disponible = document.createElement("p");
             if(producto["disponible"] != 1){
                 disponible.innerHTML = "No disponible";

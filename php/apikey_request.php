@@ -7,7 +7,7 @@
     $dotenv->load();
     
     header('Content-Type: application/json');
-    $apiKey = $_ENV['YOUTUBE_API_KEY'] ?? null; //accedo a la variable de entorno con la API Key
+    $apiKey = $_ENV['GOOGLE_API_KEY'] ?? null; //accedo a la variable de entorno con la API Key
 
     if ($apiKey) {
         echo json_encode(['apikey' => $apiKey]);

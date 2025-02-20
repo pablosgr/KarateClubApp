@@ -3,8 +3,8 @@
 const contenedor_video = document.getElementById("dojo-content");
 const boton_buscar = document.getElementById("search");
 const botones_topics = document.querySelectorAll(".search-topic");
+let topics = "";
 let selected_topics = "";
-let texto = "";
 let apiKey = "";
 let language_preference = false;
 const maxResults = 15;
@@ -41,16 +41,24 @@ boton_buscar.addEventListener("click", async ()=>{
 
 async function generarVideo(){
   //recojo los datos de los tópicos de búsqueda
-  let topics = "karate ";
   selected_topics = document.querySelectorAll(".active");
-  selected_topics.forEach(
-    (topic) => {
-        if(topic.getAttribute("data-value") === "español"){
-          language_preference = true;
-        }
-        topics += (topic.getAttribute("data-value")) + " ";
-    }
-  )
+
+  if(selected_topics.length > 0) {
+    topics = "karate ";
+    selected_topics.forEach(
+      (topic) => {
+          if(topic.getAttribute("data-value") === "español"){
+            language_preference = true;
+          }
+          topics += (topic.getAttribute("data-value")) + " ";
+      }
+    )
+  } else {
+    //si no hay topicos de búsqueda seleccionado, hago la petición a Gemini para que genere uno
+    topics = await geminiQuery(apiKey);
+    console.log(topics);
+  }
+  
 
   contenedor_video.innerHTML = "";
   const datos = await youtubeQuery(apiKey, topics.trim(), language_preference);
@@ -91,7 +99,7 @@ async function generarVideo(){
     
 }
 
-async function youtubeQuery(key, topics, lang_preference){
+async function youtubeQuery(key, topics, lang_preference) {
   const order_options = ["relevance", "rating"]; //opcional rating, viewCount
   let random = Math.floor(Math.random()*2);
   topics = encodeURIComponent(topics); //codifico el texto para evitar los espacios en la URL
@@ -103,4 +111,33 @@ async function youtubeQuery(key, topics, lang_preference){
   const response = await fetch(url);
   const datos = await response.json();
   return datos;
+}
+
+async function geminiQuery(key) {
+  let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+
+  const peticion = {
+    contents: [{
+      parts: [{ text: "Dame un texto de búsqueda interesante sobre contenido de karate en YouTube. Sin decoraciones de texto, sólo la frase" }]
+    }]
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(peticion)
+    });
+
+    const datos = await response.json();
+    if (datos && datos.candidates && datos.candidates.length > 0) {
+      return datos.candidates[0].content.parts[0].text.trim();
+    } else {
+      console.log("Error al obtener el texto de Gemini");
+      return "karate ";
+    }
+  } catch (error) {
+    console.error("Error en la petición a Gemini:", error);
+    return "karate ";
+  }
 }

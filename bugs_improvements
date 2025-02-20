@@ -1,17 +1,14 @@
 --TASKS
 
-- client products INTRO key not working as intended (check form)
+- make products not buyable if they are not available
 
 --IMPROVEMENT/FIXES
 
 - implement api key system
 - re-style opinions section
-- fix text overflow in dojo (break word)
-- make products not buyable if they are not available
 - update products quantity in DB after order
 - add alert in cart icon if has products
 - implement wishlist for cart
-- implement Gemini in external API for searching topics in 1st instance
 - redesign admin products view?
 - delete $conexion where is not being used
 - mark past appointments
