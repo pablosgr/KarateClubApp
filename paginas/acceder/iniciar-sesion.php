@@ -42,14 +42,17 @@
                         $usuario = $_POST["username"];
                         $pass = $_POST["passwd"];
 
-                        $sql = "SELECT id, pass, tipo FROM socio WHERE usuario = ?";
+                        $sql = "SELECT socio.id, pass, tipo, api_keys.api_key
+                        FROM socio 
+                        JOIN api_keys ON api_keys.id_socio = socio.id
+                        WHERE socio.usuario = ?";
                         $consulta = $conexion -> prepare($sql);
                         $consulta -> bind_param("s", $usuario);
                         $consulta -> execute();
                         $consulta -> store_result();
 
                         if($consulta -> num_rows > 0) {
-                            $consulta -> bind_result($id_usuario, $hash_usuario, $tipo_usuario);
+                            $consulta -> bind_result($id_usuario, $hash_usuario, $tipo_usuario, $apikey_usuario);
                             $consulta -> fetch(); //hago el fetch sin bucle porque sólo devuelve una fila
 
                             if(password_verify($pass, $hash_usuario)) {
@@ -57,6 +60,7 @@
                                 $_SESSION["nombre"] = $usuario;
                                 $_SESSION["tipo"] = $tipo_usuario;
                                 $_SESSION["id_usuario"] = $id_usuario;
+                                $_SESSION["api_key"] = $apikey_usuario;
                                 header("Location:../../index.php"); //lo puedo devolver a la página donde estaba (login) con $_POST[origen]
                             } else {
                                 echo "<h2>Contraseña incorrecta, volviendo..</h2>";

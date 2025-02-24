@@ -168,3 +168,10 @@ INSERT INTO productos (nombre, precio, categoria, imagen, disponible, cantidad) 
 ('Cuerda para Saltar', 10.00, 'Accesorios', '../../pics/products/cuerda.jpg', 1, 20),
 ('Bolsa de Entrenamiento', 35.00, 'Accesorios', '../../pics/products/saco.jpg', 1, 4),
 ('DVD Técnicas Básicas de Kárate', 15.00, 'Material Didáctico', '../../pics/products/dvd.jpg', 1, 10);
+
+INSERT INTO api_keys (id_socio, api_key) VALUES
+(1, '49aad7facef37fe40034dde5777533d8a8b60016f33c497dc7fbbbd23e7d91cb'),
+(2, '6419cde2b51efb0b2c949c0586468f874e15afb6caebcbcce45f1a19f048e7e4'),
+(3, 'f6b665a728faee1d47f17d22a44108cd72c4f9072535a960a3f266d7507c007f'),
+(4, 'b4b541436b35a4c4e4e1c292435a959c3f5cb1a50d053e1eb0a6fa4b40d90f77'),
+(5, 'f233438a5745db99863c7d096ebd403dac20ea1bf0f6f0b39386d567d0c44433');

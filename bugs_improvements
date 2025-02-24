@@ -1,8 +1,9 @@
 --TASKS
 
+- show window before deleting for confirmation
+
 --IMPROVEMENT/FIXES
 
-- implement api key system
 - update products quantity in DB after order
 - add alert in cart icon if has products
 - implement wishlist in products

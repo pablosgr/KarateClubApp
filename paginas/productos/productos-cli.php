@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/style_productos.css">
     <script defer src="../../js/app.js"></script> <!--Mantener para el menú hamburguesa-->
-    <script defer src="../../js/products-api.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -34,6 +33,21 @@
             $ruta_dojo = "../dojo/dojo.php";
             $ruta_acc = "../acceder";
             echo dibujarCabecera($ruta_i, $ruta_soc, $ruta_serv, $ruta_tes, $ruta_not, $ruta_cit, $ruta_prod, $ruta_dojo, $ruta_acc, $usuario, $tipo_sesion);
+
+            if($tipo_sesion != "socio"){
+                echo "<section class='productos'><h1>Acceso restringido, necesitas ser Socio</h1></section>";
+                die();
+            }
+
+            //compruebo la validez de la API Key
+            if(isset($_SESSION["api_key"])) {
+                if(!validarApiKey($conexion, $_SESSION["api_key"])) {
+                    echo "<section class='productos'><h1>API Key no válida</h1></section>";
+                    die();
+                } else {
+                    echo "<script defer src='../../js/products-api.js'></script>";
+                }
+            }
         ?>
 
         <section class='productos'>

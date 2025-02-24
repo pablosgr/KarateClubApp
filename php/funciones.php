@@ -324,7 +324,8 @@
         $id_insertado = $consulta -> insert_id;
         $consulta->close();
 
-        // generarApiKey($conexion, $id_insertado);
+        //genero la apikey para el usuario recién creado
+        generarApiKey($conexion, $id_insertado);
 
         return $resultado;
     }
@@ -952,27 +953,8 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
 
     /* ---------NUEVAS FUNCIONES--------- */
 
-    /*
-        Genera una Api Key cada vez que añado un usuario.
-        Le paso el ID del socio generado (al que se asigna) por parámetro
-    */
-    function generarApiKey($conexion, $id){
-        $api_key = bin2hex(random_bytes(32)); //genera la API Key de 64 caractéres
-
-        $consulta = "INSERT INTO api_keys (id_socio, api_key) VALUES (?, ?)";
-        $stmt = $conexion -> prepare($consulta);
-        $stmt -> bind_param("is", $id, $api_key);
-
-        if($stmt -> execute()){ //devuelve true o false en función de la ejecución exitosa de la consulta
-            $stmt -> close();
-            return $api_key;
-        } else {
-            $stmt -> close();
-            throw new Exception("Error al generar la API Key");
-        }
-    }
-
     /*Funciones Productos*/
+
     /*
         Genera el listado de productos para el administrador
     */
@@ -1283,4 +1265,43 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
         ";
 
         return $resultado;
+    }
+
+    /*
+        Genera una Api Key cada vez que añado un usuario.
+        Le paso el ID del socio generado (al que se asigna) por parámetro
+    */
+    function generarApiKey($conexion, $id){
+        $api_key = bin2hex(random_bytes(32)); //genera la API Key de 64 caractéres
+
+        $consulta = "INSERT INTO api_keys (id_socio, api_key) VALUES (?, ?)";
+        $stmt = $conexion -> prepare($consulta);
+        $stmt -> bind_param("is", $id, $api_key);
+
+        if($stmt -> execute()){ //devuelve true o false en función de la ejecución exitosa de la consulta
+            $stmt -> close();
+            return $api_key;
+        } else {
+            $stmt -> close();
+            throw new Exception("Error al generar la API Key");
+        }
+    }
+
+    /*
+    Valida la API Key, la llamo en cada petición
+    */
+    function validarApiKey($conexion, $api_key){
+        $consulta = "SELECT * FROM api_keys WHERE api_key = ? AND activa = 1";
+        $stmt = $conexion -> prepare($consulta);
+        $stmt -> bind_param("s", $api_key);
+        $stmt -> execute();
+        $resultado = $stmt -> get_result();
+
+        if($resultado -> num_rows > 0){
+            $stmt -> close();
+            return true;
+        } else {
+            $stmt -> close();
+            return false;
+        }
     }

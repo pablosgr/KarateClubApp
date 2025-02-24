@@ -67,6 +67,7 @@
                     
                     //si los hay, añado al socio antes de mostrar el listado
                     echo añadirSocio($conexion, $nombre_socio, $edad_socio, $pass_socio, $user_socio, $tlfn_socio, $ruta);
+                    
                 }
             ?>
 
