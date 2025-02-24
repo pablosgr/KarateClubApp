@@ -172,91 +172,101 @@ function renderCards(datos){
         lista_productos.forEach(producto => {
             let articulo = document.createElement("article");
             articulo.classList.add("producto");
+            
             let nombre = document.createElement("h2");
             nombre.innerHTML = producto["nombre"];
+            
             let imagen = document.createElement("img");
             imagen.src = producto["imagen"];
+            imagen.classList.add("client-pic");
+            
             let precio = document.createElement("p");
             precio.innerHTML = "Precio: <b>" + producto["precio"] + " &#8364</b>";
-            let disponible = document.createElement("p");
-            if(producto["disponible"] != 1){
-                disponible.innerHTML = "No disponible";
-            } else {
-                disponible.innerHTML = "Disponible";
-            }
+            
             let categoria = document.createElement("p");
             categoria.innerHTML = producto["categoria"];
 
             let seccion_boton = document.createElement("section");
             seccion_boton.classList.add("prod-options");
 
-            //botón y evento para añadir al carrito
-            let boton = document.createElement("button");
-            boton.classList.add("add-producto");
-            boton.setAttribute("id", "add-producto");
-            let icono = document.createElement("i");
-            icono.classList.add("material-symbols-outlined");
-            icono.innerHTML = "add_shopping_cart";
-            let texto_boton = document.createElement("span");
-            texto_boton.innerHTML = "Añadir al carrito";
+            
+            if(producto["disponible"] != 1){
+                let boton = document.createElement("button");
+                boton.classList.add("unav-producto");
+                let texto_boton = document.createElement("span");
+                texto_boton.innerHTML = "No disponible";
 
-            boton.addEventListener("click", ()=>{
-                let item = {
-                    "detalles": {
-                        "id": producto["id"],
-                        "nombre": producto["nombre"],
-                        "precio": producto["precio"],
-                        "categoria": producto["categoria"],
-                        "imagen": producto["imagen"],
-                        "disponible": producto["disponible"],
-                        "cantidad": producto["cantidad"]
-                    },
-                    "numero": 1
-                };
+                boton.appendChild(texto_boton);
+                seccion_boton.appendChild(boton);
+            } else {
+                //botón y evento para añadir al carrito sólo si está disponible
+                let boton = document.createElement("button");
+                boton.classList.add("add-producto");
+                boton.setAttribute("id", "add-producto");
+                let icono = document.createElement("i");
+                icono.classList.add("material-symbols-outlined");
+                icono.innerHTML = "add_shopping_cart";
+                let texto_boton = document.createElement("span");
+                texto_boton.innerHTML = "Añadir al carrito";
 
-                renderAlert("Producto añadido");
+                boton.addEventListener("click", ()=>{
+                    let item = {
+                        "detalles": {
+                            "id": producto["id"],
+                            "nombre": producto["nombre"],
+                            "precio": producto["precio"],
+                            "categoria": producto["categoria"],
+                            "imagen": producto["imagen"],
+                            "disponible": producto["disponible"],
+                            "cantidad": producto["cantidad"]
+                        },
+                        "numero": 1
+                    };
 
-                //Compruebo si el id del producto ya esta presente en la lista para añadir uno al numero de productos
-                let exists = false;
-                if(datos_productos.length > 0){
-                    let result = datos_productos.findIndex(i => i["detalles"]["id"] == item["detalles"]["id"]);
-                    if(result !== -1){
-                        datos_productos[result]["numero"]++;
-                        renderTotal();
-                        exists = true;
+                    renderAlert("Producto añadido");
 
-                        //Lo actualizo también en el elemento HTML
-                        let array_items = document.querySelectorAll(".item");
-                        array_items.forEach(
-                            (p) => {
-                                if(p.getAttribute("data-id") == item["detalles"]["id"]){
-                                    let cantidad_elemento = p.querySelector(".number");
-                                    cantidad_elemento.innerText = parseInt(cantidad_elemento.innerText) + 1;
+                    //Compruebo si el id del producto ya esta presente en la lista para añadir uno al numero de productos
+                    let exists = false;
+                    if(datos_productos.length > 0){
+                        let result = datos_productos.findIndex(i => i["detalles"]["id"] == item["detalles"]["id"]);
+                        if(result !== -1){
+                            datos_productos[result]["numero"]++;
+                            renderTotal();
+                            exists = true;
+
+                            //Lo actualizo también en el elemento HTML
+                            let array_items = document.querySelectorAll(".item");
+                            array_items.forEach(
+                                (p) => {
+                                    if(p.getAttribute("data-id") == item["detalles"]["id"]){
+                                        let cantidad_elemento = p.querySelector(".number");
+                                        cantidad_elemento.innerText = parseInt(cantidad_elemento.innerText) + 1;
+                                    }
                                 }
-                            }
-                        );
+                            );
+                        }
                     }
-                }
 
-                //Si no estaba previamente, lo añado
-                if(!exists){
-                    datos_productos.push(item);
-                    renderProductCart(item);
-                }
-                
-                guardarCarrito(nombre_carrito, datos_productos);
-                
-            })
+                    //Si no estaba previamente, lo añado
+                    if(!exists){
+                        datos_productos.push(item);
+                        renderProductCart(item);
+                    }
+                    
+                    guardarCarrito(nombre_carrito, datos_productos);
+                    
+                });
 
-            //añado los elementos hijos a sus padres
-            boton.appendChild(icono);
-            boton.appendChild(texto_boton);
-            seccion_boton.appendChild(boton);
+                //añado los elementos hijos a sus padres
+                boton.appendChild(icono);
+                boton.appendChild(texto_boton);
+                seccion_boton.appendChild(boton);
+            }
+            
 
             articulo.appendChild(nombre);
             articulo.appendChild(imagen);
             articulo.appendChild(precio);
-            articulo.appendChild(disponible);
             articulo.appendChild(categoria);
             articulo.appendChild(seccion_boton);
             

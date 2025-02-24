@@ -46,7 +46,7 @@
             <h1>Dojo</h1>
             <p>
             En nuestro Dojo online, te ofrecemos los <strong>mejores contenidos audiovisuales</strong> sobre kárate, incluyendo técnicas, kumite y katas, para que puedas aprender y practicar desde casa. 
-            Disfruta nuestras recomendaciones o elige la temática e idioma que más te interese y, ¡encuentra nuevo contenido <strong>a tu gusto</strong>!
+            Disfruta nuestras recomendaciones o selecciona los tópicos que más te interesen y, ¡encuentra nuevo contenido <strong>a tu gusto</strong>!
             </p>
 
             <section class="video-dojo" id="dojo-content">
@@ -58,7 +58,7 @@
                 <button class="search-topic" data-value="kata">Katas</button>
                 <button class="search-topic" data-value="tecnicas">Técnicas</button>
                 <button class="search-topic" data-value="español">Español</button>
-                <button id="search" class="buscar"><i class="material-symbols-outlined">search</i><span>Buscar</span></button>
+                <button id="search" class="buscar"><i class="material-symbols-outlined">search</i><span>Buscar vídeo</span></button>
             </section>
 
         </section>

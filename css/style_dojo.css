@@ -40,7 +40,7 @@ section.dojo p{
 .searchbar-dojo button{
     border-radius: 30px;
     border: 1px solid rgb(54, 54, 54);
-    width: 170px;
+    width: 150px;
     min-width: 135px;
     text-align: center;
     background-color: inherit;
@@ -58,6 +58,7 @@ button.active{
 }
 
 .searchbar-dojo button.buscar{
+    width: 220px;
     display: flex;
     flex-direction: row;
     gap: 10px;
@@ -129,6 +130,10 @@ button.active{
     .frame-video{
         width: 100%;
         min-width: 390px;
+    }
+
+    .video-info{
+        width: 100%;
     }
 
     .video-info h2{

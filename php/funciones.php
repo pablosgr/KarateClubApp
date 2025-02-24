@@ -45,6 +45,7 @@
                     <li><a href='$ruta_acc/cerrar-sesion.php'>CERRAR SESIÓN DE ADMINISTRADOR</a></li>
                 ";
             } else {
+                $usuario = strtoupper($usuario);
                 $resultado .= "
                     <li><a href='$ruta_prod/productos-cli.php'>PRODUCTOS</a></li>
                     <li><a href='$ruta_soc/perfil-socio.php'>PERFIL</a></li>
@@ -734,8 +735,7 @@ function imprimirCitas($conexion, $fecha, $id_usuario, $tipo_sesion){
     }
 
     $consulta->execute();
-    $consulta->store_result(); 
-    $consulta->bind_result($nombre_socio, $nombre_servicio, $id_socio, $id_servicio, $fecha_cita, $hora, $cancel);
+    $consulta->store_result();
 
     $resultado = listaCitas($consulta, $tipo_sesion);
 
@@ -883,10 +883,13 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
         return $resultado;
     }
 
+    /*
+        Imprime divs con clase 'cita' por cada cita
+    */
     function listaCitas($consulta, $tipo_sesion){
         $resultado='';
 
-        $consulta->bind_result($nombre_socio, $nombre_servicio, $id_socio, $id_servicio, $fecha_cita, $hora, $cancel);
+        $consulta -> bind_result($nombre_socio, $nombre_servicio, $id_socio, $id_servicio, $fecha_cita, $hora, $cancel);
         if($consulta->num_rows > 0){
             while($consulta->fetch()){
                 $resultado.="
@@ -906,8 +909,12 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
                 
                 //segun el valor de $cancel (campo en la bd), imprimo un botón u otro entre cancelar o borrar, y establezco su acción pasando una variable 'accion' por GET
                 if($cancel === 0){
-                    $resultado .= "<button class='actived'>Activa</button>";
-
+                    if($fecha_cita < date('Y-m-d')) {
+                        $resultado .= "<button class='past'>Pasada</button>";
+                    } else {
+                        $resultado .= "<button class='actived'>Activa</button>";
+                    }
+                    
                     if($tipo_sesion == "admin") {
                         $resultado .= "
                             </div><div class='cita-btn'>
@@ -917,7 +924,7 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
                         ";
                     }
                                 
-                }else{
+                } else {
                     $resultado.="<button class='cancelled'>Cancelada</button>";
 
                     if($tipo_sesion == "admin") {
@@ -930,11 +937,15 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
                                 
                 }
     
-                $resultado.="</div>
+                $resultado .= "</div>
                 </div>";
             }
-        }else{
-            $resultado.="<h1 class='centrado'>No se han encontrado citas</h1>";
+        } else {
+            if($tipo_sesion != "admin") {
+                $resultado .= "<h3 class='no-citas'>No tienes citas programadas</h3>";
+            } else {
+                $resultado .= "<h1 class='centrado'>No se han encontrado citas</h1>";
+            }
         }
         return $resultado;
     }
@@ -962,7 +973,9 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
     }
 
     /*Funciones Productos*/
-
+    /*
+        Genera el listado de productos para el administrador
+    */
     function generarListadoProductos($datos){
         $respuesta = "<section class='lista-productos'>";
         $array_productos = $datos["datos"];
@@ -972,6 +985,7 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
                 <h2>{$prod['nombre']}</h2>
                 <img src='{$prod['imagen']}'>
                 <p>Precio: {$prod['precio']} &#8364</p>
+                <p>Categoría: {$prod['categoria']}</p>
             ";
 
             if($prod['disponible'] != 1){
@@ -981,7 +995,6 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
             }
 
             $respuesta .= "
-                <p>Categoría: {$prod['categoria']}</p>
                 <section class='prod-options'>
                     <a href='productos-del.php?id={$prod['id']}' class='btn-del-prod'>Eliminar</a>
                     <a href='productos-mod.php?id={$prod['id']}' class='btn-upd-prod'>Modificar</a>
@@ -994,7 +1007,9 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
         return $respuesta;
     }
 
-
+    /*
+        Genera el paginado de los productos para el administrador
+    */
     function generarPaginadoProductos($datos, $parametros, $pagina){
         $respuesta = "<ul class='paginado-productos'>";
 
@@ -1035,7 +1050,9 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
         return $respuesta;
     }
     
-
+    /*
+        Imprime el formulario de modificación de un producto
+    */
     function formularioModificarProducto($id){
         $resultado = "";
         $api_url = "http://localhost/club_karate/api/api.php?id=$id";
@@ -1084,7 +1101,9 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
         return $resultado;
     }
     
-
+    /*
+        Modifica un producto a través de la API
+    */
     function modificarProductoApi($parametros, $api_url){
         $resultado = "";
         //LLAMADA A LA API CON cURL
@@ -1114,7 +1133,9 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
         return $resultado;
     }
 
-
+    /*
+        Añade un producto a través de la API
+    */
     function addProductoApi($parametros, $api_url){
         $resultado = "";
         $ch = curl_init();
@@ -1136,8 +1157,9 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
         return $resultado;
     }
 
-
-    //imprime el formulario de modificacion de datos propios del socio
+    /*
+        Imprime el formulario de modificacion de datos propios del socio
+    */
     function imprimirModificarPerfil($conexion, $id, $usuario) {
         $resultado='';
         $sql='SELECT telefono, foto FROM socio WHERE id = ?';
@@ -1172,8 +1194,9 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
         return $resultado;
     }
 
-
-    //modifica los datos del perfil del socio
+    /*
+        Modifica los datos del perfil del socio
+    */
     function modificarPerfil($conexion, $id, $user, $tlfn, $pass, $ruta) {
         $resultado='';
 
@@ -1223,5 +1246,41 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
         }
 
         $consulta->close();
+        return $resultado;
+    }
+
+    /*
+        Imprime la vista de próxima cita para cada socio
+    */
+    function imprimirProximaCita($conexion, $id_socio, $tipo_sesion) {
+        $fecha_actual = date('Y-m-d');
+        $sql = 'SELECT socio.nombre, servicio.descripcion, socio, servicio, fecha, hora, cancelada
+            FROM citas
+            JOIN servicio ON servicio.id = citas.servicio
+            JOIN socio ON socio.id = citas.socio
+            WHERE fecha >= ? AND citas.socio = ?
+            ORDER BY fecha ASC
+            LIMIT 1
+        ';
+
+        $consulta = $conexion -> prepare($sql);
+        $consulta -> bind_param("si", $fecha_actual, $id_socio);
+        $consulta -> execute();
+        $consulta -> store_result();
+
+        $resultado = "
+            <section class='proximas-citas'>
+                <h2>Próxima cita</h2>
+        ";
+
+        //añado las citas
+        $resultado .= listaCitas($consulta, $tipo_sesion);
+        $resultado .= "
+            <a href='citas-info.php?id=$id_socio' class='citas-completo'>
+                Mostrar todas las próximas citas
+            </a>
+            </section>
+        ";
+
         return $resultado;
     }

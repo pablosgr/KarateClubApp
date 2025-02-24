@@ -84,8 +84,10 @@
                 
                 echo imprimirCalendario($conexion, $meses, $mes_actual, $anno_actual, $id_usuario, $tipo_sesion);
                 
-                if($tipo_sesion == "admin"){
+                if($tipo_sesion == "admin") {
                     echo imprimirFormularioCita($conexion);
+                } else {
+                    echo imprimirProximaCita($conexion, $id_usuario, $tipo_sesion);
                 }
             ?>
 

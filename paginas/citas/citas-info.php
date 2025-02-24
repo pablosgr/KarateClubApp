@@ -55,12 +55,28 @@
 
             <?php
                 //compruebo si los datos se mandan por post (buscador) o por get (selección de día)
-                if(isset($_GET["fecha"])){
+                if(isset($_GET["fecha"])) {
                     $fecha = $_GET["fecha"];
                     echo imprimirCitas($conexion, $fecha, $id_usuario, $tipo_sesion);
-                }else if($_POST["texto"]){
+                } else if(isset($_POST["texto"])) {
                     $busqueda = $_POST["texto"];
                     echo imprimirCitasBuscadas($conexion, $busqueda, $id_usuario, $tipo_sesion);
+                } else if(isset($_GET["id"])){
+                    //botón para mostrar todas las citas
+                    $sql='SELECT socio.nombre,servicio.descripcion,socio,servicio,fecha,hora,cancelada 
+                    FROM citas 
+                    JOIN servicio ON servicio.id=citas.servicio
+                    JOIN socio ON socio.id=citas.socio
+                    WHERE fecha >= ? AND citas.socio = ?
+                    ORDER BY fecha ASC
+                    ';
+
+                    $fecha_actual = date('Y-m-d');
+                    $consulta = $conexion -> prepare($sql);
+                    $consulta -> bind_param("si", $fecha_actual, $_GET["id"]);
+                    $consulta->execute();
+                    $consulta->store_result();
+                    echo listaCitas($consulta, $tipo_sesion);
                 }
                 
             ?>

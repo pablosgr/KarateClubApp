@@ -157,6 +157,7 @@ section#buscador button:hover{
     padding: 30px;
     display: flex;
     flex-direction: column;
+    gap: 5px;
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(54, 54, 54, .4);
 }
@@ -168,11 +169,15 @@ section#buscador button:hover{
 
 .producto img{
     /* max-width: 180px; */
-    max-height: 170px;
+    max-height: 150px;
     border-radius: 6px;
     margin: 20px 0px 20px 0px;
     height: auto;
     align-self: center;
+}
+
+.producto img.client-pic{
+    max-height: 170px;
 }
 
 .producto p{
@@ -212,7 +217,7 @@ section#buscador button:hover{
 
 /*----add cart btn----*/
 
-.add-producto{
+.add-producto, .unav-producto{
     background-color: white;
     font-size: 1.01em;
     padding: 10px;
@@ -230,6 +235,12 @@ section#buscador button:hover{
     background-color: rgb(92, 212, 92);
     color: white;
     cursor: pointer;
+}
+
+.unav-producto{
+    background-color: #b8babd;
+    border: 1px solid #b8babd;
+    color: white;
 }
 
 /*----paginado----*/
