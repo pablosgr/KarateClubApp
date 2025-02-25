@@ -22,8 +22,6 @@
 
             require_once '../../php/funciones.php';
             require_once '../../php/config.php';
-            
-            $conexion=conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $ruta_i="../../index.php";
             $ruta_soc="../socios";
             $ruta_serv="../servicios/servicios.php";
@@ -67,7 +65,6 @@
 
     <?php 
         include '../../php/footer.php';
-        $conexion->close();
     ?>
 </body>
 </html>

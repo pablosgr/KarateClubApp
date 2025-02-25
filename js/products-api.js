@@ -3,13 +3,15 @@
 const contenedor = document.getElementById("contenido-productos");
 const btn_buscar = document.getElementById("btn-buscar");
 const input_busqueda = document.getElementById("texto-busqueda");
+const icono_carrito = document.querySelector(".cart-icon");
+const alerta_carrito = document.getElementById("spot");
+let contador_alerta_carrito = 0;
 let texto_busqueda;
 let url_api = "http://localhost/club_karate/api/api.php";
 
 const pagina_carrito = document.querySelector(".cart-overlay");
 const cart_aside = document.querySelector(".cart");
 const cerrar_carrito = document.querySelector(".cart-close");
-const icono_carrito = document.querySelector(".cart-icon");
 const btn_vaciar_carrito = document.querySelector(".empty-cart");
 const btn_hacer_pedido = document.querySelector(".place-order");
 const alerta_producto = document.querySelector(".add-alert");
@@ -23,7 +25,7 @@ let datos_productos = recuperarCarrito(nombre_carrito); //variable para el local
 //Llamo a la API al cargar la página
 listarProductos("", url_api);
 
-//renderizo en el carritop todos los productos en localStorage
+//renderizo en el carrito todos los productos en localStorage
 datos_productos.forEach(
     (p) => {
         renderProductCart(p);
@@ -46,8 +48,6 @@ cerrar_carrito.addEventListener("click",
       pagina_carrito.classList.remove("show");
     }
 );
-
-const cartOverlay = document.querySelector(".cart-overlay");
 
 /*
     Cierra el carrito si se hace click fuera del div carrito -aside-
@@ -75,6 +75,7 @@ btn_vaciar_carrito.addEventListener("click", ()=>{
     guardarCarrito(nombre_carrito, datos_productos);
     contenedor_carrito.innerHTML = "";
     renderTotal();
+    renderAlertaCarrito("vaciar", 0);
 });
 
 /*
@@ -87,6 +88,7 @@ btn_hacer_pedido.addEventListener("click", ()=>{
         guardarCarrito(nombre_carrito, datos_productos);
         contenedor_carrito.innerHTML = "";
         renderTotal();
+        renderAlertaCarrito("vaciar", 0);
         pagina_carrito.classList.remove("show");
         renderAlert("Pedido realizado");
     }
@@ -232,6 +234,7 @@ function renderCards(datos){
                         if(result !== -1){
                             datos_productos[result]["numero"]++;
                             renderTotal();
+                            renderAlertaCarrito("suma", 1);
                             exists = true;
 
                             //Lo actualizo también en el elemento HTML
@@ -263,7 +266,7 @@ function renderCards(datos){
                 seccion_boton.appendChild(boton);
             }
             
-
+            //añado los elementos hijos a sus padres
             articulo.appendChild(nombre);
             articulo.appendChild(imagen);
             articulo.appendChild(precio);
@@ -340,6 +343,7 @@ function renderProductCart(producto){
 
         contenedor_carrito.appendChild(articulo);
         renderTotal();
+        renderAlertaCarrito("suma", producto["numero"]);
 
         //selecciono los botones del propio articulo para que sólo le afecten a él
         let boton_sumar = articulo.querySelector(".sumar-prod");
@@ -357,6 +361,7 @@ function renderProductCart(producto){
                         cantidad_elemento.innerText = parseInt(cantidad_elemento.innerText) + 1;
 
                         renderTotal();
+                        renderAlertaCarrito("suma", 1);
                     }
                 }
             );
@@ -382,6 +387,7 @@ function renderProductCart(producto){
                         }
 
                         renderTotal();
+                        renderAlertaCarrito("resta", 1);
                     }
                 }
             );
@@ -400,6 +406,27 @@ function renderTotal(){
         }
     )
     total.innerHTML = total_calculo;
+}
+
+/*
+    Renderiza el número de articulos en la alerta del carrito
+*/
+function renderAlertaCarrito(opcion, cantidad){
+    if(opcion === "suma") {
+        contador_alerta_carrito += cantidad;
+    } else if(opcion === "resta") {
+        contador_alerta_carrito -= cantidad;
+    } else if(opcion === "vaciar") {
+        contador_alerta_carrito = cantidad;
+    }
+
+    alerta_carrito.innerHTML = contador_alerta_carrito;
+    
+    if(contador_alerta_carrito > 0) {
+        alerta_carrito.style.display = "inline-block";
+    } else {
+        alerta_carrito.style.display = "none";
+    }
 }
 
 /*

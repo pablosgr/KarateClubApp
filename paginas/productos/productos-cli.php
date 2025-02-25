@@ -82,9 +82,9 @@
             </div>
 
             <section class="form-cart" id='buscador'>
-                    <input type="text" placeholder='Nombre o precio del producto...' name='query' id="texto-busqueda">
-                    <button type="button" id="btn-buscar">Buscar</button>
-                <i class='material-symbols-outlined cart-icon'>shopping_cart</i>
+                <input type="text" placeholder='Nombre o precio del producto...' name='query' id="texto-busqueda">
+                <button type="button" id="btn-buscar">Buscar</button>
+                <i class='material-symbols-outlined cart-icon'>shopping_cart<span class="spot" id="spot"></span></i>
             </section>
 
             <!--Guardo la id del usuario para recuperarla en JS, para guardarla en el carrito. Necesito imprimir la variable con un echo-->

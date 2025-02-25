@@ -1160,7 +1160,7 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
                             Subir nueva imágen
                     </label>
                     <span class='error'></span>
-                    <input type='password' name='pass' placeholder='Nueva contraseña' id='campo-pass'>
+                    <input type='password' name='pass' placeholder='Nueva contraseña (dejar vacío para mantener la actual)' id='campo-pass'>
                     <span class='error'></span>
                     <input type='text' value='$telefono' name='tlfn' placeholder='Teléfono' id='campo-tlfn'>
                     <span class='error'></span>

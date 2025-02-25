@@ -94,12 +94,30 @@ section#buscador button:hover{
 .cart-icon {
     font-size: 3.3em !important;
     margin-left: 100px;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 50px;
     height: 50px;
     cursor: pointer;
+}
+
+.spot{
+    position: absolute;
+    display: none;
+    width: 27px;
+    height: 27px;
+    left: 30px;
+    top: -7px;
+    border-radius: 50%;
+    border: 2px solid rgb(74, 187, 74);
+    background-color: rgb(76, 224, 83);
+    color: white;
+    font-weight: 600;
+    font-size: .33em;
+    text-align: center;
+    padding-top: 2.5px;
 }
 
 /*----alerta y aviso, error not found y búsqueda----*/
@@ -132,6 +150,7 @@ section#buscador button:hover{
     align-items: center;
     font-size: 1.4em;
     color: rgb(43, 139, 43);
+    z-index: 100;
 }
 
 .add-alert.show-alert{
