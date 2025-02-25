@@ -377,20 +377,27 @@
 
 function imprimirTestimonios($conexion){
     $resultado='';
-        $sql='SELECT testimonio.id,nombre,contenido,fecha FROM socio
+        $sql='SELECT testimonio.id, nombre, contenido, fecha, foto FROM socio
         JOIN testimonio ON socio.id=testimonio.autor
         ORDER BY fecha DESC';
 
     $consulta=$conexion->prepare($sql);
     $consulta->execute();
-    $consulta->bind_result($id, $nombre, $texto, $fecha);
+    $consulta->bind_result($id, $nombre, $texto, $fecha, $imagen);
 
     while($consulta->fetch()){
         $resultado.="
             <div class='card-testimonio'>
-                <h2>$nombre</h2>
-                <p>$texto</p>
-                <p>$fecha</p>
+                <section class='imagen-card-testimonio'>
+                    <div class='contenedor-img-card-testimonio'>
+                        <img src='$imagen'>
+                    </div>
+                </section>
+                <section class='contenido-card-testimonio'>
+                    <h2>$nombre</h2>
+                    <p>$texto</p>
+                    <p>$fecha</p>
+                </section>
             </div>
         ";
     }
