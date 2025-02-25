@@ -916,7 +916,7 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
                         $resultado .= "<button class='actived'>Activa</button>";
                     }
                     
-                    if($tipo_sesion == "admin") {
+                    if($tipo_sesion == "admin" && $fecha_cita > date('Y-m-d')) {
                         $resultado .= "
                             </div><div class='cita-btn'>
                             <a href='citas-confirm.php?socio=$id_socio&servicio=$id_servicio&fecha=$fecha_cita&hora=$hora&cancel=$cancel&action=c'>
@@ -928,7 +928,7 @@ function imprimirCitasBuscadas($conexion, $texto, $id_usuario, $tipo_sesion){
                 } else {
                     $resultado.="<button class='cancelled'>Cancelada</button>";
 
-                    if($tipo_sesion == "admin") {
+                    if($tipo_sesion == "admin" && $fecha_cita > date('Y-m-d')) {
                         $resultado .= "</div><div class='cita-btn'>
                             <a href='citas-confirm.php?socio=$id_socio&servicio=$id_servicio&fecha=$fecha_cita&hora=$hora&cancel=$cancel&action=d'>
                                 <button class='btn'>Borrar</button>
