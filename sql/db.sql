@@ -124,7 +124,7 @@ INSERT INTO socio (id, nombre, edad, pass, tipo, usuario, telefono, foto) VALUES
 (3, 'María López', 42, '$2y$10$jVkwLxktfkIn7UqW7769wec8ZH1C6.z74fwIbZaZZ6Ar.IFxrGP0e', 'socio', 'marialopez', '+34623456789', '../../pics/avatar1.jpg'),
 (4, 'Pedro Gómez', 25, '$2y$10$idjaaatNg9Cu6ARNmH1ip.tZmgwEzE5ZkaoJ6g4nqgwjSW1IDTGQe', 'socio', 'pedrogomez', '+34634567890', '../../pics/avatar2.jpg'),
 (5, 'Lauren Tsai', 28, '$2y$10$sDw1Zky5owtlmy/uovDIT.j/JyLAmN7jzkQjigc3Qp4pcjDndigZC', 'socio', 'ltsai', '+34667124890', '../../pics/avatar4.jpg');
--- contraseña1, contraseña2..
+-- usuario con id 2: contraseña1; usuario con id 3: contraseña2..
 
 INSERT INTO testimonio (autor, contenido, fecha) VALUES
 (2, 'Este club ha cambiado mi vida, he mejorado en disciplina y condición física.', '2024-09-20'),
