@@ -175,3 +175,14 @@ INSERT INTO api_keys (id_socio, api_key) VALUES
 (3, 'f6b665a728faee1d47f17d22a44108cd72c4f9072535a960a3f266d7507c007f'),
 (4, 'b4b541436b35a4c4e4e1c292435a959c3f5cb1a50d053e1eb0a6fa4b40d90f77'),
 (5, 'f233438a5745db99863c7d096ebd403dac20ea1bf0f6f0b39386d567d0c44433');
+
+DELIMITER //
+
+CREATE TRIGGER actualizar_disponibilidad
+BEFORE UPDATE ON productos
+FOR EACH ROW
+BEGIN
+    SET NEW.disponible = IF(NEW.cantidad = 0, 0, 1);
+END //
+
+DELIMITER ;
